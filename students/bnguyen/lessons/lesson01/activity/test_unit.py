@@ -1,3 +1,6 @@
+"""
+What does this do?
+"""
 from unittest import TestCase
 from unittest.mock import MagicMock
 
@@ -9,8 +12,13 @@ from calculator.calculator import Calculator
 from calculator.exceptions import InsufficientOperands
 
 class AdderTests(TestCase):
-
+    """
+    What does this do?
+    """
     def test_adding(self):
+        """
+        What does this do?
+        """
         adder = Adder()
 
         for i in range(-10, 10):
@@ -19,8 +27,13 @@ class AdderTests(TestCase):
 
 
 class SubtracterTests(TestCase):
-
+    """
+    What does this do?
+    """
     def test_subtracting(self):
+        """
+        What does this do?
+        """
         subtracter = Subtracter()
 
         for i in range(-10, 10):
@@ -29,7 +42,9 @@ class SubtracterTests(TestCase):
 
 
 class CalculatorTests(TestCase):
-
+    """
+    What does this do?
+    """
     def setUp(self):
         self.adder = Adder()
         self.subtracter = Subtracter()
@@ -39,12 +54,18 @@ class CalculatorTests(TestCase):
         self.calculator = Calculator(self.adder, self.subtracter, self.multiplier, self.divider)
 
     def test_insufficient_operands(self):
+        """
+        What does this do?
+        """
         self.calculator.enter_number(0)
 
         with self.assertRaises(InsufficientOperands):
             self.calculator.add()
 
     def test_adder_call(self):
+        """
+        What does this do?
+        """
         self.adder.calc = MagicMock(return_value=0)
 
         self.calculator.enter_number(1)
@@ -54,6 +75,9 @@ class CalculatorTests(TestCase):
         self.adder.calc.assert_called_with(1, 2)
 
     def test_subtracter_call(self):
+        """
+        What does this do?
+        """
         self.subtracter.calc = MagicMock(return_value=0)
 
         self.calculator.enter_number(1)
@@ -61,5 +85,3 @@ class CalculatorTests(TestCase):
         self.calculator.subtract()
 
         self.subtracter.calc.assert_called_with(1, 2)
-
-
