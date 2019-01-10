@@ -1,0 +1,19 @@
+regular git cycle:
+git pull upstream master
+git push origin master
+
+----------------------------------------------------------------------------
+Will use 'Slack' for class communication
+
+----------------------------------------------------------------------------
+py220BV201901 is the repository
+
+need to commit often, as we will be graded on this
+
+Class team:
+dave
+ying
+arun
+
+----------------------------------------------------------------------------
+use pylint to critique your code
