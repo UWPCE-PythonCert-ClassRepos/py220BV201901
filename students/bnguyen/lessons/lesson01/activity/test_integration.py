@@ -22,11 +22,15 @@ class ModuleTests(TestCase):
 
         calculator.enter_number(46)
 
-        calculator.add()
+        result_add = calculator.add()
+
+        self.assertEqual(56, result_add)
 
         calculator.enter_number(8)
 
-        calculator.divide()
+        result_divide = calculator.divide()
+
+        self.assertEqual(7, result_divide)
 
         calculator.enter_number(1)
 

@@ -1,5 +1,6 @@
 """
 What does this do?
+To test all the methods in calculator module
 """
 from unittest import TestCase
 from unittest.mock import MagicMock
@@ -40,6 +41,36 @@ class SubtracterTests(TestCase):
             for j in range(-10, 10):
                 self.assertEqual(i - j, subtracter.calc(i, j))
 
+        # self.assertEqual(-2 - -1, subtracter.calc(-2, -1))
+
+#MultiplierTests and DividerTests as the requirement
+class MultiplierTests(TestCase):
+    """
+    This is to test the Multiplier class
+    """
+    def tst_multiplier(self):
+        """
+        This is to test the Multiplier class
+        """
+        multiplier = Multiplier()
+        for i in range(-10, 10):
+            for j in range(-10, 10):
+                self.assertEqual(i * j, multiplier.calc(i, j))
+
+class DividerTests(TestCase):
+    """
+    This is to test the Multiplier class
+    """
+    def test_divider(self):
+        """
+        This is to test the Multiplier class
+        """
+        divider = Divider()
+        for i in range(-10, 10):
+            for j in range(-20, 20, 3): #skip 0 cheat!ZeroDivisionError:
+                self.assertEqual(i/j, divider.calc(i, j))
+        #self.assertEqual(1 / -1, divider.calc(1, -1))
+
 
 class CalculatorTests(TestCase):
     """
@@ -73,6 +104,7 @@ class CalculatorTests(TestCase):
         self.calculator.add()
 
         self.adder.calc.assert_called_with(1, 2)
+
 
     def test_subtracter_call(self):
         """
