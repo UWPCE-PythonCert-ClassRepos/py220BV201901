@@ -26,16 +26,16 @@ class ModuleTests(TestCase):
 
         result = calculator.add()
 
-        self.assertEqual(result, ((2*5)+46))
+        self.assertEqual(result, (46+(2*5)))
 
         calculator.enter_number(8)
 
         result = calculator.divide()
 
-        self.assertEqual(result, (8 / ((2*5)+46) ) )
+        self.assertEqual(result, (8 / (46+(2*5))))
 
         calculator.enter_number(1)
 
         result = calculator.subtract()
 
-        self.assertEqual(result, (1 - (8 / ((2*5)+46))) )
+        self.assertEqual(result, (1 - (8 / (46+(2*5)))))
