@@ -13,11 +13,11 @@ def mainMenu(user_prompt=None):
 
     while user_prompt not in valid_prompts:
         options_str = ("{}" + (", {}") * (len(options)-1)).format(*options)
-        print("Please choose from the following options ({options_str}):")
+        print("Please choose from the following options ({0}):".format(options_str))
         print("1. Add a new item to the inventory")
         print("2. Get item information")
         print("q. Quit")
-        user_prompt = input(">")
+        user_prompt = input("> ")
     return valid_prompts.get(user_prompt)
 
 def getPrice(itemCode):
