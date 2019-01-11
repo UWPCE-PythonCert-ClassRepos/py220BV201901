@@ -18,18 +18,24 @@ class ModuleTests(TestCase):
         calculator.enter_number(5)
         calculator.enter_number(2)
 
-        calculator.multiply()
+        result = calculator.multiply()
+
+        self.assertEqual(10, result)
 
         calculator.enter_number(46)
 
-        calculator.add()
+        result = calculator.add()
+
+        self.assertEqual(result, (10+46))
 
         calculator.enter_number(8)
 
-        calculator.divide()
+        result = calculator.divide()
+
+        self.assertEqual(result, (8 / (10+46) ) )
 
         calculator.enter_number(1)
 
         result = calculator.subtract()
 
-        self.assertEqual(6, result)
+        self.assertEqual(result, (1 - (8 / (10+46))) )
