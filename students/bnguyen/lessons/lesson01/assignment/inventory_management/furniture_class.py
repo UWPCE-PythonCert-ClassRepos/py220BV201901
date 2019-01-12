@@ -2,7 +2,9 @@
 """
 What does this do?
 """
+#from inventory_management.inventory_class import Inventory
 from inventory_class import Inventory
+
 
 class Furniture(Inventory):
     """
@@ -11,6 +13,7 @@ class Furniture(Inventory):
     def __init__(self, product_code, description, market_price, rental_price, material, size):
         # Creates common instance variables from the parent class
         Inventory.__init__(self, product_code, description, market_price, rental_price)
+        #super().__init__(self, product_code, description, market_price, rental_price)
 
         self.material = material
         self.size = size
