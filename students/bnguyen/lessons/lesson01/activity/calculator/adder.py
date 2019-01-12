@@ -1,7 +1,8 @@
 """
 Medule: Adder.
 """
-class Adder(object):
+#class Adder(object):
+class Adder:
     """
     Class: Adder.
     """

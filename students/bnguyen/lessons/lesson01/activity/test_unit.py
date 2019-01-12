@@ -48,7 +48,8 @@ class MultiplierTests(TestCase):
     """
     This is to test the Multiplier class
     """
-    def tst_multiplier(self):
+
+    def test_multiplier(self):
         """
         This is to test the Multiplier class
         """
@@ -117,3 +118,27 @@ class CalculatorTests(TestCase):
         self.calculator.subtract()
 
         self.subtracter.calc.assert_called_with(1, 2)
+
+    def test_multiplier_call(self):
+        """
+        This is to test calcultor.multipy method call.
+        """
+        self.multiplier.calc = MagicMock(return_value=0) #Need to learn more.
+
+        self.calculator.enter_number(-4)
+        self.calculator.enter_number(-2)
+        self.calculator.multiply()
+
+        self.multiplier.calc.assert_called_with(-4, -2)
+
+    def test_divider_call(self):
+        """
+        This is to test calculator.divide method call.
+        """
+        self.divider.calc = MagicMock(return_value=0)
+
+        self.calculator.enter_number(4)
+        self.calculator.enter_number(-2)
+        self.calculator.divide()
+
+        self.divider.calc.assert_called_with(4, -2)

@@ -1,10 +1,12 @@
 """
 Module: Divider
 """
-class Divider(object):
+#class Divider(object):
+class Divider:
     """
     Class Divider.
     """
+
     @staticmethod
     def calc(operand_1, operand_2):
         """

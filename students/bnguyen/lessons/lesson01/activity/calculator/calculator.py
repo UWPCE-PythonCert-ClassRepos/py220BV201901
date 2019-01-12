@@ -3,7 +3,8 @@ Module:calculator with basic methods.
 """
 from .exceptions import InsufficientOperands
 
-class Calculator(object):
+#class Calculator(object):
+class Calculator:
     """
     Class: Calculator
     """
