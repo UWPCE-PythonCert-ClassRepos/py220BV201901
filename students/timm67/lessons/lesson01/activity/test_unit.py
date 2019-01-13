@@ -27,6 +27,7 @@ class SubtracterTests(TestCase):
             for j in range(-10, 10):
                 self.assertEqual(i - j, subtracter.calc(i, j))
 
+
 class MultiplierTests(TestCase):
 
     def test_multiplying(self):
@@ -35,6 +36,7 @@ class MultiplierTests(TestCase):
         for i in range(-10, 10):
             for j in range(-10, 10):
                 self.assertEqual(i * j, multiplier.calc(i, j))
+
 
 class DividerTests(TestCase):
 
@@ -45,6 +47,7 @@ class DividerTests(TestCase):
             for j in range(-10, 10):
                 if (j != 0): # don't allow div by zero
                     self.assertEqual(i / j, divider.calc(i, j))
+
 
 class CalculatorTests(TestCase):
 
@@ -81,5 +84,3 @@ class CalculatorTests(TestCase):
 
         self.subtracter.calc.assert_called_with(2, 1)
         self.assertEqual(result, (2-1))
-
-
