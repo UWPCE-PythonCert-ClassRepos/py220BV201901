@@ -2,21 +2,22 @@
 """
 What does this class do?
 """
-from inventory_class import Inventory
+#from inventory_class import Inventory #for running main.
+from inventory_management.inventory_class import Inventory
 
 class ElectricAppliances(Inventory):
     """
     What does this do?
     """
-    def __init__(self, product_code, description, market_price, rental_price, brand, voltage):
+    def __init__(self, product_code, description, market_price,
+                 rental_price, brand, voltage):
         # Creates common instance variables from the parent class
         Inventory.__init__(self, product_code, description, market_price, rental_price)
-
 
         self.brand = brand
         self.voltage = voltage
 
-    def return_as_cictionary(self):
+    def return_as_dictionary(self):
         """
         What does this do?
         """

@@ -7,12 +7,12 @@ To test all the methods in inv module
 """
 
 from unittest import TestCase
-from unittest.mock import MagicMock
+#from unittest.mock import MagicMock
 
-#from inventory_management.electric_appliances_class import ElectricAppliances
-from inventory_management.market_prices import get_latest_price
+from inventory_management.electric_appliances_class import ElectricAppliances
 from inventory_management.furniture_class import Furniture
-from inventory_management.inventory_class import Inventory
+from inventory_management import inventory_class
+from inventory_management.market_prices import get_latest_price
 
 
 class InventoryTests(TestCase):
@@ -25,8 +25,9 @@ class InventoryTests(TestCase):
         self.market_price = get_latest_price(self.product_code)
         self.rental_price = 30
 
-        self.inventory = Inventory(self.product_code, self.description,
-                                   self.market_price, self.rental_price)
+        self.inventory = inventory_class.Inventory(
+            self.product_code, self.description,
+            self.market_price, self.rental_price)
 
     def test_return_as_dictionary_call(self):
         """
@@ -43,6 +44,39 @@ class InventoryTests(TestCase):
 
         self.assertEqual(expected_dict, dict_result)
 
+class ElectricAppliancesTests(TestCase):
+    """
+    To test ElectricAppliances class and method.
+    """
+    def setUp(self):
+        self.product_code = 22
+        self.description = "Lamb"
+        self.market_price = get_latest_price(self.product_code)
+        self.rental_price = 22
+        self.brand = "GE"
+        self.voltage = "210"
+
+        self.electrical = ElectricAppliances(
+            self.product_code, self.description,
+            self.market_price, self.rental_price,
+            self.brand, self.voltage)
+
+    def test_return_as_dictionary_call3(self):
+        """
+        This
+        """
+        dict_result = self.electrical.return_as_dictionary()
+
+        expected_dict = {}
+        expected_dict['product_code'] = 22
+        expected_dict['description'] = "Lamb"
+        expected_dict['market_price'] = 24
+        expected_dict['rental_price'] = 22
+        expected_dict['brand'] = "GE"
+        expected_dict['voltage'] = "210"
+
+        self.assertEqual(expected_dict, dict_result)
+
 class FurnitureTests(TestCase):
     """
     To test Furniture class and method.
@@ -55,11 +89,15 @@ class FurnitureTests(TestCase):
         self.material = "Wood"
         self.size = "L"
 
-        self.furniture = Furniture(self.product_code, self.description,
-                                   self.market_price, self.rental_price, self.material, self.size)
+        self.furniture = Furniture(
+            self.product_code, self.description,
+            self.market_price, self.rental_price,
+            self.material, self.size)
 
     def test_return_as_dictionary_call2(self):
-
+        """
+        This
+        """
         dict_result = self.furniture.return_as_dictionary()
 
         expected_dict = {}
