@@ -1,10 +1,12 @@
 # Electric appliances class
-from inventory_class import Inventory
+from inventory_management.inventory_class import Inventory
 
-class Electric_Appliances(Inventory):
+class Electric_appliances(Inventory):
 
-    def __init__(self, product_code, description, market_price, rental_price, brand, voltage):
-        Inventory.__init__(self, product_code, description, market_price, rental_price)
+    def __init__(self, product_code, description, market_price, rental_price,
+                 brand, voltage):
+        super(Electric_appliances, self).__init__(product_code, description,
+                                                  market_price, rental_price)
         # Creates common instance variables from the parent class
         self.brand = brand
         self.voltage = voltage

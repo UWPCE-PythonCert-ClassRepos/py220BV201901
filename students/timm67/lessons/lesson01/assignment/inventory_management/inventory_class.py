@@ -1,5 +1,5 @@
 # Inventory class
-class Inventory:
+class Inventory(object):
 
     def __init__(self, product_code, description, market_price, rental_price):
         self.product_code = product_code
