@@ -8,6 +8,7 @@ from inventory_management.inventory_class import Inventory
 from inventory_management.furniture_class import Furniture
 from inventory_management.electric_appliances_class import Electric_appliances
 
+
 def main_menu(user_prompt=None):
     valid_prompts = {"1": add_new_item,
                      "2": item_info,
@@ -23,8 +24,10 @@ def main_menu(user_prompt=None):
         user_prompt = input("> ")
     return valid_prompts.get(user_prompt)
 
+
 def get_price(item_code):
     print("Get price")
+
 
 def add_new_item():
     # global FULL_INVENTORY

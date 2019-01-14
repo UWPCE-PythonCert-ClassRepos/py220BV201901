@@ -1,6 +1,7 @@
 # Electric appliances class
 from inventory_management.inventory_class import Inventory
 
+
 class Electric_appliances(Inventory):
 
     def __init__(self, product_code, description, market_price, rental_price,
