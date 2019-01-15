@@ -32,7 +32,9 @@ load-plugins=
 # Disable the message, report, category or checker with the given id(s). You
 # can either give multiple identifier separated by comma (,) or put this option
 # multiple time.
+# superfluous-parens needed because pylint seems to think print uses 2.x syntax
 disable=superfluous-parens,missing-docstring,too-many-arguments,too-few-public-methods
+# disable=missing-docstring,too-many-arguments,too-few-public-methods
 
 
 [REPORTS]
