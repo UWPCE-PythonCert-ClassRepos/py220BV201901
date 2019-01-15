@@ -1,5 +1,5 @@
 """
-Launches the user interface for the inventory management system
+Launches the command line interface for the inventory management system
 """
 
 import sys
@@ -9,6 +9,7 @@ from inventory_management.furniture_class import Furniture
 from inventory_management.electric_appliances_class import Electric_appliances
 
 def main_menu(user_prompt=None):
+    """ Menu-driven CLI using dictionary """
     valid_prompts = {"1": add_new_item,
                      "2": item_info,
                      "q": exit_program}
@@ -24,10 +25,11 @@ def main_menu(user_prompt=None):
     return valid_prompts.get(user_prompt)
 
 def get_price(item_code):
-    print("Get price")
+    """ get price method """
+    print("Get price [{}]".format(item_code))
 
 def add_new_item():
-    # global FULL_INVENTORY
+    """ add a new item to the inventory """
     item_code = input("Enter item code: ")
     item_description = input("Enter item description: ")
     item_rental_price = input("Enter item rental price: ")
@@ -57,7 +59,7 @@ def add_new_item():
 
 
 def item_info():
-    # global FULL_INVENTORY
+    """ display the inventory """
     item_code = input("Enter item code: ")
     if item_code in FULL_INVENTORY:
         print_dict = FULL_INVENTORY[item_code]
@@ -68,6 +70,7 @@ def item_info():
 
 
 def exit_program():
+    """ exit inventory management """
     sys.exit()
 
 
