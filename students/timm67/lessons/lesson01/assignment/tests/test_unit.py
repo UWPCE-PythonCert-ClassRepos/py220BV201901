@@ -1,3 +1,4 @@
+""" Unit tests for assignment01 """
 from unittest import TestCase
 from unittest.mock import MagicMock
 
@@ -8,7 +9,7 @@ from inventory_management.market_prices import get_latest_price
 
 
 class InventoryTest(TestCase):
-
+    """ Inventory class tests """
     def test_inventory_class(self):
         """ Inventory class test """
         product_code = 1234
@@ -26,7 +27,7 @@ class InventoryTest(TestCase):
 
 
 class FurnitureTest(TestCase):
-
+    """ Furniture class tests """
     def test_furniture_class(self):
         """ Furniture class test """
         product_code = 5678
@@ -49,7 +50,7 @@ class FurnitureTest(TestCase):
 
 
 class ElectricApplianceTest(TestCase):
-
+    """ Appliance class tests """
     def test_electric_appliance_class(self):
         """ Appliance class test """
         product_code = 5678
@@ -73,17 +74,21 @@ class ElectricApplianceTest(TestCase):
 
 
 class MarketPriceTest(TestCase):
-
+    """market price test"""
     def test_market_price(self):
         """market price test"""
+        magic_num = 24
+        mock = MagicMock(return_value=magic_num)
         item_code = 42
-        mkt_price = get_latest_price(item_code)
-        self.assertEqual(mkt_price, 24)
+        mkt_price = mock(item_code)
+        mock.assert_called_with(item_code)
+        self.assertEqual(mkt_price, magic_num)
 
 
 class CliTest(TestCase):
     """cli (main) test"""
-    def test_subtracter_call(self):
+    def test__call(self):
+        """ foo """
         pass
         # self.subtracter.calc = MagicMock(return_value=(2-1))
         # self.subtracter.calc.assert_called_with(2, 1)
