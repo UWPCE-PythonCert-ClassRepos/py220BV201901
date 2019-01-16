@@ -1,4 +1,6 @@
 """ Inventory class """
+
+
 class Inventory(object):
     """ Inventory base class """
     def __init__(self, product_code, description, market_price, rental_price):
@@ -6,7 +8,6 @@ class Inventory(object):
         self.description = description
         self.market_price = market_price
         self.rental_price = rental_price
-
 
     def return_as_dictionary(self):
         """ convert object to dictionary """
