@@ -3,7 +3,7 @@ Launches the command line interface for the inventory management system
 """
 
 import sys
-import inventory_management.market_prices as market_prices
+import inventory_management.market_prices
 from inventory_management.inventory_class import Inventory
 from inventory_management.furniture_class import Furniture
 from inventory_management.electric_appliances_class import ElectricAppliances
@@ -28,7 +28,7 @@ def main_menu(user_prompt=None):
 
 def get_price(item_code):
     """ get price method """
-    print("Get price [{}]".format(item_code))
+    return inventory_management.market_prices.get_latest_price(item_code)
 
 
 def add_new_item():
@@ -38,7 +38,7 @@ def add_new_item():
     item_rental_price = input("Enter item rental price: ")
 
     # Get price from the market prices module
-    item_price = market_prices.get_latest_price(item_code)
+    item_price = get_price(item_code)
 
     is_furniture = input("Is this item a piece of furniture? (Y/N): ")
     if is_furniture.lower() == "y":
