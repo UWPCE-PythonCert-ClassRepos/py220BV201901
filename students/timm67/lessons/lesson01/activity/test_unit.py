@@ -46,7 +46,7 @@ class DividerTests(TestCase):
 
         for i in range(-10, 10):
             for j in range(-10, 10):
-                if (j != 0): # don't allow div by zero
+                if j != 0:  # don't allow div by zero
                     self.assertEqual(i / j, divider.calc(i, j))
 
 
@@ -58,7 +58,8 @@ class CalculatorTests(TestCase):
         self.multiplier = Multiplier()
         self.divider = Divider()
 
-        self.calculator = Calculator(self.adder, self.subtracter, self.multiplier, self.divider)
+        self.calculator = Calculator(self.adder, self.subtracter,
+                                     self.multiplier, self.divider)
 
     def test_insufficient_operands(self):
         self.calculator.enter_number(0)

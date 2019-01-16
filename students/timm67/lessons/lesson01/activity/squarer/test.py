@@ -1,8 +1,8 @@
 # test.py
 from squarer import Squarer
 
-class SquarerTest(object):
 
+class SquarerTest(object):
 
     @staticmethod
     def test_positive_numbers():
@@ -19,8 +19,7 @@ class SquarerTest(object):
             result = Squarer.calc(num)
 
             if result != square:
-                print("Squared {} and got {} but expected {}".format(num, result, square))
-
+                print("Squared {}, act {} exp {}".format(num, result, square))
 
     @staticmethod
     def test_negative_numbers():
@@ -37,7 +36,7 @@ class SquarerTest(object):
             result = Squarer.calc(num)
 
             if result != square:
-                print("Squared {} and got {} but expected {}".format(num, result, square))
+                print("Squared {}, act {} exp {}".format(num, result, square))
 
 
 if __name__ == "__main__":

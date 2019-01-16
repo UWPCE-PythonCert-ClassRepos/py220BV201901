@@ -1,7 +1,7 @@
 # test2.py
 import unittest
-
 from squarer import Squarer
+
 
 class SquarerTest(unittest.TestCase):
 
@@ -16,7 +16,7 @@ class SquarerTest(unittest.TestCase):
         }
 
         for num, square in squares.items():
-            self.assertEqual(square, Squarer.calc(num), "Squaring {}".format(num))
+            self.assertEqual(square, Squarer.calc(num), "Squar {}".format(num))
 
     def test_negative_numbers(self):
 
@@ -29,4 +29,4 @@ class SquarerTest(unittest.TestCase):
         }
 
         for num, square in squares.items():
-            self.assertEqual(square, Squarer.calc(num), "Squaring {}".format(num))
+            self.assertEqual(square, Squarer.calc(num), "Squar {}".format(num))
