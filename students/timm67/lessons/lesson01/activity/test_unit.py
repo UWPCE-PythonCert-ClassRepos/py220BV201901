@@ -84,3 +84,23 @@ class CalculatorTests(TestCase):
 
         self.subtracter.calc.assert_called_with(2, 1)
         self.assertEqual(result, (2-1))
+
+    def test_multiplier_call(self):
+        self.multiplier.calc = MagicMock(return_value=(2*1))
+
+        self.calculator.enter_number(1)
+        self.calculator.enter_number(2)
+        result = self.calculator.multiply()
+
+        self.multiplier.calc.assert_called_with(2, 1)
+        self.assertEqual(result, (2*1))
+
+    def test_divider_call(self):
+        self.divider.calc = MagicMock(return_value=(2/1))
+
+        self.calculator.enter_number(1)
+        self.calculator.enter_number(2)
+        result = self.calculator.divide()
+
+        self.divider.calc.assert_called_with(2, 1)
+        self.assertEqual(result, (2/1))

@@ -9,7 +9,7 @@ There's one new addition since the videos: I've separated the unit tests and the
 ## Your Goals
 
 1. `python -m unittest integration-test` should have no failures. Don't edit integration-test.py, edit your code to make it pass.
-2. Add unit tests to unit-test.py such that `coverage run --source=calculator -m unittest unit-test; coverage report` shows 100% coverage.
+2. Add unit tests to unit-test.py such that `coverage run --source=calculator -m unittest test_unit; coverage report` shows 100% coverage.
 3. All of the tests in unit-test.py should pass.
 4. Satisfy the linter such that `pylint calculator` gives no errors and `flake8 calculator` gives no errors. See (PEP257)[https://www.python.org/dev/peps/pep-0257/] if you'd like more information about docstrings. There are quite a few docstrings to add, but for this exercise you don't need to get too creative: """ this method adds two numbers """ is sufficient.
 
@@ -23,7 +23,7 @@ Enter the result of the operation back into the calculator
 This makes it possible to perform the following sequences of operations:
   calculator.enter_number(2)
   calculator.enter_number(3)
-  calculator.add()                      # Returns 5, and now 5 is now 'in the calculator' 
+  calculator.add()                      # Returns 5, and now 5 is now 'in the calculator'
   calculator.enter_number(1)
   calculator.subtract()               # Returns 4 because 5 - 1 = 4
 ```
