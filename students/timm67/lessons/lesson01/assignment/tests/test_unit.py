@@ -1,10 +1,13 @@
-import unittest
+from unittest import TestCase
+from unittest.mock import MagicMock
 
 from inventory_management.inventory_class import Inventory
 from inventory_management.furniture_class import Furniture
-from inventory_management.electric_appliances_class import Electric_appliances
+from inventory_management.electric_appliances_class import ElectricAppliances
+from inventory_management.market_prices import get_latest_price
 
-class InventoryTest(unittest.TestCase):
+
+class InventoryTest(TestCase):
 
     def test_inventory_class(self):
         """ Inventory class test """
@@ -22,7 +25,7 @@ class InventoryTest(unittest.TestCase):
         self.assertEqual(test_dict['rental_price'], rental_price)
 
 
-class FurnitureTest(unittest.TestCase):
+class FurnitureTest(TestCase):
 
     def test_furniture_class(self):
         """ Furniture class test """
@@ -44,7 +47,8 @@ class FurnitureTest(unittest.TestCase):
         self.assertEqual(test_dict['material'], material)
         self.assertEqual(test_dict['size'], size)
 
-class ElectricApplianceTest(unittest.TestCase):
+
+class ElectricApplianceTest(TestCase):
 
     def test_electric_appliance_class(self):
         """ Appliance class test """
@@ -55,9 +59,9 @@ class ElectricApplianceTest(unittest.TestCase):
         brand = 'General Electric'
         voltage = 220
 
-        test_article = Electric_appliances(product_code, description,
-                                           market_price, rental_price,
-                                           brand, voltage)
+        test_article = ElectricAppliances(product_code, description,
+                                          market_price, rental_price,
+                                          brand, voltage)
         test_dict = test_article.return_as_dictionary()
 
         self.assertEqual(test_dict['product_code'], product_code)
@@ -66,3 +70,21 @@ class ElectricApplianceTest(unittest.TestCase):
         self.assertEqual(test_dict['rental_price'], rental_price)
         self.assertEqual(test_dict['brand'], brand)
         self.assertEqual(test_dict['voltage'], voltage)
+
+
+class MarketPriceTest(TestCase):
+
+    def test_market_price(self):
+        """market price test"""
+        item_code = 42
+        mkt_price = get_latest_price(item_code)
+        self.assertEqual(mkt_price, 24)
+
+
+class CliTest(TestCase):
+    """cli (main) test"""
+    def test_subtracter_call(self):
+        pass
+        # self.subtracter.calc = MagicMock(return_value=(2-1))
+        # self.subtracter.calc.assert_called_with(2, 1)
+        # self.assertEqual(result, (2-1))
