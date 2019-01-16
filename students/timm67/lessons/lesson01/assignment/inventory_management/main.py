@@ -6,7 +6,7 @@ import sys
 import inventory_management.market_prices as market_prices
 from inventory_management.inventory_class import Inventory
 from inventory_management.furniture_class import Furniture
-from inventory_management.electric_appliances_class import Electric_appliances
+from inventory_management.electric_appliances_class import ElectricAppliances
 
 
 def main_menu(user_prompt=None):
@@ -51,9 +51,9 @@ def add_new_item():
         if is_electric_appliance.lower() == "y":
             item_brand = input("Enter item brand: ")
             item_voltage = input("Enter item voltage: ")
-            new_item = Electric_appliances(item_code, item_description,
-                                           item_price, item_rental_price,
-                                           item_brand, item_voltage)
+            new_item = ElectricAppliances(item_code, item_description,
+                                          item_price, item_rental_price,
+                                          item_brand, item_voltage)
         else:
             new_item = Inventory(item_code, item_description,
                                  item_price, item_rental_price)

@@ -2,16 +2,15 @@
 from inventory_management.inventory_class import Inventory
 
 
-class Electric_appliances(Inventory):
+class ElectricAppliances(Inventory):
     """ Electric appliance class """
     def __init__(self, product_code, description, market_price, rental_price,
                  brand, voltage):
         # Creates common instance variables from the parent class
-        super(Electric_appliances, self).__init__(product_code, description,
-                                                  market_price, rental_price)
+        super(ElectricAppliances, self).__init__(product_code, description,
+                                                 market_price, rental_price)
         self.brand = brand
         self.voltage = voltage
-
 
     def return_as_dictionary(self):
         """ convert object to dictionary """

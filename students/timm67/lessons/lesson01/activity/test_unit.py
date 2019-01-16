@@ -8,6 +8,7 @@ from calculator.divider import Divider
 from calculator.calculator import Calculator
 from calculator.exceptions import InsufficientOperands
 
+
 class AdderTests(TestCase):
 
     def test_adding(self):
