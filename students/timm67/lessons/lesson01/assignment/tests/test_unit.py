@@ -1,6 +1,6 @@
 """ Unit tests for assignment01 """
 from unittest import TestCase
-from unittest.mock import MagicMock
+# from unittest.mock import MagicMock
 
 from inventory_management.inventory_class import Inventory
 from inventory_management.furniture_class import Furniture
@@ -17,7 +17,8 @@ class InventoryTest(TestCase):
         market_price = 1234.56
         rental_price = 12.34
 
-        test_article = Inventory(product_code, description, market_price, rental_price)
+        test_article = Inventory(product_code, description, market_price,
+                                 rental_price)
         test_dict = test_article.return_as_dictionary()
 
         self.assertEqual(test_dict['product_code'], product_code)
@@ -37,8 +38,8 @@ class FurnitureTest(TestCase):
         material = 'cloth'
         size = 'large'
 
-        test_article = Furniture(product_code, description, market_price, rental_price,
-                                 material, size)
+        test_article = Furniture(product_code, description, market_price,
+                                 rental_price, material, size)
         test_dict = test_article.return_as_dictionary()
 
         self.assertEqual(test_dict['product_code'], product_code)
@@ -78,10 +79,8 @@ class MarketPriceTest(TestCase):
     def test_market_price(self):
         """market price test"""
         magic_num = 24
-        mock = MagicMock(return_value=magic_num)
         item_code = 42
-        mkt_price = mock(item_code)
-        mock.assert_called_with(item_code)
+        mkt_price = get_latest_price(item_code)
         self.assertEqual(mkt_price, magic_num)
 
 
