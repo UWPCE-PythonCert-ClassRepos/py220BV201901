@@ -6,7 +6,10 @@ from inventory_management.inventory_class import Inventory
 from inventory_management.furniture_class import Furniture
 from inventory_management.electric_appliances_class import ElectricAppliances
 from inventory_management.market_prices import get_latest_price
-
+from inventory_management.main import add_appliance
+from inventory_management.main import add_furniture
+from inventory_management.main import add_inventory
+from inventory_management.main import get_item
 
 class InventoryTest(TestCase):
     """ Inventory class tests """
@@ -84,11 +87,94 @@ class MarketPriceTest(TestCase):
         self.assertEqual(mkt_price, magic_num)
 
 
-class CliTest(TestCase):
-    """cli (main) test"""
-    def test__call(self):
-        """ foo """
-        pass
-        # self.subtracter.calc = MagicMock(return_value=(2-1))
-        # self.subtracter.calc.assert_called_with(2, 1)
-        # self.assertEqual(result, (2-1))
+class MainTest(TestCase):
+    """Main test"""
+    def test_add_furniture(self):
+        """ Test adding a furniture item """
+        item_code = 123
+        item_description = 'sofa'
+        item_price = 42
+        item_rental_price = 24
+        item_material = 'cloth'
+        item_size = 'large'
+        actual_dict = None
+        test_dict = {
+            'product_code' : item_code,
+            'description' : item_description,
+            'market_price' : item_price,
+            'rental_price' : item_rental_price,
+            'material' : item_material,
+            'size' : item_size
+        }
+
+        add_furniture(item_code, item_description, item_price,
+                      item_rental_price, item_material, item_size)
+
+        actual_dict = get_item(item_code)
+
+        self.assertNotEqual(actual_dict, None)
+        if actual_dict is None:
+            return
+
+        for key in actual_dict:
+            self.assertEqual(test_dict[key], actual_dict[key])
+
+
+    def test_add_appliance(self):
+        """ test adding an Electric Appliance item """
+        item_code = 456
+        item_description = 'dishwasher'
+        item_price = 420
+        item_rental_price = 240
+        item_brand = 'GE'
+        item_voltage = 220
+        actual_dict = None
+
+        test_dict = {
+            'product_code' : item_code,
+            'description' : item_description,
+            'market_price' : item_price,
+            'rental_price' : item_rental_price,
+            'brand' : item_brand,
+            'voltage' : item_voltage
+        }
+
+        add_appliance(item_code, item_description, item_price,
+                      item_rental_price, item_brand, item_voltage)
+
+        actual_dict = get_item(item_code)
+
+        self.assertNotEqual(actual_dict, None)
+        if actual_dict is None:
+            return
+
+        for key in actual_dict:
+            self.assertEqual(test_dict[key], actual_dict[key])
+
+
+    def test_add_inventory(self):
+        """ Test adding an inventory item """
+        item_code = 789
+        item_description = 'pencil'
+        item_price = 4
+        item_rental_price = 2
+        actual_dict = None
+
+        test_dict = {
+            'product_code' : item_code,
+            'description' : item_description,
+            'market_price' : item_price,
+            'rental_price' : item_rental_price,
+        }
+
+        add_inventory(item_code, item_description, item_price,
+                      item_rental_price)
+
+        actual_dict = get_item(item_code)
+
+        self.assertNotEqual(actual_dict, None)
+        if actual_dict is None:
+            return
+
+        for key in actual_dict:
+            self.assertEqual(test_dict[key], actual_dict[key])
