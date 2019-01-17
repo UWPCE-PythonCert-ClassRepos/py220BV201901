@@ -24,7 +24,7 @@ def main_menu(user_prompt=None):
         user_prompt = input(">")
     return valid_prompts.get(user_prompt)
 
-def get_price(item_code):
+def get_price(item_code, FULL_INVENTORY):
     """get price of inventory item"""
     price = FULL_INVENTORY[item_code]['marketPrice']
     print(price)
@@ -60,7 +60,7 @@ def add_new_item():
     print("New inventory item added")
 
 
-def item_info():
+def item_info(FULL_INVENTORY):
     """search for item info"""
     item_code = input("Enter item code: ")
     if item_code in FULL_INVENTORY:
