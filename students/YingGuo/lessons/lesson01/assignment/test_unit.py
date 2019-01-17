@@ -3,24 +3,19 @@
 import unittest
 import sys
 
+""""
 from electric_appliances_class import *
 from furniture_class import *
 from main import *
 from inventory_class import *
 from market_prices import *
-
 """
-I tried the followiing but couldn't allow me to move the test file outside the folder
-from inventory_management.main import *
+
 from inventory_management.electric_appliances_class import *
 from inventory_management.furniture_class import *
+from inventory_management.main import *
 from inventory_management.inventory_class import *
 from inventory_management.market_prices import *
-
-the following sytle didn't make me to be able to put the test file outside of inventory_management folder
-from inventory_management import electric_appliances_class
-from inventory_management import furniture_class
-from inventory_management import inventory_class"""
 
 class ElectricApplicancesClassTest(unittest.TestCase):
 

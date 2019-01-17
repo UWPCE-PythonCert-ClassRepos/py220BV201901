@@ -1,6 +1,6 @@
 """This is furniture_class, a subclass of Inventory"""
 # Furniture class
-from inventory_class import Inventory
+from .inventory_class import Inventory
 
 class Furniture(Inventory):
     """This is Furniture class, a sub-class of Inventory"""

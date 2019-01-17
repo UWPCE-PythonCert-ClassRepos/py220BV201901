@@ -1,7 +1,7 @@
 """this file is for electric applicanese class for inventory management"""
 
 # Electric Appliances Class
-from inventory_class import Inventory
+from .inventory_class import Inventory
 
 class ElectricAppliances(Inventory):
     """This class is to creat a dictionary for inventory for electric appliances"""
