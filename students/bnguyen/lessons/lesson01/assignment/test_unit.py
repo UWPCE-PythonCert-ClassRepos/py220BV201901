@@ -7,12 +7,14 @@ To test all the methods in inv module
 """
 
 from unittest import TestCase
-#from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 from inventory_management.electric_appliances_class import ElectricAppliances
 from inventory_management.furniture_class import Furniture
 from inventory_management import inventory_class
 from inventory_management.market_prices import get_latest_price
+#from inventory_management.main import main_menu
+import inventory_management.main as m
 
 
 class InventoryTests(TestCase):
@@ -109,3 +111,20 @@ class FurnitureTests(TestCase):
         expected_dict['size'] = "L"
 
         self.assertEqual(expected_dict, dict_result)
+
+class MainTest(TestCase):
+    """This class is used to test all the codes in main module"""
+
+    def test_main_menu(self):
+        """Test main menu to see if it return correctly"""
+
+        expect_values = {'1':m.add_new_item, '2':m.item_info,
+                         'q':m.exit_program}
+        user_inputs = ['1', '2', 'q']
+
+        for i in range(3):
+            with patch('builtins.input', return_value=user_inputs[i]):
+                result = m.main_menu()
+                self.assertEqual(result, expect_values.get(user_inputs[i]))
+
+#More main testing needed

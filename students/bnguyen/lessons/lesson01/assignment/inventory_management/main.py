@@ -3,11 +3,19 @@
 This is the main program/module for the inventory managment system.
 """
 import sys
-from inventory_class import Inventory
-from furniture_class import Furniture
-from market_prices import get_latest_price
-from electric_appliances_class import ElectricAppliances
+# from inventory_class import Inventory
+# from furniture_class import Furniture
+# from market_prices import get_latest_price
+# from electric_appliances_class import ElectricAppliances
 
+#USING this to see:  NOT working
+#ModuleNotFoundError: __path__ attribute not found on 'inventory_management.main
+from .market_prices import get_latest_price
+from .inventory_class import Inventory
+from .furniture_class import Furniture
+from .electric_appliances_class import ElectricAppliances
+
+FULL_INVENTORY = {}
 
 def main_menu(user_prompt=None):
     """
@@ -44,7 +52,6 @@ def add_new_item():
     item_rent_price = input("Enter item rental price: ")
 
     # Get price from the market prices module
-    #item_price = market_prices.get_latest_price(item_code)
     item_price = get_latest_price(item_code)
 
     is_funiture = input("Is this item a piece of furniture? (Y/N): ")
@@ -59,9 +66,13 @@ def add_new_item():
         if is_electric_appliance.lower() == "y":
             item_brand = input("Enter item brand: ")
             item_voltage = input("Enter item voltage: ")
-            new_item = ElectricAppliances(item_code, item_description, item_price, item_rent_price, item_brand, item_voltage)
+            new_item = ElectricAppliances(
+                item_code, item_description,
+                item_price, item_rent_price,
+                item_brand, item_voltage)
         else:
-            new_item = Inventory(item_code, item_description, item_price, item_rent_price)
+            new_item = Inventory(item_code, item_description,
+                                 item_price, item_rent_price)
 
     FULL_INVENTORY[item_code] = new_item.return_as_dictionary()
     print("New inventory item added")

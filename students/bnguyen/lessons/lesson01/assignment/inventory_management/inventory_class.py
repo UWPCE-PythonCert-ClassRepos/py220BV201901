@@ -2,7 +2,7 @@
 """
     Doctring is a must have for module/file.  This is a Inventory class.
 """
-class Inventory(object):
+class Inventory():
     """
     Docstring is a must have for class.
     """
@@ -12,6 +12,8 @@ class Inventory(object):
         self.market_price = market_price
         self.rental_price = rental_price
 
+    def __str__(self):
+        return f"testing"
 
     def return_as_dictionary(self):
         """

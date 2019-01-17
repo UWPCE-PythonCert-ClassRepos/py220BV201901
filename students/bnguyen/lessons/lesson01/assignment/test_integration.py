@@ -10,3 +10,4 @@ from unittest.mock import MagicMock  #Need to learn more about this.
 from inventory_management.inventory_class import Inventory
 
 
+#Make call to all the 3 classes.

@@ -3,8 +3,8 @@
 What does this do?
 """
 
-#from inventory_class import Inventory  #error when ran unittest.
-from inventory_management.inventory_class import Inventory #works with unnitest not main
+#from inventory_class import Inventory  #ran main ok.
+from inventory_management.inventory_class import Inventory #works with unnitest
 
 class Furniture(Inventory):
     """
@@ -19,7 +19,11 @@ class Furniture(Inventory):
         self.material = material
         self.size = size
 
+    def __str__(self):
+        return f"testing"
+
     def return_as_dictionary(self):
+        """Method returns a dictionary related to field in inventory"""
         out_put_dict = {}
         out_put_dict['product_code'] = self.product_code
         out_put_dict['description'] = self.description
