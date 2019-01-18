@@ -1,0 +1,24 @@
+Tims-MacBook-Pro:activity timm$ python3 -m unittest test_unit.py
+.........
+----------------------------------------------------------------------
+Ran 9 tests in 0.006s
+
+OK
+Tims-MacBook-Pro:activity timm$ coverage run --source=calculator -m unittest test_unit; coverage report
+.........
+----------------------------------------------------------------------
+Ran 9 tests in 0.005s
+
+OK
+Name                       Stmts   Miss  Cover
+----------------------------------------------
+calculator/__init__.py         0      0   100%
+calculator/adder.py            3      0   100%
+calculator/calculator.py      25      0   100%
+calculator/divider.py          3      0   100%
+calculator/exceptions.py       2      0   100%
+calculator/multiplier.py       3      0   100%
+calculator/subtracter.py       3      0   100%
+----------------------------------------------
+TOTAL                         39      0   100%
+Tims-MacBook-Pro:activity timm$
