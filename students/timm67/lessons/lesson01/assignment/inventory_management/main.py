@@ -3,11 +3,12 @@ Launches the command line interface for the inventory management system
 """
 
 import sys
-import inventory_management.market_prices as market_prices
+import inventory_management.market_prices
 from inventory_management.inventory_class import Inventory
 from inventory_management.furniture_class import Furniture
-from inventory_management.electric_appliances_class import Electric_appliances
+from inventory_management.electric_appliances_class import ElectricAppliances
 
+FULL_INVENTORY = {}
 
 def main_menu(user_prompt=None):
     """ Menu-driven CLI using dictionary """
@@ -28,7 +29,33 @@ def main_menu(user_prompt=None):
 
 def get_price(item_code):
     """ get price method """
-    print("Get price [{}]".format(item_code))
+    return inventory_management.market_prices.get_latest_price(item_code)
+
+
+def add_furniture(item_code, item_description, item_price,
+                  item_rental_price, item_material, item_size):
+    new_item = Furniture(item_code, item_description, item_price,
+                         item_rental_price, item_material, item_size)
+    FULL_INVENTORY[item_code] = new_item.return_as_dictionary()
+    print("New inventory item added")
+
+
+def add_appliance(item_code, item_description,
+                  item_price, item_rental_price,
+                  item_brand, item_voltage):
+    new_item = ElectricAppliances(item_code, item_description,
+                                  item_price, item_rental_price,
+                                  item_brand, item_voltage)
+    FULL_INVENTORY[item_code] = new_item.return_as_dictionary()
+    print("New inventory item added")
+
+
+def add_inventory(item_code, item_description,
+                  item_price, item_rental_price):
+    new_item = Inventory(item_code, item_description,
+                         item_price, item_rental_price)
+    FULL_INVENTORY[item_code] = new_item.return_as_dictionary()
+    print("New inventory item added")
 
 
 def add_new_item():
@@ -38,27 +65,25 @@ def add_new_item():
     item_rental_price = input("Enter item rental price: ")
 
     # Get price from the market prices module
-    item_price = market_prices.get_latest_price(item_code)
+    item_price = get_price(item_code)
 
     is_furniture = input("Is this item a piece of furniture? (Y/N): ")
     if is_furniture.lower() == "y":
         item_material = input("Enter item material: ")
         item_size = input("Enter item size (S,M,L,XL): ")
-        new_item = Furniture(item_code, item_description, item_price,
-                             item_rental_price, item_material, item_size)
+        add_furniture(item_code, item_description, item_price,
+                      item_rental_price, item_material, item_size)
     else:
         is_electric_appliance = input("Is this an electric appliance? (Y/N): ")
         if is_electric_appliance.lower() == "y":
             item_brand = input("Enter item brand: ")
             item_voltage = input("Enter item voltage: ")
-            new_item = Electric_appliances(item_code, item_description,
-                                           item_price, item_rental_price,
-                                           item_brand, item_voltage)
+            add_appliance(item_code, item_description,
+                          item_price, item_rental_price,
+                          item_brand, item_voltage)
         else:
-            new_item = Inventory(item_code, item_description,
-                                 item_price, item_rental_price)
-    FULL_INVENTORY[item_code] = new_item.return_as_dictionary()
-    print("New inventory item added")
+            add_inventory(item_code, item_description,
+                          item_price, item_rental_price)
 
 
 def item_info():
@@ -72,13 +97,22 @@ def item_info():
         print("Item not found in inventory")
 
 
+def get_item(item_code):
+    """ needed for unit test"""
+    ret_item = None
+    try:
+        ret_item = FULL_INVENTORY[item_code]
+    except KeyError():
+        print("Key {} not found in database".format(item_code))
+    return ret_item
+
+
 def exit_program():
     """ exit inventory management """
     sys.exit()
 
 
 if __name__ == '__main__':
-    FULL_INVENTORY = {}
     while True:
         print(FULL_INVENTORY)
         main_menu()()
