@@ -1,5 +1,5 @@
 '''
-Returns total price paid for individual rentals 
+Returns total price paid for individual rentals
 '''
 
 
@@ -55,9 +55,12 @@ def load_rentals_file(filename):
     with open(filename) as file:
         try:
             newdata = json.load(file)
-        except Exception as exerror:
-            logging.error(f"Input file read error: {type(exerror).__name__}")
-            exit(0)
+        except FileNotFoundError as file_error:
+            logging.error(f"Input file not found: {type(file_error).__name__}")
+            exit(1)
+        except EOFError as eof_error:
+            logging.error(f"Input file read error: {type(eof_error).__name__}")
+            exit(2)
     return newdata
 
 def calculate_additional_fields(data):
@@ -65,13 +68,16 @@ def calculate_additional_fields(data):
 
     for value in data.values():
         try:
+            if value['rental_start'] > value['rental_end']:
+                logging.warning("Rental start date is after rental end date.")
+                raise ValueError
             rental_start = datetime.datetime.strptime(value['rental_start'], '%m/%d/%y')
             rental_end = datetime.datetime.strptime(value['rental_end'], '%m/%d/%y')
             value['total_days'] = (rental_end - rental_start).days
             value['total_price'] = value['total_days'] * value['price_per_day']
             value['sqrt_total_price'] = math.sqrt(value['total_price'])
             value['unit_cost'] = value['total_price'] / value['units_rented']
-        except:
+        except ValueError as data_error:
             logging.error(f"Bad data in file. Skipping data: {value}")
             continue
 
@@ -80,6 +86,7 @@ def calculate_additional_fields(data):
 def save_to_json(filename, data):
     """ Save new calculations to file """
 
+    logging.debug(f'Writing calculated data to file: {filename}')
     with open(filename, 'w') as file:
         json.dump(data, file)
 
