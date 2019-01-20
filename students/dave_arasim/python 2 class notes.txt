@@ -1,0 +1,64 @@
+regular git cycle:
+git pull upstream master
+git push origin master
+
+----------------------------------------------------------------------------
+Will use 'Slack' for class communication
+
+----------------------------------------------------------------------------
+py220BV201901 is the repository
+
+need to commit often, as we will be graded on this
+
+Class team:
+dave
+ying
+arun
+
+----------------------------------------------------------------------------
+use pylint to critique your code:
+python -m pylint ./inventory_management
+
+create pylint rcfile:
+pylint --generate-rcfile > .pylintrc
+
+can edit this file to exclude certain errors (ex: too-few-public-methods).
+Add errors to 'disable' statement in the .pylintrc entry
+
+----------------------------------------------------------------------------
+Check for testing coverage:
+python -m coverage run --source=inventory_management -m unittest test_unit.py
+python -m coverage report
+
+----------------------------------------------------------------------------
+Use pytest if you can.
+
+Virtual environments allow you to emulate your client's environment if it's not like your own:
+python3 -m venv venv
+source venv/bin/activate   --> activates virtual env
+deactivate                 --> deactivates virtual env
+
+pip freeze  --> shows your environment's modules versions
+
+pip install -r requirements.txt   --> gets requirements.txt file
+
+
+can stack git commands with && in between AND it will not continue if previous one fails.
+
+use fstrings when you can:
+first = 'dave'
+last = 'arasim'
+print(f"My name is {first} {last}")
+
+Try loguru for logging in python for easier logging.
+
+
+Add password info. files to .gitignore entry, so they won't be propagated into the repository.
+
+
+
+
+
+
+
+
