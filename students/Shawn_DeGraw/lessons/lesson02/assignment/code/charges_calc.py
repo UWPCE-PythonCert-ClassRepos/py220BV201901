@@ -53,6 +53,7 @@ def load_rentals_file(filename):
     """ Read json input file and create data structure """
 
     with open(filename) as file:
+        logging.debug(f'Reading data from file: {filename}')
         try:
             newdata = json.load(file)
         except FileNotFoundError as file_error:
@@ -66,13 +67,14 @@ def load_rentals_file(filename):
 def calculate_additional_fields(data):
     """ Calculate data using input data """
 
+    logging.debug('Calculating new data.')
     for value in data.values():
         try:
-            if value['rental_start'] > value['rental_end']:
-                logging.warning("Rental start date is after rental end date.")
-                raise ValueError
             rental_start = datetime.datetime.strptime(value['rental_start'], '%m/%d/%y')
             rental_end = datetime.datetime.strptime(value['rental_end'], '%m/%d/%y')
+            if rental_start > rental_end:
+                logging.warning("Rental start date is after rental end date.")
+                raise ValueError
             value['total_days'] = (rental_end - rental_start).days
             value['total_price'] = value['total_days'] * value['price_per_day']
             value['sqrt_total_price'] = math.sqrt(value['total_price'])
@@ -94,8 +96,7 @@ if __name__ == "__main__":
 
     args = parse_cmd_arguments()
 
-    CONSOLE_HANDLER.setLevel(LOG_LEVEL.get(args.d, "ERROR"))
-    FILE_HANDLER.setLevel(LOG_LEVEL.get(args.d, "ERROR"))
+    LOGGER.setLevel(LOG_LEVEL.get(args.d, "WARNING"))
 
     logging.debug(f"Program arguments: input file = {args.input}, output file = {args.output}, debug level = {args.d}")
 
