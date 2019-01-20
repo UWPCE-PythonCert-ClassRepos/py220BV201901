@@ -34,6 +34,7 @@ def get_price(item_code):
 
 def add_furniture(item_code, item_description, item_price,
                   item_rental_price, item_material, item_size):
+    """ add furniture method to decouple UI/bus logic for unit test """
     new_item = Furniture(item_code, item_description, item_price,
                          item_rental_price, item_material, item_size)
     FULL_INVENTORY[item_code] = new_item.return_as_dictionary()
@@ -43,6 +44,7 @@ def add_furniture(item_code, item_description, item_price,
 def add_appliance(item_code, item_description,
                   item_price, item_rental_price,
                   item_brand, item_voltage):
+    """ add appliance method to decouple UI/bus logic for unit test """
     new_item = ElectricAppliances(item_code, item_description,
                                   item_price, item_rental_price,
                                   item_brand, item_voltage)
@@ -52,6 +54,7 @@ def add_appliance(item_code, item_description,
 
 def add_inventory(item_code, item_description,
                   item_price, item_rental_price):
+    """ add inventory method to decouple UI/bus logic for unit test """
     new_item = Inventory(item_code, item_description,
                          item_price, item_rental_price)
     FULL_INVENTORY[item_code] = new_item.return_as_dictionary()
