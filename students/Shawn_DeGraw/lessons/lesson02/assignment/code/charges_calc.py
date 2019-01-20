@@ -79,8 +79,11 @@ def calculate_additional_fields(data):
             value['total_price'] = value['total_days'] * value['price_per_day']
             value['sqrt_total_price'] = math.sqrt(value['total_price'])
             value['unit_cost'] = value['total_price'] / value['units_rented']
-        except ValueError as data_error:
+        except ValueError:
             logging.error(f"Bad data in file. Skipping data: {value}")
+            continue
+        except KeyError:
+            logging.error(f"Missing data in file. Skipping data: {value}")
             continue
 
     return data
@@ -94,12 +97,12 @@ def save_to_json(filename, data):
 
 if __name__ == "__main__":
 
-    args = parse_cmd_arguments()
+    ARGS = parse_cmd_arguments()
 
-    LOGGER.setLevel(LOG_LEVEL.get(args.d, "WARNING"))
+    LOGGER.setLevel(LOG_LEVEL.get(ARGS.d, "WARNING"))
 
-    logging.debug(f"Program arguments: input file = {args.input}, output file = {args.output}, debug level = {args.d}")
+    logging.debug(f"Program arguments: input file = {ARGS.input}, output file = {ARGS.output}, debug level = {ARGS.d}")
 
-    DATA = load_rentals_file(args.input)
+    DATA = load_rentals_file(ARGS.input)
     DATA = calculate_additional_fields(DATA)
-    save_to_json(args.output, DATA)
+    save_to_json(ARGS.output, DATA)
