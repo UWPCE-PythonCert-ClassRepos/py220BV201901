@@ -1,5 +1,8 @@
 '''
 Returns total price paid for individual rentals
+
+Logging level set based on input argument, defaults to no logging.
+Four logging levels are use: OFF, ERROR, WARNING, DEBUG
 '''
 
 
@@ -11,7 +14,7 @@ import logging
 
 LOG_FORMAT = "%(asctime)s %(filename)s:%(lineno)-3d %(levelname)s %(message)s"
 LOG_FILE = datetime.datetime.now().strftime("%Y-%m-%d")+'.log'
-LOG_LEVEL = {'0': 'CRITICAL', '1': 'ERROR', '2': 'WARNING', '3': 'DEBUG'}
+LOG_LEVEL = {'0': 'OFF', '1': 'ERROR', '2': 'WARNING', '3': 'DEBUG'}
 
 FORMATTER = logging.Formatter(LOG_FORMAT)
 
@@ -44,7 +47,7 @@ def parse_cmd_arguments():
     parser = argparse.ArgumentParser(description='Process some integers.')
     parser.add_argument('-i', '--input', help='input JSON file', required=True)
     parser.add_argument('-o', '--output', help='ouput JSON file', required=True)
-    parser.add_argument('-d', '-debug', help='debug level 0=none, 1=error, 2=warn, 3=debug', default='0', required=False)
+    parser.add_argument('-d', '-debug', help='debug level 0=off, 1=error, 2=warn, 3=debug', default='0', required=False)
 
     return parser.parse_args()
 
@@ -98,8 +101,10 @@ def save_to_json(filename, data):
 if __name__ == "__main__":
 
     ARGS = parse_cmd_arguments()
-
-    LOGGER.setLevel(LOG_LEVEL.get(ARGS.d, "WARNING"))
+    if LOG_LEVEL.get(ARGS.d) == 'OFF':
+        LOGGER.disabled = True
+    else:
+        LOGGER.setLevel(LOG_LEVEL.get(ARGS.d, "WARNING"))
 
     logging.debug(f"Program arguments: input file = {ARGS.input}, output file = {ARGS.output}, debug level = {ARGS.d}")
 
