@@ -9,42 +9,60 @@ import datetime
 import math
 import logging
 
-log_format = "%(asctime)s %(filename)s:%(lineno)-3d %(levelname)s %(message)s"
-log_file = datetime.datetime.now().strftime("%Y-%m-%d")+'.log'
-log_level = {'0': 'CRITICAL', '1': 'ERROR', '2': 'WARNING', '3': 'DEBUG'}
+LOG_FORMAT = "%(asctime)s %(filename)s:%(lineno)-3d %(levelname)s %(message)s"
+LOG_FILE = datetime.datetime.now().strftime("%Y-%m-%d")+'.log'
+LOG_LEVEL = {'0': 'CRITICAL', '1': 'ERROR', '2': 'WARNING', '3': 'DEBUG'}
 
-formatter = logging.Formatter(log_format)
+FORMATTER = logging.Formatter(LOG_FORMAT)
 
-file_handler = logging.FileHandler(log_file)
-file_handler.setFormatter(formatter)
+FILE_HANDLER = logging.FileHandler(LOG_FILE)
+FILE_HANDLER.setFormatter(FORMATTER)
 
-console_handler = logging.StreamHandler()
-console_handler.setFormatter(formatter)
+CONSOLE_HANDLER = logging.StreamHandler()
+CONSOLE_HANDLER.setFormatter(FORMATTER)
 
-logger = logging.getLogger()
-logger.addHandler(file_handler)
-logger.addHandler(console_handler)
+LOGGER = logging.getLogger()
+LOGGER.addHandler(FILE_HANDLER)
+LOGGER.addHandler(CONSOLE_HANDLER)
 
 
 def parse_cmd_arguments():
+    """
+    Usage: prog -i,--input INFILE -o,--output OUTFILE -d,-debug LEVEL
+
+    Arguments:
+        INFILE  filename for input data file
+        OUTFILE filename for output data file
+        LEVEL   debug level
+
+    Options:
+        -i, --input options for input file
+        -o, --output options for output file
+        -d, -debug options for debug level
+    """
+
     parser = argparse.ArgumentParser(description='Process some integers.')
     parser.add_argument('-i', '--input', help='input JSON file', required=True)
     parser.add_argument('-o', '--output', help='ouput JSON file', required=True)
-    parser.add_argument('-d', '-debug', help='debug level 0=none,1=error,2=warn,3=debug', default='0',required=False)
+    parser.add_argument('-d', '-debug', help='debug level 0=none, 1=error, 2=warn, 3=debug', default='0', required=False)
 
     return parser.parse_args()
 
 
 def load_rentals_file(filename):
+    """ Read json input file and create data structure """
+
     with open(filename) as file:
         try:
-            data = json.load(file)
+            newdata = json.load(file)
         except Exception as exerror:
             logging.error(f"Input file read error: {type(exerror).__name__}")
             exit(0)
-    return data
+    return newdata
 
 def calculate_additional_fields(data):
+    """ Calculate data using input data """
+
     for value in data.values():
         try:
             rental_start = datetime.datetime.strptime(value['rental_start'], '%m/%d/%y')
@@ -60,6 +78,8 @@ def calculate_additional_fields(data):
     return data
 
 def save_to_json(filename, data):
+    """ Save new calculations to file """
+
     with open(filename, 'w') as file:
         json.dump(data, file)
 
@@ -67,11 +87,11 @@ if __name__ == "__main__":
 
     args = parse_cmd_arguments()
 
-    console_handler.setLevel(log_level.get(args.d, "ERROR"))
-    file_handler.setLevel(log_level.get(args.d, "ERROR"))
+    CONSOLE_HANDLER.setLevel(LOG_LEVEL.get(args.d, "ERROR"))
+    FILE_HANDLER.setLevel(LOG_LEVEL.get(args.d, "ERROR"))
 
     logging.debug(f"Program arguments: input file = {args.input}, output file = {args.output}, debug level = {args.d}")
 
-    data = load_rentals_file(args.input)
-    data = calculate_additional_fields(data)
-    save_to_json(args.output, data)
+    DATA = load_rentals_file(args.input)
+    DATA = calculate_additional_fields(DATA)
+    save_to_json(args.output, DATA)
