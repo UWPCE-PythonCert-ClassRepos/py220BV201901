@@ -10,7 +10,7 @@ def my_fun(n):
     logger.debug(f"parameter: {n}")
     # if n == 2:
     #    return True
-    # return my_fun(n // 2)
+    # return my_fun(n / 2)
     if n == 0:
         return True
     return my_fun(n // 2)
