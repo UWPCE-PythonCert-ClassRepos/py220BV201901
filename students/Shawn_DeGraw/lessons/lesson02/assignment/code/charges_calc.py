@@ -54,17 +54,17 @@ def parse_cmd_arguments():
 
 def load_rentals_file(filename):
     """ Read json input file and create data structure """
-
-    with open(filename) as file:
-        logging.debug(f'Reading data from file: {filename}')
-        try:
-            newdata = json.load(file)
-        except FileNotFoundError as file_error:
-            logging.error(f"Input file not found: {type(file_error).__name__}")
-            exit(1)
-        except EOFError as eof_error:
-            logging.error(f"Input file read error: {type(eof_error).__name__}")
-            exit(2)
+    try:
+        with open(filename) as file:
+            logging.debug(f'Reading data from file: {filename}')
+            try:
+                newdata = json.load(file)
+            except EOFError as eof_error:
+                logging.error(f"Input file read error: {type(eof_error).__name__}")
+                exit(2)
+    except FileNotFoundError as file_error:
+        logging.error(f"Input file not found: {type(file_error).__name__}")
+        exit(1)
     return newdata
 
 def calculate_additional_fields(data):
@@ -95,8 +95,11 @@ def save_to_json(filename, data):
     """ Save new calculations to file """
 
     logging.debug(f'Writing calculated data to file: {filename}')
-    with open(filename, 'w') as file:
-        json.dump(data, file)
+    try:
+        with open(filename, 'w') as file:
+            json.dump(data, file)
+    except IOError as file_error:
+        logging.error(f"Failed to open output file: {type(file_error).__name__}")
 
 if __name__ == "__main__":
 
