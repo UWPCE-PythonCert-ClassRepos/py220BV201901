@@ -5429,7 +5429,7 @@
     "units_rented": 1,
     "price_per_day": 14,
     "rental_start": "6/19/16",
-    "rental_end": ""
+    "rental_end": "10/10/18"
   },
   "RNT777": {
     "product_code": "PRD15",
@@ -5881,7 +5881,7 @@
   },
   "RNT841": {
     "product_code": "PRD33",
-    "units_rented": 7,,
+    "units_rented": 7,
     "price_per_day": 19,
     "rental_start": "5/11/16",
     "rental_end": "7/27/17"
