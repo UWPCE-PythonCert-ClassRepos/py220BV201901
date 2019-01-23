@@ -30,7 +30,19 @@ def calculate_additional_fields(data):
         try:
             logger.debug(f"record num: {record_num}")
             rental_start = datetime.datetime.strptime(value['rental_start'], '%m/%d/%y')
+            if (rental_start == ''):
+                logger.warning("rental start is not specified! Using today's date")
+                year = datetime.datetime.now().year
+                month = datetime.datetime.now().month
+                day = datetime.datetime.now().day
+                value['rental_start'] = "{0}/{1}/{2}".format(month, day, year)
             rental_end = datetime.datetime.strptime(value['rental_end'], '%m/%d/%y')
+            if (rental_end == ''):
+                logger.warning("rental end is not specified! Using today's date")
+                year = datetime.datetime.now().year
+                month = datetime.datetime.now().month
+                day = datetime.datetime.now().day
+                value['rental_end'] = "{0}/{1}/{2}".format(month, day, year)
             logger.debug(f"rental start: {rental_start}")
             logger.debug(f"rental end: {rental_end}")
             value['total_days'] = abs((rental_end - rental_start).days)
@@ -45,8 +57,7 @@ def calculate_additional_fields(data):
             value['unit_cost'] = value['total_price'] / value['units_rented']
             logger.debug(f"unit cost: {value['unit_cost']}")
         except ValueError:
-            logger.error("negative square root or invalid date")
-            exit(0)
+            logger.warning("invalid date")
         record_num += 1
     return data
 
@@ -60,7 +71,7 @@ def save_to_json(filename, data):
 
 if __name__ == "__main__":
     logger.enable('__main__')
-    logger.add("dbgfile_{time}.log")
+    logger.add("debugger_log_{time}.txt")
     logger.info('logger enabled')
     args = parse_cmd_arguments()
     logger.debug(f"Input arg: {args.input}")
