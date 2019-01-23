@@ -1,5 +1,5 @@
 '''
-Returns total price paid for individual rentals 
+Returns total price paid for individual rentals
 '''
 import argparse
 import json
@@ -7,10 +7,11 @@ import datetime
 import math
 from loguru import logger
 
+
 def parse_cmd_arguments():
     parser = argparse.ArgumentParser(description='Process some integers.')
     parser.add_argument('-i', '--input', help='input JSON file', required=True)
-    parser.add_argument('-o', '--output', help='ouput JSON file', required=True)
+    parser.add_argument('-o', '--output', help='out JSON file', required=True)
     return parser.parse_args()
 
 
@@ -29,16 +30,18 @@ def calculate_additional_fields(data):
     for value in data.values():
         try:
             logger.debug(f"record num: {record_num}")
-            rental_start = datetime.datetime.strptime(value['rental_start'], '%m/%d/%y')
+            rental_start = datetime.datetime.strptime(value['rental_start'],
+                                                      '%m/%d/%y')
             if (rental_start == ''):
-                logger.warning("rental start is not specified! Using today's date")
+                logger.warning("rental start not present! Using today's date")
                 year = datetime.datetime.now().year
                 month = datetime.datetime.now().month
                 day = datetime.datetime.now().day
                 value['rental_start'] = "{0}/{1}/{2}".format(month, day, year)
-            rental_end = datetime.datetime.strptime(value['rental_end'], '%m/%d/%y')
+            rental_end = datetime.datetime.strptime(value['rental_end'],
+                                                    '%m/%d/%y')
             if (rental_end == ''):
-                logger.warning("rental end is not specified! Using today's date")
+                logger.warning("rental end not present! Using today's date")
                 year = datetime.datetime.now().year
                 month = datetime.datetime.now().month
                 day = datetime.datetime.now().day
