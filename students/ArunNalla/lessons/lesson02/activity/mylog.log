@@ -1,0 +1,4 @@
+2019-01-21 18:45:35,243 class_activity.py:24  WARNING The value of i is 50.
+2019-01-21 18:45:35,243 class_activity.py:28  ERROR Tried to divide by zero. Var i was 50. Recovered gracefully.
+2019-01-21 18:50:09,692 class_activity.py:24  WARNING The value of i is 50.
+2019-01-21 18:50:09,693 class_activity.py:28  ERROR Tried to divide by zero. Var i was 50. Recovered gracefully.
