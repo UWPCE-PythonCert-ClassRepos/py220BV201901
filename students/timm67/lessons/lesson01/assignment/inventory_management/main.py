@@ -3,7 +3,7 @@ Launches the command line interface for the inventory management system
 """
 
 import sys
-import inventory_management.market_prices
+from inventory_management import market_prices
 from inventory_management.inventory_class import Inventory
 from inventory_management.furniture_class import Furniture
 from inventory_management.electric_appliances_class import ElectricAppliances
