@@ -49,11 +49,15 @@ def search_customer(customer_id):
     Returns dictionary object with name, lastname, email and phone.
     Returns empty object if customer not found.
     """
-    # success
-    LOGGER.info(f'Customer {customer_id} found successfully.')
-    # failure
-    LOGGER.info(f'Customer {customer_id} not found in database')
-    pass
+    try:
+        found_customer = Customer.get(customer_id=customer_id)
+        LOGGER.info(f'Customer {customer_id} found successfully.')
+
+        return {'name': found_customer.customer_name, 'lastname': found_customer.customer_lastname, 'email':                found_customer.customer_email, 'phone': found_customer.customer_phone_number}
+
+    except DoesNotExist:
+        LOGGER.warn(f'Customer {customer_id} not found in database')
+        return {}
 
 
 def delete_customer(customer_id):
