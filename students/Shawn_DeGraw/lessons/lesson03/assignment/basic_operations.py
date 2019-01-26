@@ -2,11 +2,22 @@
 
 from peewee import *
 import logging
+from hpnortondbmodel import BaseModel, Customer
 
 
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
+DATABASE = SqliteDatabase('hpnorton.db')
+DATABASE.connect()
+DATABASE.execute_sql('PRAGMA foreign_keys = ON;') # needed for sqlite only
+
+def create_sqlite_database():
+    """ Used to create sqlite database on initilization """
+
+    DATABASE.create_tables([
+        Customer
+    ])
 
 def add_customer(customer_id, name, lastname, home_address,
                  phone_number, email_address, status, credit_limit):
@@ -14,8 +25,23 @@ def add_customer(customer_id, name, lastname, home_address,
     Adds a new customer to the customer database
     """
 
-    logger.info(f'Customer {customer_id} successfully added to database.')
-    pass
+    try:
+        with DATABASE.transaction():
+            new_customer = Customer.create(
+                customer_id = customer_id,
+                customer_name = name,
+                customer_lastname = lastname,
+                customer_home_address = home_address,
+                customer_phone_number = phone_number,
+                customer_email = email_address,
+                customer_status = status,
+                customer_credit_limit = credit_limit)
+            new_customer.save()
+
+        LOGGER.info(f'Customer {customer_id} successfully added to database.')
+    except Exception as db_exception:
+        LOGGER.error(f'Customer {customer_id} failed to be added to database.')
+        LOGGER.error(f'Exception: {type(db_exception).__name__}')
 
 
 def search_customer(customer_id):
@@ -24,9 +50,9 @@ def search_customer(customer_id):
     Returns empty object if customer not found.
     """
     # success
-    logger.info(f'Customer {customer_id} found successfully.')
+    LOGGER.info(f'Customer {customer_id} found successfully.')
     # failure
-    logger.info(f'Customer {customer_id} not found in database')
+    LOGGER.info(f'Customer {customer_id} not found in database')
     pass
 
 
@@ -36,9 +62,9 @@ def delete_customer(customer_id):
     """
 
     # success
-    logger.info(f'Customer {customer_id} successfully deleted.')
+    LOGGER.info(f'Customer {customer_id} successfully deleted.')
     # failure
-    logger.info(f'Customer {customer_id} failed deletion.')
+    LOGGER.info(f'Customer {customer_id} failed deletion.')
     pass
 
 
@@ -48,9 +74,9 @@ def update_customer_credit(customer_id, credit_limit):
     """
 
     # success
-    logger.info(f'Customer {customer_id} successfully updated.')
+    LOGGER.info(f'Customer {customer_id} successfully updated.')
     # failure
-    logger.info(f'Customer {customer_id} failed update.')
+    LOGGER.info(f'Customer {customer_id} failed update.')
     pass
 
 
@@ -59,5 +85,5 @@ def list_active_customers():
     Returns the number of active customers.
     """
 
-    logger.info(f'Active customer check in list_active_customers')
+    LOGGER.info(f'Active customer check in list_active_customers')
     pass
