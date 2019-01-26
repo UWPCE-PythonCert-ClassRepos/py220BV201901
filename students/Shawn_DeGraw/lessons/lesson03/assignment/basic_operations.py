@@ -50,7 +50,7 @@ def search_customer(customer_id):
     Returns empty object if customer not found.
     """
     try:
-        found_customer = Customer.get(customer_id=customer_id)
+        found_customer = Customer.get(customer_id == customer_id)
         LOGGER.info(f'Customer {customer_id} found successfully.')
 
         return {'name': found_customer.customer_name, 'lastname': found_customer.customer_lastname, 'email':                found_customer.customer_email, 'phone': found_customer.customer_phone_number}
@@ -65,11 +65,14 @@ def delete_customer(customer_id):
     Deletes a customer from the database.
     """
 
-    # success
-    LOGGER.info(f'Customer {customer_id} successfully deleted.')
-    # failure
-    LOGGER.info(f'Customer {customer_id} failed deletion.')
-    pass
+    try:
+        found_customer = Customer.get(customer_id == customer_id)
+        found_customer.delete_instance()
+
+        LOGGER.info(f'Customer {customer_id} successfully deleted.')
+
+    except DoesNotExist:
+        LOGGER.info(f'Customer {customer_id} failed deletion.')
 
 
 def update_customer_credit(customer_id, credit_limit):
