@@ -2,17 +2,12 @@
 Database models for HP Norton.
 """
 
-import peewee
+from peewee import *
 import logging
 
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-logger.info('Here we define our data (the schema)')
-logger.info('First name and connect to a database (sqlite here)')
-
-logger.info('The next 3 lines of code are the only database specific code')
 
 database = SqliteDatabase('hpnorton.db')
 database.connect()
@@ -26,7 +21,6 @@ class BaseModel(Model):
         database = database
 
 
-
 class Customer(BaseModel):
     """
         This class defines Customer. Contains all customer information
@@ -36,10 +30,11 @@ class Customer(BaseModel):
         phonenumber, email, status, creditlimit
     """
 
-    logger.info('Note how we defined the class')
-
-    logger.info('Specify the fields in our model, their lengths and if mandatory')
-    logger.info('Must be a unique identifier for each person')
-    person_name = CharField(primary_key = True, max_length = 30)
-    lives_in_town = CharField(max_length = 40)
-    nickname = CharField(max_length = 20, null = True)
+    customer_id = IntegerField(primary_key = True, max_length = 5)
+    name = CharField(max_length = 25, null=False)
+    lastname = CharField(max_length = 25, null=False)
+    home_address = CharField(max_length=40, null)
+    phone_number = CharField(max_length=12)
+    email = CharField(max_length=40)
+    status = BooleanField(null=False)
+    credit_limit = IntegerField(max_length=5)
