@@ -66,8 +66,9 @@ def delete_customer(customer_id):
     """
 
     try:
-        found_customer = Customer.get(customer_id == customer_id)
-        found_customer.delete_instance()
+        with DATABASE.transaction():
+            found_customer = Customer.get(customer_id == customer_id)
+            found_customer.delete_instance()
 
         LOGGER.info(f'Customer {customer_id} successfully deleted.')
 
@@ -80,11 +81,17 @@ def update_customer_credit(customer_id, credit_limit):
     Updates customer credit limit.
     """
 
-    # success
-    LOGGER.info(f'Customer {customer_id} successfully updated.')
-    # failure
-    LOGGER.info(f'Customer {customer_id} failed update.')
-    pass
+    try:
+        with DATABASE.transaction():
+            customer_found = Customer.get(customer_id == customer_id)
+            customer_found.customer_credit_limit = credit_limit
+            customer_found.save()
+
+        LOGGER.info(f'Customer {customer_id} successfully updated.')
+
+    except DoesNotExist:
+        LOGGER.info(f'Customer {customer_id} failed update.')
+
 
 
 def list_active_customers():
@@ -93,4 +100,4 @@ def list_active_customers():
     """
 
     LOGGER.info(f'Active customer check in list_active_customers')
-    pass
+    return Customer.select().where(Customer.status == 'active').count()
