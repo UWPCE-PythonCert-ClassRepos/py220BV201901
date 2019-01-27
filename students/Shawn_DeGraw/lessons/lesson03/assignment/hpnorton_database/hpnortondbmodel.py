@@ -26,7 +26,7 @@ class Customer(BaseModel):
         phonenumber, email, status, creditlimit
     """
 
-    customer_id = CharField(primary_key = True)
+    customer_id = CharField(primary_key = True, max_length=5)
     name = CharField(max_length = 25, null=False)
     lastname = CharField(max_length = 25, null=False)
     home_address = CharField(max_length=40)
