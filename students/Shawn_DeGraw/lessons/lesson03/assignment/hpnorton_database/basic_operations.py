@@ -41,13 +41,13 @@ def search_customer(customer_id):
     Returns empty object if customer not found.
     """
     try:
-        found_customer = Customer.get(customer_id == customer_id)
+        found_customer = Customer.get(Customer.customer_id == customer_id)
         LOGGER.info(f'Customer {customer_id} found successfully.')
 
         return {'name': found_customer.name, 'lastname': found_customer.lastname, 'email': found_customer.email, 'phone_number': found_customer.phone_number}
 
     except DoesNotExist:
-        LOGGER.warn(f'Customer {customer_id} not found in database')
+        LOGGER.warning(f'Customer {customer_id} not found in database')
         return {}
 
 
@@ -74,7 +74,7 @@ def update_customer_credit(customer_id, credit_limit):
 
     try:
         with DATABASE.transaction():
-            customer_found = Customer.get(customer_id == customer_id)
+            customer_found = Customer.get(Customer.customer_id == customer_id)
             customer_found.credit_limit = credit_limit
             customer_found.save()
 
@@ -82,7 +82,7 @@ def update_customer_credit(customer_id, credit_limit):
 
     except DoesNotExist:
         LOGGER.info(f'Customer {customer_id} failed update.')
-
+        raise ValueError('NoCustomer')
 
 
 def list_active_customers():
