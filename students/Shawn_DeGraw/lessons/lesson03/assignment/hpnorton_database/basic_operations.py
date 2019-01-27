@@ -2,7 +2,7 @@
 
 from peewee import *
 import logging
-from .hpnortondbmodel import *
+from hpnorton_database.hpnortondbmodel import *
 
 
 logging.basicConfig(level=logging.INFO)
@@ -19,13 +19,13 @@ def add_customer(customer_id, name, lastname, home_address,
         with DATABASE.transaction():
             new_customer = Customer.create(
                 customer_id = customer_id,
-                customer_name = name,
-                customer_lastname = lastname,
-                customer_home_address = home_address,
-                customer_phone_number = phone_number,
-                customer_email = email_address,
-                customer_status = status,
-                customer_credit_limit = credit_limit)
+                name = name,
+                lastname = lastname,
+                home_address = home_address,
+                phone_number = phone_number,
+                email = email_address,
+                status = status,
+                credit_limit = credit_limit)
             new_customer.save()
 
         LOGGER.info(f'Customer {customer_id} successfully added to database.')
@@ -44,7 +44,7 @@ def search_customer(customer_id):
         found_customer = Customer.get(customer_id == customer_id)
         LOGGER.info(f'Customer {customer_id} found successfully.')
 
-        return {'name': found_customer.customer_name, 'lastname': found_customer.customer_lastname, 'email':                found_customer.customer_email, 'phone': found_customer.customer_phone_number}
+        return {'name': found_customer.name, 'lastname': found_customer.lastname, 'email': found_customer.email, 'phone_number': found_customer.phone_number}
 
     except DoesNotExist:
         LOGGER.warn(f'Customer {customer_id} not found in database')
@@ -75,7 +75,7 @@ def update_customer_credit(customer_id, credit_limit):
     try:
         with DATABASE.transaction():
             customer_found = Customer.get(customer_id == customer_id)
-            customer_found.customer_credit_limit = credit_limit
+            customer_found.credit_limit = credit_limit
             customer_found.save()
 
         LOGGER.info(f'Customer {customer_id} successfully updated.')
@@ -91,4 +91,4 @@ def list_active_customers():
     """
 
     LOGGER.info(f'Active customer check in list_active_customers')
-    return Customer.select().where(Customer.customer_status == 'active').count()
+    return Customer.select().where(Customer.status == 'active').count()

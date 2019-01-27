@@ -27,10 +27,10 @@ class Customer(BaseModel):
     """
 
     customer_id = IntegerField(primary_key = True)
-    customer_name = CharField(max_length = 25, null=False)
-    customer_lastname = CharField(max_length = 25, null=False)
-    customer_home_address = CharField(max_length=40)
-    customer_phone_number = CharField(max_length=10)
-    customer_email = CharField(max_length=40)
-    customer_status = CharField(max_length=8, null=False)
-    customer_credit_limit = IntegerField()
+    name = CharField(max_length = 25, null=False)
+    lastname = CharField(max_length = 25, null=False)
+    home_address = CharField(max_length=40)
+    phone_number = CharField(max_length=10)
+    email = CharField(max_length=40)
+    status = CharField(max_length=8, null=False)
+    credit_limit = IntegerField()
