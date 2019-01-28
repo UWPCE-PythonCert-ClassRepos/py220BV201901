@@ -1,0 +1,1225 @@
+guogu@DESKTOP-LPE93KK MINGW64 /c/gitroot/py220BV201901/students/YingGuo/lessons/lesson02/assignment/code (master)
+$ python charges_calc.py  -i source.json -o source.json
+
+guogu@DESKTOP-LPE93KK MINGW64 /c/gitroot/py220BV201901/students/YingGuo/lessons/lesson02/assignment/code (master)
+$ python -m pdb charges_calc.py -i source.json -o source.json
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(3)<module>()
+-> '''
+(Pdb) ll
+  1     '''
+  2     Returns total price paid for individual rentals
+  3  -> '''
+  4     import argparse
+  5     import json
+  6     import datetime
+  7     import math
+  8
+  9
+ 10     def parse_cmd_arguments():
+ 11         parser = argparse.ArgumentParser(description='Process some integers.')
+ 12         parser.add_argument('-i', '--input', help='input JSON file', required=True)
+ 13         parser.add_argument('-o', '--output', help='ouput JSON file', required=True)
+ 14
+ 15         return parser.parse_args()
+ 16
+ 17
+ 18     def load_rentals_file(filename):
+ 19         with open(filename) as file:
+ 20             try:
+ 21                 data = json.load(file)
+ 22             except:
+ 23                 exit(0)
+ 24         return data
+ 25
+ 26     def calculate_additional_fields(data):
+ 27         for value in data.values():
+ 28             try:
+ 29                 rental_start = datetime.datetime.strptime(value['rental_start'], '%m/%d/%y')
+ 30                 rental_end = datetime.datetime.strptime(value['rental_end'], '%m/%d/%y')
+ 31                 value['total_days'] = (rental_end - rental_start).days
+ 32                 value['total_price'] = value['total_days'] * value['price_per_day']
+ 33                 value['sqrt_total_price'] = math.sqrt(value['total_price'])
+ 34                 value['unit_cost'] = value['total_price'] / value['units_rented']
+ 35             except:
+ 36                 exit(0)
+ 37
+ 38         return data
+ 39
+ 40     def save_to_json(filename, data):
+ 41         with open(filename, 'w') as file:
+ 42             json.dump(data, file)
+ 43
+ 44     if __name__ == "__main__":
+ 45
+ 46         args = parse_cmd_arguments()
+ 47         data = load_rentals_file(args.input)
+ 48         data = calculate_additional_fields(data)
+ 49         save_to_json(args.output, data)
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(4)<module>()
+-> import argparse
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(5)<module>()
+-> import json
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(6)<module>()
+-> import datetime
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(7)<module>()
+-> import math
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(10)<module>()
+-> def parse_cmd_arguments():
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(18)<module>()
+-> def load_rentals_file(filename):
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(26)<module>()
+-> def calculate_additional_fields(data):
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(40)<module>()
+-> def save_to_json(filename, data):
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(44)<module>()
+-> if __name__ == "__main__":
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(46)<module>()
+-> args = parse_cmd_arguments()
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(47)<module>()
+-> data = load_rentals_file(args.input)
+(Pdb) pp args.input
+'source.json'
+(Pdb) s
+--Call--
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(18)load_rentals_file()
+-> def load_rentals_file(filename):
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(19)load_rentals_file()
+-> with open(filename) as file:
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(20)load_rentals_file()
+-> try:
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(21)load_rentals_file()
+-> data = json.load(file)
+(Pdb) pp file
+<_io.TextIOWrapper name='source.json' mode='r' encoding='cp1252'>
+(Pdb) n
+json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 5884 column 23 (char 130093)
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(21)load_rentals_file()
+-> data = json.load(file)
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(22)load_rentals_file()
+-> except:
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(23)load_rentals_file()
+-> exit(0)
+(Pdb) ll
+ 18     def load_rentals_file(filename):
+ 19         with open(filename) as file:
+ 20             try:
+ 21                 data = json.load(file)
+ 22             except:
+ 23  ->             exit(0)
+ 24         return data
+(Pdb) n
+SystemExit: 0
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(23)load_rentals_file()
+-> exit(0)
+(Pdb) ll
+ 18     def load_rentals_file(filename):
+ 19         with open(filename) as file:
+ 20             try:
+ 21                 data = json.load(file)
+ 22             except:
+ 23  ->             exit(0)
+ 24         return data
+(Pdb) pp
+*** SyntaxError: unexpected EOF while parsing
+(Pdb) pp data
+*** NameError: name 'data' is not defined
+(Pdb) pp json.load(file)
+*** json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+(Pdb) n
+--Return--
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(23)load_rentals_file()->None
+-> exit(0)
+(Pdb) ll
+ 18     def load_rentals_file(filename):
+ 19         with open(filename) as file:
+ 20             try:
+ 21                 data = json.load(file)
+ 22             except:
+ 23  ->             exit(0)
+ 24         return data
+(Pdb) pp json.load(file)
+*** ValueError: I/O operation on closed file.
+(Pdb) n
+SystemExit: 0
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(47)<module>()
+-> data = load_rentals_file(args.input)
+(Pdb) ll
+  1     '''
+  2     Returns total price paid for individual rentals
+  3     '''
+  4     import argparse
+  5     import json
+  6     import datetime
+  7     import math
+  8
+  9
+ 10     def parse_cmd_arguments():
+ 11         parser = argparse.ArgumentParser(description='Process some integers.')
+ 12         parser.add_argument('-i', '--input', help='input JSON file', required=True)
+ 13         parser.add_argument('-o', '--output', help='ouput JSON file', required=True)
+ 14
+ 15         return parser.parse_args()
+ 16
+ 17
+ 18     def load_rentals_file(filename):
+ 19         with open(filename) as file:
+ 20             try:
+ 21                 data = json.load(file)
+ 22             except:
+ 23                 exit(0)
+ 24         return data
+ 25
+ 26     def calculate_additional_fields(data):
+ 27         for value in data.values():
+ 28             try:
+ 29                 rental_start = datetime.datetime.strptime(value['rental_start'], '%m/%d/%y')
+ 30                 rental_end = datetime.datetime.strptime(value['rental_end'], '%m/%d/%y')
+ 31                 value['total_days'] = (rental_end - rental_start).days
+ 32                 value['total_price'] = value['total_days'] * value['price_per_day']
+ 33                 value['sqrt_total_price'] = math.sqrt(value['total_price'])
+ 34                 value['unit_cost'] = value['total_price'] / value['units_rented']
+ 35             except:
+ 36                 exit(0)
+ 37
+ 38         return data
+ 39
+ 40     def save_to_json(filename, data):
+ 41         with open(filename, 'w') as file:
+ 42             json.dump(data, file)
+ 43
+ 44     if __name__ == "__main__":
+ 45
+ 46         args = parse_cmd_arguments()
+ 47  ->     data = load_rentals_file(args.input)
+ 48         data = calculate_additional_fields(data)
+ 49         save_to_json(args.output, data)
+(Pdb) n
+--Return--
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(47)<module>()->None
+-> data = load_rentals_file(args.input)
+(Pdb) n
+SystemExit: 0
+> <string>(1)<module>()->None
+(Pdb) n
+--Return--
+> <string>(1)<module>()->None
+(Pdb) n
+The program exited via sys.exit(). Exit status: 0
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(3)<module>()
+-> '''
+(Pdb) ll
+  1     '''
+  2     Returns total price paid for individual rentals
+  3  -> '''
+  4     import argparse
+  5     import json
+  6     import datetime
+  7     import math
+  8
+  9
+ 10     def parse_cmd_arguments():
+ 11         parser = argparse.ArgumentParser(description='Process some integers.')
+ 12         parser.add_argument('-i', '--input', help='input JSON file', required=True)
+ 13         parser.add_argument('-o', '--output', help='ouput JSON file', required=True)
+ 14
+ 15         return parser.parse_args()
+ 16
+ 17
+ 18     def load_rentals_file(filename):
+ 19         with open(filename) as file:
+ 20             try:
+ 21                 data = json.load(file)
+ 22             except:
+ 23                 exit(0)
+ 24         return data
+ 25
+ 26     def calculate_additional_fields(data):
+ 27         for value in data.values():
+ 28             try:
+ 29                 rental_start = datetime.datetime.strptime(value['rental_start'], '%m/%d/%y')
+ 30                 rental_end = datetime.datetime.strptime(value['rental_end'], '%m/%d/%y')
+ 31                 value['total_days'] = (rental_end - rental_start).days
+ 32                 value['total_price'] = value['total_days'] * value['price_per_day']
+ 33                 value['sqrt_total_price'] = math.sqrt(value['total_price'])
+ 34                 value['unit_cost'] = value['total_price'] / value['units_rented']
+ 35             except:
+ 36                 exit(0)
+ 37
+ 38         return data
+ 39
+ 40     def save_to_json(filename, data):
+ 41         with open(filename, 'w') as file:
+ 42             json.dump(data, file)
+ 43
+ 44     if __name__ == "__main__":
+ 45
+ 46         args = parse_cmd_arguments()
+ 47         data = load_rentals_file(args.input)
+ 48         data = calculate_additional_fields(data)
+ 49         save_to_json(args.output, data)
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(4)<module>()
+-> import argparse
+(Pdb) quit
+
+
+#second try
+
+guogu@DESKTOP-LPE93KK MINGW64 /c/gitroot/py220BV201901/students/YingGuo/lessons/lesson02/assignment/code (master)
+$ python -m pdb charges_calc.py -i source.json -o source.json
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(3)<module>()
+-> '''
+(Pdb) ll
+  1     '''
+  2     Returns total price paid for individual rentals
+  3  -> '''
+  4     import argparse
+  5     import json
+  6     import datetime
+  7     import math
+  8
+  9
+ 10     def parse_cmd_arguments():
+ 11         parser = argparse.ArgumentParser(description='Process some integers.')
+ 12         parser.add_argument('-i', '--input', help='input JSON file', required=True)
+ 13         parser.add_argument('-o', '--output', help='ouput JSON file', required=True)
+ 14
+ 15         return parser.parse_args()
+ 16
+ 17
+ 18     def load_rentals_file(filename):
+ 19         with open(filename) as file:
+ 20             try:
+ 21                 data = json.load(file)
+ 22             except:
+ 23                 exit(0)
+ 24         return data
+ 25
+ 26     def calculate_additional_fields(data):
+ 27         for value in data.values():
+ 28             try:
+ 29                 rental_start = datetime.datetime.strptime(value['rental_start'], '%m/%d/%y')
+ 30                 rental_end = datetime.datetime.strptime(value['rental_end'], '%m/%d/%y')
+ 31                 value['total_days'] = (rental_end - rental_start).days
+ 32                 value['total_price'] = value['total_days'] * value['price_per_day']
+ 33                 value['sqrt_total_price'] = math.sqrt(value['total_price'])
+ 34                 value['unit_cost'] = value['total_price'] / value['units_rented']
+ 35             except:
+ 36                 exit(0)
+ 37
+ 38         return data
+ 39
+ 40     def save_to_json(filename, data):
+ 41         with open(filename, 'w') as file:
+ 42             json.dump(data, file)
+ 43
+ 44     if __name__ == "__main__":
+ 45
+ 46         args = parse_cmd_arguments()
+ 47         data = load_rentals_file(args.input)
+ 48         data = calculate_additional_fields(data)
+ 49         save_to_json(args.output, data)
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(4)<module>()
+-> import argparse
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(5)<module>()
+-> import json
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(6)<module>()
+-> import datetime
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(7)<module>()
+-> import math
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(10)<module>()
+-> def parse_cmd_arguments():
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(18)<module>()
+-> def load_rentals_file(filename):
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(26)<module>()
+-> def calculate_additional_fields(data):
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(40)<module>()
+-> def save_to_json(filename, data):
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(44)<module>()
+-> if __name__ == "__main__":
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(46)<module>()
+-> args = parse_cmd_arguments()
+(Pdb) ll
+  1     '''
+  2     Returns total price paid for individual rentals
+  3     '''
+  4     import argparse
+  5     import json
+  6     import datetime
+  7     import math
+  8
+  9
+ 10     def parse_cmd_arguments():
+ 11         parser = argparse.ArgumentParser(description='Process some integers.')
+ 12         parser.add_argument('-i', '--input', help='input JSON file', required=True)
+ 13         parser.add_argument('-o', '--output', help='ouput JSON file', required=True)
+ 14
+ 15         return parser.parse_args()
+ 16
+ 17
+ 18     def load_rentals_file(filename):
+ 19         with open(filename) as file:
+ 20             try:
+ 21                 data = json.load(file)
+ 22             except:
+ 23                 exit(0)
+ 24         return data
+ 25
+ 26     def calculate_additional_fields(data):
+ 27         for value in data.values():
+ 28             try:
+ 29                 rental_start = datetime.datetime.strptime(value['rental_start'], '%m/%d/%y')
+ 30                 rental_end = datetime.datetime.strptime(value['rental_end'], '%m/%d/%y')
+ 31                 value['total_days'] = (rental_end - rental_start).days
+ 32                 value['total_price'] = value['total_days'] * value['price_per_day']
+ 33                 value['sqrt_total_price'] = math.sqrt(value['total_price'])
+ 34                 value['unit_cost'] = value['total_price'] / value['units_rented']
+ 35             except:
+ 36                 exit(0)
+ 37
+ 38         return data
+ 39
+ 40     def save_to_json(filename, data):
+ 41         with open(filename, 'w') as file:
+ 42             json.dump(data, file)
+ 43
+ 44     if __name__ == "__main__":
+ 45
+ 46  ->     args = parse_cmd_arguments()
+ 47         data = load_rentals_file(args.input)
+ 48         data = calculate_additional_fields(data)
+ 49         save_to_json(args.output, data)
+(Pdb) s
+--Call--
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(10)parse_cmd_arguments()
+-> def parse_cmd_arguments():
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(11)parse_cmd_arguments()
+-> parser = argparse.ArgumentParser(description='Process some integers.')
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(12)parse_cmd_arguments()
+-> parser.add_argument('-i', '--input', help='input JSON file', required=True)
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(13)parse_cmd_arguments()
+-> parser.add_argument('-o', '--output', help='ouput JSON file', required=True)
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(15)parse_cmd_arguments()
+-> return parser.parse_args()
+(Pdb) n
+--Return--
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(15)parse_cmd_arguments()->Namespace(inp...'source.json')
+-> return parser.parse_args()
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(47)<module>()
+-> data = load_rentals_file(args.input)
+(Pdb) pp data
+*** NameError: name 'data' is not defined
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(48)<module>()
+-> data = calculate_additional_fields(data)
+(Pdb) pp data
+{'RNT001': {'price_per_day': 31,
+            'product_code': 'PRD80',
+            'rental_end': '3/22/17',
+            'rental_start': '6/12/17',
+            'units_rented': 8},
+ 'RNT002': {'price_per_day': 16,
+            'product_code': 'PRD11',
+            'rental_end': '9/30/18',
+            'rental_start': '7/20/16',
+            'units_rented': 1},
+ 'RNT003': {'price_per_day': 40,
+            'product_code': 'PRD22',
+            'rental_end': '6/4/17',
+            'rental_start': '2/1/16',
+            'units_rented': 4},
+ 'RNT004': {'price_per_day': 40,
+            'product_code': 'PRD86',
+            'rental_end': '12/7/17',
+            'rental_start': '8/14/16',
+            'units_rented': 6},
+ 'RNT005': {'price_per_day': 7,
+            'product_code': 'PRD70',
+            'rental_end': '11/23/18',
+            'rental_start': '7/12/17',
+            'units_rented': 8},
+ 'RNT006': {'price_per_day': 20,
+            'product_code': 'PRD51',
+            'rental_end': '7/29/18',
+            'rental_start': '8/26/18',
+            'units_rented': 8},
+ 'RNT007': {'price_per_day': 16,
+            'product_code': 'PRD42',
+            'rental_end': '5/31/17',
+            'rental_start': '7/10/17',
+            'units_rented': 1},
+ 'RNT008': {'price_per_day': 12,
+            'product_code': 'PRD32',
+            'rental_end': '7/4/18',
+            'rental_start': '10/25/18',
+            'units_rented': 3},
+ 'RNT009': {'price_per_day': 6,
+            'product_code': 'PRD13',
+            'rental_end': '7/28/16',
+            'rental_start': '11/3/18',
+            'units_rented': 9},
+ 'RNT010': {'price_per_day': 27,
+            'product_code': 'PRD22',
+            'rental_end': '8/27/17',
+            'rental_start': '3/15/18',
+            'units_rented': 6},
+ 'RNT011': {'price_per_day': 26,
+            'product_code': 'PRD17',
+            'rental_end': '4/29/16',
+            'rental_start': '9/29/17',
+            'units_rented': 7},
+ 'RNT012': {'price_per_day': 18,
+            'product_code': 'PRD55',
+            'rental_end': '1/15/16',
+            'rental_start': '10/24/17',
+            'units_rented': 4},
+ 'RNT013': {'price_per_day': 10,
+            'product_code': 'PRD81',
+            'rental_end': '8/31/17',
+            'rental_start': '2/3/17',
+            'units_rented': 10},
+ 'RNT014': {'price_per_day': 37,
+            'product_code': 'PRD0',
+            'rental_end': '7/30/16',
+            'rental_start': '1/30/17',
+            'units_rented': 7},
+ 'RNT015': {'price_per_day': 29,
+            'product_code': 'PRD82',
+            'rental_end': '6/22/18',
+            'rental_start': '5/2/17',
+            'units_rented': 10},
+ 'RNT016': {'price_per_day': 11,
+            'product_code': 'PRD52',
+            'rental_end': '2/5/16',
+            'rental_start': '6/18/18',
+            'units_rented': 10},
+ 'RNT017': {'price_per_day': 36,
+            'product_code': 'PRD5',
+            'rental_end': '4/11/18',
+            'rental_start': '4/28/18',
+            'units_rented': 10},
+ 'RNT018': {'price_per_day': 40,
+            'product_code': 'PRD59',
+            'rental_end': '1/13/16',
+            'rental_start': '8/16/16',
+            'units_rented': 9},
+ 'RNT019': {'price_per_day': 39,
+            'product_code': 'PRD6',
+            'rental_end': '5/10/16',
+            'rental_start': '12/16/17',
+            'units_rented': 8},
+ 'RNT020': {'price_per_day': 33,
+            'product_code': 'PRD2',
+            'rental_end': '1/12/16',
+            'rental_start': '6/20/18',
+            'units_rented': 9},
+ 'RNT021': {'price_per_day': 33,
+            'product_code': 'PRD97',
+            'rental_end': '2/9/16',
+            'rental_start': '8/31/17',
+            'units_rented': 3},
+ 'RNT022': {'price_per_day': 14,
+            'product_code': 'PRD66',
+            'rental_end': '11/1/17',
+            'rental_start': '10/3/16',
+            'units_rented': 9},
+ 'RNT023': {'price_per_day': 20,
+            'product_code': 'PRD14',
+            'rental_end': '11/16/18',
+            'rental_start': '9/13/16',
+            'units_rented': 9},
+ 'RNT024': {'price_per_day': 20,
+            'product_code': 'PRD78',
+            'rental_end': '11/25/18',
+            'rental_start': '7/14/17',
+            'units_rented': 3},
+ 'RNT025': {'price_per_day': 26,
+            'product_code': 'PRD28',
+            'rental_end': '5/28/16',
+            'rental_start': '3/2/18',
+            'units_rented': 5},
+ 'RNT026': {'price_per_day': 24,
+            'product_code': 'PRD40',
+            'rental_end': '4/21/16',
+            'rental_start': '3/27/18',
+            'units_rented': 6},
+ 'RNT027': {'price_per_day': 27,
+            'product_code': 'PRD11',
+            'rental_end': '8/3/16',
+            'rental_start': '3/28/16',
+            'units_rented': 2},
+ 'RNT028': {'price_per_day': 17,
+            'product_code': 'PRD63',
+            'rental_end': '5/6/17',
+            'rental_start': '7/6/18',
+            'units_rented': 10},
+ 'RNT029': {'price_per_day': 10,
+            'product_code': 'PRD77',
+            'rental_end': '5/3/18',
+            'rental_start': '9/5/16',
+            'units_rented': 5},
+ 'RNT030': {'price_per_day': 31,
+            'product_code': 'PRD43',
+            'rental_end': '4/18/17',
+            'rental_start': '7/1/17',
+            'units_rented': 4},
+ 'RNT031': {'price_per_day': 27,
+            'product_code': 'PRD51',
+            'rental_end': '4/13/17',
+            'rental_start': '4/18/18',
+            'units_rented': 10},
+ 'RNT032': {'price_per_day': 34,
+            'product_code': 'PRD97',
+            'rental_end': '7/18/16',
+            'rental_start': '7/2/16',
+            'units_rented': 9},
+ 'RNT033': {'price_per_day': 8,
+            'product_code': 'PRD0',
+            'rental_end': '3/28/17',
+            'rental_start': '2/5/17',
+            'units_rented': 6},
+ 'RNT034': {'price_per_day': 36,
+            'product_code': 'PRD72',
+            'rental_end': '4/3/16',
+            'rental_start': '10/11/17',
+            'units_rented': 9},
+ 'RNT035': {'price_per_day': 20,
+            'product_code': 'PRD19',
+            'rental_end': '11/4/17',
+            'rental_start': '9/15/16',
+            'units_rented': 7},
+ 'RNT036': {'price_per_day': 14,
+            'product_code': 'PRD94',
+            'rental_end': '1/9/18',
+            'rental_start': '10/16/17',
+            'units_rented': 2},
+ 'RNT037': {'price_per_day': 7,
+            'product_code': 'PRD6',
+            'rental_end': '9/13/18',
+            'rental_start': '3/20/18',
+            'units_rented': 8},
+ 'RNT038': {'price_per_day': 18,
+            'product_code': 'PRD5',
+            'rental_end': '6/24/17',
+            'rental_start': '2/16/17',
+            'units_rented': 4},
+ 'RNT039': {'price_per_day': 17,
+            'product_code': 'PRD61',
+            'rental_end': '7/24/16',
+            'rental_start': '7/24/16',
+            'units_rented': 1},
+ 'RNT040': {'price_per_day': 23,
+            'product_code': 'PRD51',
+            'rental_end': '12/30/16',
+            'rental_start': '12/1/17',
+            'units_rented': 1},
+ 'RNT041': {'price_per_day': 14,
+            'product_code': 'PRD59',
+            'rental_end': '3/30/17',
+            'rental_start': '2/19/18',
+            'units_rented': 4},
+ 'RNT042': {'price_per_day': 11,
+            'product_code': 'PRD18',
+            'rental_end': '10/19/17',
+            'rental_start': '7/27/17',
+            'units_rented': 10},
+ 'RNT043': {'price_per_day': 27,
+            'product_code': 'PRD68',
+            'rental_end': '7/5/18',
+            'rental_start': '4/9/17',
+            'units_rented': 2},
+ 'RNT044': {'price_per_day': 15,
+            'product_code': 'PRD43',
+            'rental_end': '12/19/16',
+            'rental_start': '9/4/18',
+            'units_rented': 1},
+ 'RNT045': {'price_per_day': 33,
+            'product_code': 'PRD62',
+            'rental_end': '11/12/18',
+            'rental_start': '12/19/18',
+            'units_rented': 3},
+ 'RNT046': {'price_per_day': 34,
+            'product_code': 'PRD46',
+            'rental_end': '1/8/18',
+            'rental_start': '10/15/18',
+            'units_rented': 5},
+ 'RNT047': {'price_per_day': 12,
+            'product_code': 'PRD52',
+            'rental_end': '6/24/16',
+            'rental_start': '8/3/18',
+            'units_rented': 2},
+ 'RNT048': {'price_per_day': 36,
+            'product_code': 'PRD32',
+            'rental_end': '10/28/16',
+            'rental_start': '9/5/17',
+            'units_rented': 5},
+ 'RNT049': {'price_per_day': 14,
+            'product_code': 'PRD77',
+            'rental_end': '3/14/18',
+            'rental_start': '1/9/18',
+            'units_rented': 4},
+ 'RNT050': {'price_per_day': 34,
+            'product_code': 'PRD6',
+            'rental_end': '6/30/17',
+            'rental_start': '12/6/18',
+            'units_rented': 8},
+ 'RNT051': {'price_per_day': 33,
+            'product_code': 'PRD45',
+            'rental_end': '7/19/17',
+            'rental_start': '2/18/16',
+            'units_rented': 6},
+ 'RNT052': {'price_per_day': 9,
+            'product_code': 'PRD53',
+            'rental_end': '3/13/17',
+            'rental_start': '10/30/16',
+            'units_rented': 7},
+ 'RNT053': {'price_per_day': 10,
+            'product_code': 'PRD17',
+            'rental_end': '9/20/17',
+            'rental_start': '12/12/16',
+            'units_rented': 7},
+ 'RNT054': {'price_per_day': 6,
+            'product_code': 'PRD62',
+            'rental_end': '12/21/17',
+            'rental_start': '12/31/16',
+            'units_rented': 1},
+ 'RNT055': {'price_per_day': 33,
+            'product_code': 'PRD16',
+            'rental_end': '9/14/18',
+            'rental_start': '2/4/18',
+            'units_rented': 6},
+ 'RNT056': {'price_per_day': 40,
+            'product_code': 'PRD43',
+            'rental_end': '2/27/16',
+            'rental_start': '4/12/18',
+            'units_rented': 9},
+ 'RNT057': {'price_per_day': 23,
+            'product_code': 'PRD58',
+            'rental_end': '9/17/18',
+            'rental_start': '9/23/17',
+            'units_rented': 4},
+ 'RNT058': {'price_per_day': 28,
+            'product_code': 'PRD35',
+            'rental_end': '1/25/17',
+            'rental_start': '7/14/17',
+            'units_rented': 8},
+ 'RNT059': {'price_per_day': 7,
+            'product_code': 'PRD9',
+            'rental_end': '10/11/16',
+            'rental_start': '3/26/16',
+            'units_rented': 8},
+ 'RNT060': {'price_per_day': 29,
+            'product_code': 'PRD84',
+            'rental_end': '1/18/16',
+            'rental_start': '2/15/16',
+            'units_rented': 8},
+ 'RNT061': {'price_per_day': 24,
+            'product_code': 'PRD35',
+            'rental_end': '2/28/17',
+            'rental_start': '2/12/18',
+            'units_rented': 8},
+ 'RNT062': {'price_per_day': 12,
+            'product_code': 'PRD29',
+            'rental_end': '6/3/18',
+            'rental_start': '8/25/18',
+            'units_rented': 3},
+ 'RNT063': {'price_per_day': 35,
+            'product_code': 'PRD47',
+            'rental_end': '5/18/18',
+            'rental_start': '1/11/17',
+            'units_rented': 4},
+ 'RNT064': {'price_per_day': 23,
+            'product_code': 'PRD83',
+            'rental_end': '6/28/17',
+            'rental_start': '2/24/17',
+            'units_rented': 3},
+ 'RNT065': {'price_per_day': 11,
+            'product_code': 'PRD61',
+            'rental_end': '12/12/16',
+            'rental_start': '10/11/18',
+            'units_rented': 1},
+ 'RNT066': {'price_per_day': 39,
+            'product_code': 'PRD74',
+            'rental_end': '11/12/17',
+            'rental_start': '2/28/16',
+            'units_rented': 10},
+ 'RNT067': {'price_per_day': 31,
+            'product_code': 'PRD29',
+            'rental_end': '10/18/17',
+            'rental_start': '1/18/18',
+            'units_rented': 5},
+ 'RNT068': {'price_per_day': 38,
+            'product_code': 'PRD71',
+            'rental_end': '5/20/16',
+            'rental_start': '3/28/16',
+            'units_rented': 5},
+ 'RNT069': {'price_per_day': 27,
+            'product_code': 'PRD38',
+            'rental_end': '2/17/17',
+            'rental_start': '10/21/16',
+            'units_rented': 9},
+ 'RNT070': {'price_per_day': 13,
+            'product_code': 'PRD82',
+            'rental_end': '10/21/18',
+            'rental_start': '10/24/17',
+            'units_rented': 3},
+ 'RNT071': {'price_per_day': 6,
+            'product_code': 'PRD38',
+            'rental_end': '5/25/16',
+            'rental_start': '10/5/16',
+            'units_rented': 9},
+ 'RNT072': {'price_per_day': 32,
+            'product_code': 'PRD53',
+            'rental_end': '6/19/18',
+            'rental_start': '10/6/16',
+            'units_rented': 8},
+ 'RNT073': {'price_per_day': 23,
+            'product_code': 'PRD37',
+            'rental_end': '9/8/18',
+            'rental_start': '4/3/18',
+            'units_rented': 3},
+ 'RNT074': {'price_per_day': 22,
+            'product_code': 'PRD33',
+            'rental_end': '7/14/17',
+            'rental_start': '9/9/17',
+            'units_rented': 9},
+ 'RNT075': {'price_per_day': 25,
+            'product_code': 'PRD2',
+            'rental_end': '11/13/18',
+            'rental_start': '4/25/16',
+            'units_rented': 8},
+ 'RNT076': {'price_per_day': 20,
+            'product_code': 'PRD64',
+            'rental_end': '5/12/16',
+            'rental_start': '6/6/18',
+            'units_rented': 4},
+ 'RNT077': {'price_per_day': 14,
+            'product_code': 'PRD6',
+            'rental_end': '11/19/16',
+            'rental_start': '8/15/18',
+            'units_rented': 8},
+ 'RNT078': {'price_per_day': 14,
+            'product_code': 'PRD72',
+            'rental_end': '11/1/17',
+            'rental_start': '1/6/17',
+            'units_rented': 9},
+ 'RNT079': {'price_per_day': 21,
+            'product_code': 'PRD85',
+            'rental_end': '1/27/18',
+            'rental_start': '11/27/18',
+            'units_rented': 1},
+ 'RNT080': {'price_per_day': 21,
+            'product_code': 'PRD8',
+            'rental_end': '4/18/18',
+            'rental_start': '6/27/17',
+            'units_rented': 10},
+ 'RNT081': {'price_per_day': 17,
+            'product_code': 'PRD52',
+            'rental_end': '12/9/18',
+            'rental_start': '2/8/18',
+            'units_rented': 7},
+ 'RNT082': {'price_per_day': 24,
+            'product_code': 'PRD2',
+            'rental_end': '11/16/17',
+            'rental_start': '10/3/16',
+            'units_rented': 2},
+ 'RNT083': {'price_per_day': 17,
+            'product_code': 'PRD70',
+            'rental_end': '2/6/18',
+            'rental_start': '9/9/17',
+            'units_rented': 1},
+ 'RNT084': {'price_per_day': 16,
+            'product_code': 'PRD75',
+            'rental_end': '4/29/16',
+            'rental_start': '5/13/17',
+            'units_rented': 6},
+ 'RNT085': {'price_per_day': 21,
+            'product_code': 'PRD16',
+            'rental_end': '3/20/18',
+            'rental_start': '2/21/18',
+            'units_rented': 6},
+ 'RNT086': {'price_per_day': 40,
+            'product_code': 'PRD87',
+            'rental_end': '3/20/18',
+            'rental_start': '12/3/18',
+            'units_rented': 6},
+ 'RNT087': {'price_per_day': 37,
+            'product_code': 'PRD0',
+            'rental_end': '6/18/16',
+            'rental_start': '8/10/16',
+            'units_rented': 2},
+ 'RNT088': {'price_per_day': 20,
+            'product_code': 'PRD84',
+            'rental_end': '2/25/17',
+            'rental_start': '6/9/16',
+            'units_rented': 9},
+ 'RNT089': {'price_per_day': 20,
+            'product_code': 'PRD58',
+            'rental_end': '8/15/18',
+            'rental_start': '11/5/18',
+            'units_rented': 5},
+ 'RNT090': {'price_per_day': 10,
+            'product_code': 'PRD18',
+            'rental_end': '8/19/18',
+            'rental_start': '1/14/17',
+            'units_rented': 10},
+ 'RNT091': {'price_per_day': 5,
+            'product_code': 'PRD46',
+            'rental_end': '10/25/17',
+            'rental_start': '6/27/17',
+            'units_rented': 7},
+ 'RNT092': {'price_per_day': 18,
+            'product_code': 'PRD6',
+            'rental_end': '5/23/16',
+            'rental_start': '3/10/17',
+            'units_rented': 10},
+ 'RNT093': {'price_per_day': 33,
+            'product_code': 'PRD64',
+            'rental_end': '11/19/18',
+            'rental_start': '4/2/16',
+            'units_rented': 2},
+ 'RNT094': {'price_per_day': 19,
+            'product_code': 'PRD28',
+            'rental_end': '8/24/16',
+            'rental_start': '8/22/16',
+            'units_rented': 3},
+ 'RNT095': {'price_per_day': 6,
+            'product_code': 'PRD83',
+            'rental_end': '7/23/17',
+            'rental_start': '8/5/18',
+            'units_rented': 6},
+ 'RNT096': {'price_per_day': 12,
+            'product_code': 'PRD97',
+            'rental_end': '7/9/16',
+            'rental_start': '2/6/16',
+            'units_rented': 1},
+ 'RNT097': {'price_per_day': 29,
+            'product_code': 'PRD36',
+            'rental_end': '8/29/16',
+            'rental_start': '1/11/17',
+            'units_rented': 7},
+ 'RNT098': {'price_per_day': 19,
+            'product_code': 'PRD5',
+            'rental_end': '2/11/18',
+            'rental_start': '1/28/17',
+            'units_rented': 7},
+ 'RNT099': {'price_per_day': 18,
+            'product_code': 'PRD42',
+            'rental_end': '10/21/16',
+            'rental_start': '11/23/18',
+            'units_rented': 1},
+ 'RNT100': {'price_per_day': 10,
+            'product_code': 'PRD66',
+            'rental_end': '5/21/16',
+            'rental_start': '6/16/18',
+            'units_rented': 6},
+ 'RNT101': {'price_per_day': 9,
+            'product_code': 'PRD42',
+            'rental_end': '9/20/17',
+            'rental_start': '12/3/18',
+            'units_rented': 9},
+ 'RNT102': {'price_per_day': 34,
+            'product_code': 'PRD68',
+            'rental_end': '12/8/16',
+            'rental_start': '7/17/17',
+            'units_rented': 7},
+ 'RNT103': {'price_per_day': 20,
+            'product_code': 'PRD76',
+            'rental_end': '2/18/16',
+            'rental_start': '1/24/17',
+            'units_rented': 6},
+ 'RNT104': {'price_per_day': 31,
+            'product_code': 'PRD98',
+            'rental_end': '8/30/16',
+            'rental_start': '12/20/17',
+            'units_rented': 1},
+ 'RNT105': {'price_per_day': 32,
+            'product_code': 'PRD3',
+            'rental_end': '2/20/16',
+            'rental_start': '12/29/17',
+            'units_rented': 4},
+ 'RNT106': {'price_per_day': 35,
+            'product_code': 'PRD80',
+            'rental_end': '1/1/18',
+            'rental_start': '3/14/18',
+            'units_rented': 7},
+ 'RNT107': {'price_per_day': 11,
+            'product_code': 'PRD84',
+            'rental_end': '6/4/16',
+            'rental_start': '5/30/17',
+            'units_rented': 3},
+ 'RNT108': {'price_per_day': 26,
+            'product_code': 'PRD44',
+            'rental_end': '3/15/17',
+            'rental_start': '6/5/16',
+            'units_rented': 1},
+ 'RNT109': {'price_per_day': 30,
+            'product_code': 'PRD88',
+            'rental_end': '1/9/17',
+            'rental_start': '6/26/18',
+            'units_rented': 2},
+ 'RNT110': {'price_per_day': 33,
+            'product_code': 'PRD42',
+            'rental_end': '7/14/18',
+            'rental_start': '10/25/16',
+            'units_rented': 2},
+ 'RNT111': {'price_per_day': 5,
+            'product_code': 'PRD10',
+            'rental_end': '11/10/17',
+            'rental_start': '9/4/16',
+            'units_rented': 7},
+ 'RNT112': {'price_per_day': 20,
+            'product_code': 'PRD99',
+            'rental_end': '9/1/16',
+            'rental_start': '7/11/16',
+            'units_rented': 10},
+ 'RNT113': {'price_per_day': 6,
+            'product_code': 'PRD65',
+            'rental_end': '11/6/18',
+            'rental_start': '10/19/18',
+            'units_rented': 2},
+ 'RNT114': {'price_per_day': 14,
+            'product_code': 'PRD89',
+            'rental_end': '1/9/16',
+            'rental_start': '6/6/17',
+            'units_rented': 10},
+ 'RNT115': {'price_per_day': 8,
+            'product_code': 'PRD22',
+            'rental_end': '2/3/16',
+            'rental_start': '5/11/18',
+            'units_rented': 2},
+ 'RNT116': {'price_per_day': 8,
+            'product_code': 'PRD74',
+            'rental_end': '8/4/16',
+            'rental_start': '4/14/17',
+            'units_rented': 1},
+ 'RNT117': {'price_per_day': 29,
+            'product_code': 'PRD11',
+            'rental_end': '12/23/18',
+            'rental_start': '6/12/18',
+            'units_rented': 9},
+ 'RNT118': {'price_per_day': 23,
+            'product_code': 'PRD11',
+            'rental_end': '6/4/17',
+            'rental_start': '7/23/18',
+            'units_rented': 10},
+ 'RNT119': {'price_per_day': 28,
+            'product_code': 'PRD58',
+            'rental_end': '12/18/17',
+            'rental_start': '7/19/18',
+            'units_rented': 10},
+ 'RNT120': {'price_per_day': 6,
+            'product_code': 'PRD83',
+            'rental_end': '8/1/16',
+            'rental_start': '1/3/17',
+            'units_rented': 8},
+ 'RNT121': {'price_per_day': 11,
+            'product_code': 'PRD39',
+            'rental_end': '2/25/17',
+            'rental_start': '11/30/18',
+            'units_rented': 2},
+            'rental_end': '1/29/18',
+            'rental_start': '4/25/16',
+            'units_rented': 1},
+ 'RNT998': {'price_per_day': 30,
+            'product_code': 'PRD73',
+            'rental_end': '4/14/16',
+            'rental_start': '9/2/18',
+            'units_rented': 7},
+ 'RNT999': {'price_per_day': 36,
+            'product_code': 'PRD69',
+            'rental_end': '10/2/16',
+            'rental_start': '10/12/18',
+            'units_rented': 8}}
+(Pdb) ll
+  1     '''
+  2     Returns total price paid for individual rentals
+  3     '''
+  4     import argparse
+  5     import json
+  6     import datetime
+  7     import math
+  8
+  9
+ 10     def parse_cmd_arguments():
+ 11         parser = argparse.ArgumentParser(description='Process some integers.')
+ 12         parser.add_argument('-i', '--input', help='input JSON file', required=True)
+ 13         parser.add_argument('-o', '--output', help='ouput JSON file', required=True)
+ 14
+ 15         return parser.parse_args()
+ 16
+ 17
+ 18     def load_rentals_file(filename):
+ 19         with open(filename) as file:
+ 20             try:
+ 21                 data = json.load(file)
+ 22             except:
+ 23                 exit(0)
+ 24         return data
+ 25
+ 26     def calculate_additional_fields(data):
+ 27         for value in data.values():
+ 28             try:
+ 29                 rental_start = datetime.datetime.strptime(value['rental_start'], '%m/%d/%y')
+ 30                 rental_end = datetime.datetime.strptime(value['rental_end'], '%m/%d/%y')
+ 31                 value['total_days'] = (rental_end - rental_start).days
+ 32                 value['total_price'] = value['total_days'] * value['price_per_day']
+ 33                 value['sqrt_total_price'] = math.sqrt(value['total_price'])
+ 34                 value['unit_cost'] = value['total_price'] / value['units_rented']
+ 35             except:
+ 36                 exit(0)
+ 37
+ 38         return data
+ 39
+ 40     def save_to_json(filename, data):
+ 41         with open(filename, 'w') as file:
+ 42             json.dump(data, file)
+ 43
+ 44     if __name__ == "__main__":
+ 45
+ 46         args = parse_cmd_arguments()
+ 47         data = load_rentals_file(args.input)
+ 48  ->     data = calculate_additional_fields(data)
+ 49         save_to_json(args.output, data)
+(Pdb) s
+--Call--
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(26)calculate_additional_fields()
+-> def calculate_additional_fields(data):
+(Pdb) ll
+ 26  -> def calculate_additional_fields(data):
+ 27         for value in data.values():
+ 28             try:
+ 29                 rental_start = datetime.datetime.strptime(value['rental_start'], '%m/%d/%y')
+ 30                 rental_end = datetime.datetime.strptime(value['rental_end'], '%m/%d/%y')
+ 31                 value['total_days'] = (rental_end - rental_start).days
+ 32                 value['total_price'] = value['total_days'] * value['price_per_day']
+ 33                 value['sqrt_total_price'] = math.sqrt(value['total_price'])
+ 34                 value['unit_cost'] = value['total_price'] / value['units_rented']
+ 35             except:
+ 36                 exit(0)
+ 37
+ 38         return data
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(27)calculate_additional_fields()
+-> for value in data.values():
+(Pdb) pp value
+*** NameError: name 'value' is not defined
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(28)calculate_additional_fields()
+-> try:
+(Pdb) ll
+ 26     def calculate_additional_fields(data):
+ 27         for value in data.values():
+ 28  ->         try:
+ 29                 rental_start = datetime.datetime.strptime(value['rental_start'], '%m/%d/%y')
+ 30                 rental_end = datetime.datetime.strptime(value['rental_end'], '%m/%d/%y')
+ 31                 value['total_days'] = (rental_end - rental_start).days
+ 32                 value['total_price'] = value['total_days'] * value['price_per_day']
+ 33                 value['sqrt_total_price'] = math.sqrt(value['total_price'])
+ 34                 value['unit_cost'] = value['total_price'] / value['units_rented']
+ 35             except:
+ 36                 exit(0)
+ 37
+ 38         return data
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(29)calculate_additional_fields()
+-> rental_start = datetime.datetime.strptime(value['rental_start'], '%m/%d/%y')
+(Pdb) pp rental_start
+*** NameError: name 'rental_start' is not defined
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(30)calculate_additional_fields()
+-> rental_end = datetime.datetime.strptime(value['rental_end'], '%m/%d/%y')
+(Pdb) pp rental_start
+datetime.datetime(2017, 6, 12, 0, 0)
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(31)calculate_additional_fields()
+-> value['total_days'] = (rental_end - rental_start).days
+(Pdb) ll
+ 26     def calculate_additional_fields(data):
+ 27         for value in data.values():
+ 28             try:
+ 29                 rental_start = datetime.datetime.strptime(value['rental_start'], '%m/%d/%y')
+ 30                 rental_end = datetime.datetime.strptime(value['rental_end'], '%m/%d/%y')
+ 31  ->             value['total_days'] = (rental_end - rental_start).days
+ 32                 value['total_price'] = value['total_days'] * value['price_per_day']
+ 33                 value['sqrt_total_price'] = math.sqrt(value['total_price'])
+ 34                 value['unit_cost'] = value['total_price'] / value['units_rented']
+ 35             except:
+ 36                 exit(0)
+ 37
+ 38         return data
+(Pdb) pp value['total_days']
+*** KeyError: 'total_days'
+(Pdb) n
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(32)calculate_additional_fields()
+-> value['total_price'] = value['total_days'] * value['price_per_day']
+(Pdb) pp value['total_days']
+-82
+(Pdb) ll
+ 26     def calculate_additional_fields(data):
+ 27         for value in data.values():
+ 28             try:
+ 29                 rental_start = datetime.datetime.strptime(value['rental_start'], '%m/%d/%y')
+ 30                 rental_end = datetime.datetime.strptime(value['rental_end'], '%m/%d/%y')
+ 31                 value['total_days'] = (rental_end - rental_start).days
+ 32  ->             value['total_price'] = value['total_days'] * value['price_per_day']
+ 33                 value['sqrt_total_price'] = math.sqrt(value['total_price'])
+ 34                 value['unit_cost'] = value['total_price'] / value['units_rented']
+ 35             except:
+ 36                 exit(0)
+ 37
+ 38         return data
+(Pdb) b 32
+Breakpoint 1 at c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py:32
+(Pdb) ll
+ 26     def calculate_additional_fields(data):
+ 27         for value in data.values():
+ 28             try:
+ 29                 rental_start = datetime.datetime.strptime(value['rental_start'], '%m/%d/%y')
+ 30                 rental_end = datetime.datetime.strptime(value['rental_end'], '%m/%d/%y')
+ 31                 value['total_days'] = (rental_end - rental_start).days
+ 32 B->             value['total_price'] = value['total_days'] * value['price_per_day']
+ 33                 value['sqrt_total_price'] = math.sqrt(value['total_price'])
+ 34                 value['unit_cost'] = value['total_price'] / value['units_rented']
+ 35             except:
+ 36                 exit(0)
+ 37
+ 38         return data
+(Pdb) condition 1 value['total_days'] < 0
+New condition set for breakpoint 1.
+(Pdb) c
+The program exited via sys.exit(). Exit status: 0
+> c:\gitroot\py220bv201901\students\yingguo\lessons\lesson02\assignment\code\charges_calc.py(3)<module>()
+-> '''
+(Pdb)
