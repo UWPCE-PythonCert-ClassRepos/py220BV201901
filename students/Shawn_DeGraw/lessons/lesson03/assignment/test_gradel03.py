@@ -55,6 +55,14 @@ def _list_active_customers():
         ("593", "Name", "Lastname", "Address", "phone", "email", "active", 99)
     ]
 
+@pytest.fixture
+def _search_name():
+    return [
+        ("298", "Name1", "Lastname1", "Address", "phone", "email", "active", 999),
+        ("297", "Name2", "Lastname2", "Address", "phone", "email", "inactive", 10),
+        ("296", "Name3", "Lastname3", "Address", "phone", "email", "inactive", -99)
+    ]
+
 def test_list_active_customers(_list_active_customers):
     """ actives """
     for customer in _list_active_customers:
@@ -91,6 +99,7 @@ def test_add_customer(_add_customers):
                        customer[6],
                        customer[7]
                        )
+
         added = l.search_customer(customer[0])
         assert added["name"] == customer[1]
         assert added["lastname"] == customer[2]
@@ -107,6 +116,39 @@ def test_add_failure(caplog):
     caplog.clear()
     l.add_customer(None, None, None, None, None, None, None, None)
     assert 'Customer None failed to be added to database' in caplog.text
+
+
+def test_search_name(_search_name):
+    """ search by name """
+
+    for customer in _search_name:
+        l.add_customer(customer[0],
+                       customer[1],
+                       customer[2],
+                       customer[3],
+                       customer[4],
+                       customer[5],
+                       customer[6],
+                       customer[7]
+                      )
+
+    result = l.search_lastname(_search_name[1][2])
+    assert result[0]["customer_id"] == _search_name[1][0]
+    assert result[0]["name"] == _search_name[1][1]
+    assert result[0]["lastname"] == _search_name[1][2]
+    assert result[0]["email"] == _search_name[1][5]
+    assert result[0]["phone_number"] == _search_name[1][4]
+
+    for customer in _search_name:
+        l.delete_customer(customer[0])
+
+
+def test_search_name_fail(caplog):
+    """ search by name failure """
+
+    caplog.clear()
+    l.search_lastname("test")
+    assert 'Searching for customer last name' in caplog.text
 
 
 def test_search_customer(_search_customers):
