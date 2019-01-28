@@ -52,6 +52,26 @@ def search_customer(customer_id):
         return {}
 
 
+def search_lastname(srchlastname):
+    """
+    Returns dictionary object with customer id, name, lastname, email and phone.
+    Returns empty object if customer not found.
+    Query could return more than one object.
+    """
+
+    try:
+        query = Customer.select(Customer.customer_id, Customer.name, Customer.lastname, Customer.email, Customer.phone_number).where(Customer.lastname == srchlastname).dicts()
+
+        LOGGER.info(f'Searching for customer last name.')
+
+        return query
+
+    except Exception as dberror:
+        LOGGER.warning(f'Customer search by last name failed.')
+        LOGGER.warning(f'Exception: {type(dberror).__name__}')
+        return {}
+
+
 def delete_customer(customer_id):
     """
     Deletes a customer from the database.
