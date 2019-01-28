@@ -5,7 +5,6 @@
 Module: test_integration - to test existing code in inventory package.
 """
 from unittest import TestCase
-from unittest.mock import MagicMock
 from inventory_management.inventory_class import Inventory
 from inventory_management.furniture_class import Furniture
 from inventory_management.electric_appliances_class import ElectricAppliances

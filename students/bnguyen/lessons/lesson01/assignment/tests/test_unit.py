@@ -145,8 +145,8 @@ class MainTest(TestCase):
                          1235: {'product_code': 1235,
                                 'description': 'Furniture item.',
                                 'market_price': 33, 'rental_price': 26,
-                                'material': 'Wood', 'size': 'M'}, 
-                        1236: {'product_code': 1236,
+                                'material': 'Wood', 'size': 'M'},
+                         1236: {'product_code': 1236,
                                 'description': 'Electric item.',
                                 'market_price': 33, 'rental_price': 27,
                                 'brand': 'GE', 'voltage': 110}, }
@@ -171,13 +171,13 @@ class MainTest(TestCase):
 
     def test_item_info(self):
         """This is to test the method item_info() in main module."""
-        expected_dict = {1234: {'productCode': 1234,
-                                'description': 'This is a base item.',
-                                'marketPrice': 24, 'rentalPrice': 25},
-                         1235: {'product_code': 1235,
-                                'description': 'This is a furniture item.',
-                                'market_price': 25, 'rental_price': 26,
-                                'material': 'Wood', 'size': 'M'}, }
+        expected_dict = {12344: {'productCode': 12344,
+                                 'description': 'This is a base item.',
+                                 'marketPrice': 24, 'rentalPrice': 25},
+                         12355: {'product_code': 1235,
+                                 'description': 'This is a furniture item.',
+                                 'market_price': 25, 'rental_price': 26,
+                                 'material': 'Wood', 'size': 'M'}, }
         m.FULL_INVENTORY = expected_dict
         # Testing else path
         with patch('builtins.input', return_value=12345):
@@ -189,8 +189,8 @@ class MainTest(TestCase):
 
         # Testing the main path with correct iteim id
         # Item id can be replaced to test more or build a loop
-        with patch('builtins.input', return_value=1234):
-            str_expect = ("productCode:1234\n"
+        with patch('builtins.input', return_value=12344):
+            str_expect = ("productCode:12344\n"
                           "description:This is a base item.\n"
                           "marketPrice:24\n"
                           "rentalPrice:25")
@@ -214,5 +214,3 @@ class MainTest(TestCase):
         m.get_price(1234)
         output = temp_stdout.getvalue().strip()
         self.assertEqual(str_txt, output)
-
-
