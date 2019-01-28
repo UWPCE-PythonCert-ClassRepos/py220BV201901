@@ -1,10 +1,10 @@
 """This is the main menu script for inventory management"""
 # Launches the user interface for the inventory management system
 import sys
-from .market_prices import *
-from .inventory_class import *
-from .furniture_class import *
-from .electric_appliances_class import *
+from inventory_management.market_prices import get_latest_price
+from inventory_management.inventory_class import Inventory
+from inventory_management.furniture_class import Furniture
+from inventory_management.electric_appliances_class import ElectricAppliances
 
 FULL_INVENTORY = {}
 
@@ -37,13 +37,13 @@ def add_new_item():
     item_rental_price = input("Enter item rental price: ")
 
     # Get price from the market prices module
-    item_price = market_prices.get_latest_price(item_code)
+    item_price = get_latest_price(item_code)
 
     is_furniture = input("Is this item a piece of furniture? (Y/N): ")
     if is_furniture.lower() == "y":
         item_material = input("Enter item material: ")
         item_size = input("Enter item size (S,M,L,XL): ")
-        new_item = furniture_class.Furniture(item_code, item_description,\
+        new_item = Furniture(item_code, item_description,\
          item_price, item_rental_price,\
          item_material, item_size)
     else:
@@ -51,11 +51,11 @@ def add_new_item():
         if is_electric_appliance.lower() == "y":
             item_brand = input("Enter item brand: ")
             item_voltage = input("Enter item voltage: ")
-            new_item = electric_appliances_class.ElectricAppliances(item_code, item_description,\
+            new_item = ElectricAppliances(item_code, item_description,\
              item_price, item_rental_price, item_brand, item_voltage)
         else:
-            new_item = inventory_class.Inventory(item_code, item_description,\
-             item_price, item_rental_price)
+            new_item = Inventory(item_code, item_description, item_price, item_rental_price)
+
     FULL_INVENTORY[item_code] = new_item.return_as_dictionary()
     print("New inventory item added")
 
