@@ -1,8 +1,9 @@
 """ Functions to operate on HP Norton database """
 
-from peewee import *
+
 import logging
-from hpnorton_database.hpnortondbmodel import *
+from peewee import *
+from lesson03.assignment.hpnorton_database.hpnortondbmodel import *
 
 
 logging.basicConfig(level=logging.INFO)
@@ -18,19 +19,19 @@ def add_customer(customer_id, name, lastname, home_address,
     try:
         with DATABASE.transaction():
             new_customer = Customer.create(
-                customer_id = customer_id,
-                name = name,
-                lastname = lastname,
-                home_address = home_address,
-                phone_number = phone_number,
-                email = email_address,
-                status = status,
-                credit_limit = credit_limit)
+                customer_id=customer_id,
+                name=name,
+                lastname=lastname,
+                home_address=home_address,
+                phone_number=phone_number,
+                email=email_address,
+                status=status,
+                credit_limit=credit_limit)
             new_customer.save()
 
         LOGGER.info(f'Customer {customer_id} successfully added to database.')
 
-    except Exception as db_exception:
+    except IntegrityError as db_exception:
         LOGGER.error(f'Customer {customer_id} failed to be added to database.')
         LOGGER.error(f'Exception: {type(db_exception).__name__}')
 
@@ -58,13 +59,13 @@ def delete_customer(customer_id):
 
     try:
         with DATABASE.transaction():
-            found_customer = Customer.get(customer_id == customer_id)
+            found_customer = Customer.get(Customer.customer_id == customer_id)
             found_customer.delete_instance()
 
         LOGGER.info(f'Customer {customer_id} successfully deleted.')
 
     except DoesNotExist:
-        LOGGER.info(f'Customer {customer_id} failed deletion.')
+        LOGGER.warning(f'Customer {customer_id} failed deletion.')
 
 
 def update_customer_credit(customer_id, credit_limit):
