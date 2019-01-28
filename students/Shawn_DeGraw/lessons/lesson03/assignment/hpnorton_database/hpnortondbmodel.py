@@ -5,7 +5,7 @@ Database models for HP Norton.
 from peewee import *
 
 
-DATABASE = SqliteDatabase('hpnorton.db')
+DATABASE = SqliteDatabase('customers.db')
 DATABASE.connect()
 DATABASE.execute_sql('PRAGMA foreign_keys = ON;') # needed for sqlite only
 
@@ -27,10 +27,10 @@ class Customer(BaseModel):
     """
 
     customer_id = CharField(primary_key = True, max_length=5)
-    name = CharField(max_length = 25, null=False)
-    lastname = CharField(max_length = 25, null=False)
-    home_address = CharField(max_length=40)
-    phone_number = CharField(max_length=10)
-    email = CharField(max_length=40)
-    status = CharField(max_length=8, null=False)
-    credit_limit = IntegerField()
+    name = CharField(max_length = 25, null=True)
+    lastname = CharField(max_length = 25, null=True)
+    home_address = CharField(max_length=40, null=True)
+    phone_number = CharField(max_length=10, null=True)
+    email = CharField(max_length=40, null=True)
+    status = CharField(max_length=8, null=True)
+    credit_limit = IntegerField(null=True)
