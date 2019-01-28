@@ -1,0 +1,180 @@
+Ran charges_calc.py with no arguments to see what would happen.
+$ python charges_calc.py
+usage: charges_calc.py [-h] -i INPUT -o OUTPUT
+charges_calc.py: error: the following arguments are required: -i/--input, -o/--output
+
+------------------------------------------------------------------------------------
+
+Reran with -h option...
+$ python charges_calc.py -h
+usage: charges_calc.py [-h] -i INPUT -o OUTPUT
+
+Process some integers.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -i INPUT, --input INPUT
+                        input JSON file
+  -o OUTPUT, --output OUTPUT
+                        ouput JSON file
+
+------------------------------------------------------------------------------------
+
+Realized the program expects 2 command line arguments--as the assignment also implies...
+$ python charges_calc.py -i source.json -o output.json
+
+However, this ran with no output messages or output file.
+
+------------------------------------------------------------------------------------
+
+Engaged python debugger to run program...
+$ python -m pdb charges_calc.py -i source.json -o output.json
+
+------------------------------------------------------------------------------------
+
+Walked through with breakpoints and step commands (n and s).  Program fails at line 20
+and therefore hits 'except:' clause at line 21.  Of course the 'exit(0)' is not helpful...
+(Pdb) l
+ 16
+ 17     def load_rentals_file(filename):
+ 18         with open(filename) as file:
+ 19             try:
+ 20                 data = json.load(file)
+ 21 B->         except:
+ 22                 exit(0)
+ 23         return data
+ 24
+ 25     def calculate_additional_fields(data):
+ 26         for value in data.values():
+(Pdb)
+
+------------------------------------------------------------------------------------
+
+Could not figure out why it was failing on the 'try:' clause, so commented out the
+'try/except' code to see if stderr would provide some feedback...
+ 17     def load_rentals_file(filename):
+ 18         with open(filename) as file:
+ 19 #            try:
+ 20                 data = json.load(file)            <--- Running with this line only
+ 21 #            except:
+ 22 #                exit(0)
+ 23         return data
+
+------------------------------------------------------------------------------------
+
+The stderr reveals that the input file has an error on line 5884...
+$ python charges_calc.py -i source.json -o output.json
+Traceback (most recent call last):
+  File "charges_calc.py", line 45, in <module>
+    data = load_rentals_file(args.input)
+  File "charges_calc.py", line 20, in load_rentals_file
+    data = json.load(file)
+  File "C:\Users\tarasim\AppData\Local\Programs\Python\Python37\lib\json\__init__.py", line 296, in load
+    parse_constant=parse_constant, object_pairs_hook=object_pairs_hook, **kw)
+  File "C:\Users\tarasim\AppData\Local\Programs\Python\Python37\lib\json\__init__.py", line 348, in loads
+    return _default_decoder.decode(s)
+  File "C:\Users\tarasim\AppData\Local\Programs\Python\Python37\lib\json\decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "C:\Users\tarasim\AppData\Local\Programs\Python\Python37\lib\json\decoder.py", line 353, in raw_decode
+    obj, end = self.scan_once(s, idx)
+json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 5884 column 23 (char 130093)
+
+------------------------------------------------------------------------------------
+
+The input file has an extra comma on line 5884.  I removed this comma from the input file...
+  "RNT841": {
+    "product_code": "PRD33",
+    "units_rented": 7,,                <--- Removed extra comma here
+    "price_per_day": 19,
+    "rental_start": "5/11/16",
+    "rental_end": "7/27/17"
+  },
+
+------------------------------------------------------------------------------------
+
+The program now runs past the error.  However, it still doesn't create an output file.
+Back in the debugger, I set breakpoints at lines 46 and 47 to see which function had the next issue...
+(Pdb) l
+ 41             json.dump(data, file)
+ 42
+ 43     if __name__ == "__main__":
+ 44         args = parse_cmd_arguments()
+ 45         data = load_rentals_file(args.input)
+ 46 B->     data = calculate_additional_fields(data)
+ 47 B       save_to_json(args.output, data)
+[EOF]
+(Pdb) c
+The program exited via sys.exit(). Exit status: 0
+> c:\gitroot\py220bv201901\students\dave_arasim\lesson02\assignment\code\charges_calc.py(3)<module>()
+-> '''
+(Pdb)
+
+------------------------------------------------------------------------------------
+
+The calculate_additional_fields() also had an 'except:' clause that wasn't helpful,
+so I commented the try/except out to see stderr message...
+def calculate_additional_fields(data):
+    for value in data.values():
+#        try:
+            rental_start = datetime.datetime.strptime(value['rental_start'], '%m/%d/%y')
+            rental_end = datetime.datetime.strptime(value['rental_end'], '%m/%d/%y')
+            value['total_days'] = (rental_end - rental_start).days
+            value['total_price'] = value['total_days'] * value['price_per_day']
+            value['sqrt_total_price'] = math.sqrt(value['total_price'])
+            value['unit_cost'] = value['total_price'] / value['units_rented']
+#        except:
+#            exit(0)
+
+    return data
+
+------------------------------------------------------------------------------------
+
+Now the stderr gives a clue to the problem...
+$ python charges_calc.py -i source.json -o output.json
+Traceback (most recent call last):
+  File "charges_calc.py", line 46, in <module>
+    data = calculate_additional_fields(data)
+  File "charges_calc.py", line 32, in calculate_additional_fields
+    value['sqrt_total_price'] = math.sqrt(value['total_price'])
+ValueError: math domain error
+
+------------------------------------------------------------------------------------
+
+Restored the try/except and ran in debugger to break on line 35.  Pretty printed 'value'
+to see the value being handled that entered the 'except:' clause...
+(Pdb) ll
+ 25     def calculate_additional_fields(data):
+ 26         for value in data.values():
+ 27             try:
+ 28                 rental_start = datetime.datetime.strptime(value['rental_start'], '%m/%d/%y')
+ 29                 rental_end = datetime.datetime.strptime(value['rental_end'], '%m/%d/%y')
+ 30                 value['total_days'] = (rental_end - rental_start).days
+ 31                 value['total_price'] = value['total_days'] * value['price_per_day']
+ 32                 value['sqrt_total_price'] = math.sqrt(value['total_price'])
+ 33                 value['unit_cost'] = value['total_price'] / value['units_rented']
+ 34             except:
+ 35 B->             exit(0)
+ 36
+ 37         return data
+(Pdb) pp rental_start
+datetime.datetime(2017, 6, 12, 0, 0)
+(Pdb) pp value
+{'price_per_day': 31,
+ 'product_code': 'PRD80',
+ 'rental_end': '3/22/17',
+ 'rental_start': '6/12/17',
+ 'total_days': -82,
+ 'total_price': -2542,
+ 'units_rented': 8}
+(Pdb)
+
+------------------------------------------------------------------------------------
+
+Noticed the rental_start date was AFTER the rental_end date.  This would cause a negative number
+delta and therefore the math error would occur.  Decided to check for these conditions:
+- Make sure BOTH dates exist
+- Make sure start date is always before, and is also not equal to end date
+
+Used the logger to handle these conditions as warnings.  Decided to skip the transactions that
+caused these conditions.  The output data file therefore contains these unprocessed transactions.
+The program works as expected for all valid transactions once these conditions are avoided.

@@ -1,0 +1,11 @@
+Tims-MacBook-Pro:activity timm$ python3 recursive.py 66
+2019-01-20 21:27:48.037 | INFO     | __main__:<module>:20 - logger enabled
+2019-01-20 21:27:48.037 | DEBUG    | __main__:my_fun:10 - parameter: 66
+2019-01-20 21:27:48.037 | DEBUG    | __main__:my_fun:10 - parameter: 33
+2019-01-20 21:27:48.037 | DEBUG    | __main__:my_fun:10 - parameter: 16
+2019-01-20 21:27:48.037 | DEBUG    | __main__:my_fun:10 - parameter: 8
+2019-01-20 21:27:48.037 | DEBUG    | __main__:my_fun:10 - parameter: 4
+2019-01-20 21:27:48.037 | DEBUG    | __main__:my_fun:10 - parameter: 2
+2019-01-20 21:27:48.038 | DEBUG    | __main__:my_fun:10 - parameter: 1
+2019-01-20 21:27:48.038 | DEBUG    | __main__:my_fun:10 - parameter: 0
+2019-01-20 21:27:48.038 | DEBUG    | __main__:<module>:22 - True
