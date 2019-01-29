@@ -62,6 +62,10 @@ def search_customer(customer_id):
         DATABASE.close()
         return {}
 
+    except InternalError:
+        LOGGER.error('Database error.')
+        DATABASE.close()
+        return {}
 
 def search_lastname(srchlastname):
     """
@@ -111,6 +115,11 @@ def delete_customer(customer_id):
     except DoesNotExist:
         LOGGER.warning(f'Customer {customer_id} failed deletion.')
 
+    except InternalError:
+        LOGGER.error('Database error.')
+        DATABASE.close()
+        return {}
+
     finally:
         DATABASE.close()
 
@@ -134,6 +143,11 @@ def update_customer_credit(customer_id, credit_limit):
     except DoesNotExist:
         LOGGER.info(f'Customer {customer_id} failed update.')
         raise ValueError('NoCustomer')
+
+    except InternalError:
+        LOGGER.error('Database error.')
+        DATABASE.close()
+        return {}
 
     finally:
         DATABASE.close()
