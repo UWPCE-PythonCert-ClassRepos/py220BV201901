@@ -148,7 +148,7 @@ def test_search_name_fail(caplog):
 
     caplog.clear()
     l.search_lastname("test")
-    assert 'Searching for customer last name' in caplog.text
+    assert 'Found 0 customers for name test' in caplog.text
 
 
 def test_search_customer(_search_customers):
