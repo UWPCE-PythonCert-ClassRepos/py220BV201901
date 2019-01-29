@@ -13,7 +13,17 @@ LOGGER = logging.getLogger(__name__)
 def add_customer(customer_id, name, lastname, home_address,
                  phone_number, email_address, status, credit_limit):
     """
-    Adds a new customer to the customer database
+    Adds a new customer to the customer database:
+
+    Arguments:
+    customer_id - unique id representing customer
+    name - customer first name
+    lastname - customer last name
+    home_address - customer home address
+    phone_number - customer telephone number
+    email_address - customer email
+    status - active or inactive
+    credit_limit - integer value
     """
 
     try:
@@ -118,7 +128,6 @@ def delete_customer(customer_id):
     except InternalError:
         LOGGER.error('Database error.')
         DATABASE.close()
-        return {}
 
     finally:
         DATABASE.close()
@@ -147,7 +156,6 @@ def update_customer_credit(customer_id, credit_limit):
     except InternalError:
         LOGGER.error('Database error.')
         DATABASE.close()
-        return {}
 
     finally:
         DATABASE.close()
