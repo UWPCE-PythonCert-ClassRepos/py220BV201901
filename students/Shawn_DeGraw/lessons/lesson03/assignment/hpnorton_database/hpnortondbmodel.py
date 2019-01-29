@@ -6,8 +6,6 @@ from peewee import *
 
 
 DATABASE = SqliteDatabase('customers.db')
-DATABASE.connect()
-DATABASE.execute_sql('PRAGMA foreign_keys = ON;') # needed for sqlite only
 
 
 class BaseModel(Model):
