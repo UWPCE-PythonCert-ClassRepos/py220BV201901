@@ -2,8 +2,8 @@
 """
 What does this class do?
 """
-#from inventory_class import Inventory #for running main.
 from inventory_management.inventory_class import Inventory
+
 
 class ElectricAppliances(Inventory):
     """
