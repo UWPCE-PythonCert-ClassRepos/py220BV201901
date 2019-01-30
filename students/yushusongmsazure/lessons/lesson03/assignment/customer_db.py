@@ -7,14 +7,9 @@
 
 from peewee import *
 
-DATABASE = SqliteDatabase('customer.db')
+DATABASE = SqliteDatabase('customers.db')
 DATABASE.connect()
 DATABASE.execute_sql('PRAGMA foreign_keys = ON;')
-
-# class BaseModel(Model):
-#     class Meta:
-#         database = database
-
 
 class Customer(Model):
     """
