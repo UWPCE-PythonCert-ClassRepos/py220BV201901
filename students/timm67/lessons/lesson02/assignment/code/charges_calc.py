@@ -37,7 +37,7 @@ def calculate_additional_fields(data):
             rental_start = datetime.datetime.strptime(value['rental_start'],
                                                       '%m/%d/%y')
         except ValueError:
-            if (value['rental_start'] == ''):
+            if (value['rental_start'] == ""):
                 logger.warning("rental start not present! Using today's date")
 
                 value['rental_start'] = "{0}/{1}/{2}".format(month, day, year)
@@ -45,7 +45,7 @@ def calculate_additional_fields(data):
             rental_end = datetime.datetime.strptime(value['rental_end'],
                                                     '%m/%d/%y')
         except ValueError:
-            if (rental_end == ''):
+            if (value['rental_end'] == ""):
                 logger.warning("rental end not present! Using today's date")
                 value['rental_end'] = "{0}/{1}/{2}".format(month, day, year)
         value['total_days'] = abs((rental_end - rental_start).days)
@@ -69,10 +69,13 @@ def save_to_json(filename, data):
 
 
 if __name__ == "__main__":
+    logfilename = "debugger_log_{time}.txt"
     logger.enable('__main__')
+    logger.add(logfilename)
+    logger.info('logger enabled')
     args = parse_cmd_arguments()
+
     print(f"Debug level: {args.level}")
-    logger.add("debugger_log_{time}.txt")
 
     #
     # log levels per the assignment
@@ -84,15 +87,16 @@ if __name__ == "__main__":
 
     if args.level == 0:
         logger.disable('__main__')
+        logger.remove(logfilename)
     elif args.level == 1:
         logger.level = logger.error
-        logger.add("debugger_log_{time}.txt", level=logger.error)
+        logger.add(logfilename, level=logger.error)
     elif args.level == 2:
         logger.level = logger.warning
-        logger.add("debugger_log_{time}.txt", level=logger.warning)
+        logger.add(logfilename, level=logger.warning)
     elif args.level == 3:
         logger.level = logger.debug
-        logger.add("debugger_log_{time}.txt", level=logger.debug)
+        logger.add(logfilename, level=logger.debug)
     else:
         pass
 
