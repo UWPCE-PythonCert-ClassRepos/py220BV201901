@@ -10,11 +10,13 @@ file_handler.setLevel(logging.WARNING)
 file_handler.setFormatter(formatter)
 
 console_handler = logging.StreamHandler()
-console_handler.setLevel(logging.DEBUG)
+#console_handler.setLevel(logging.DEBUG)
+console_handler.setLevel(logging.NOTSET)
 console_handler.setFormatter(formatter)
 
 logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
+#logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.NOTSET)
 logger.addHandler(file_handler)
 logger.addHandler(console_handler)
 
