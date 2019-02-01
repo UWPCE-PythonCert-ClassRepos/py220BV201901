@@ -3,7 +3,7 @@ Launches the command line interface for the inventory management system
 """
 
 import sys
-import inventory_management.market_prices
+from inventory_management import market_prices
 from inventory_management.inventory_class import Inventory
 from inventory_management.furniture_class import Furniture
 from inventory_management.electric_appliances_class import ElectricAppliances
@@ -29,7 +29,7 @@ def main_menu(user_prompt=None):
 
 def get_price(item_code):
     """ get price method """
-    return inventory_management.market_prices.get_latest_price(item_code)
+    return market_prices.get_latest_price(item_code)
 
 
 def add_furniture(item_code, item_description, item_price,
