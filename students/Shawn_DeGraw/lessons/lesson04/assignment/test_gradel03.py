@@ -9,6 +9,7 @@
 import pytest
 import lesson04.assignment.hpnorton_database.basic_operations as l
 
+
 @pytest.fixture
 def _add_customers():
     return [
