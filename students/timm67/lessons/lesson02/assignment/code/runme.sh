@@ -1,2 +1,2 @@
 #!/bin/sh
-python3 charges_calc.py -i source.json -o output.json
+python3 charges_calc.py -i source.json -o output.json -l 4
