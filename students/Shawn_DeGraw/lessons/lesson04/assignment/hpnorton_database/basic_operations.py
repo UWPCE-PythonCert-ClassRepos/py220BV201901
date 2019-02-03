@@ -6,19 +6,26 @@ from peewee import *
 from lesson04.assignment.hpnorton_database.hpnortondbmodel import *
 
 
-#LOG_FORMAT = "%(asctime)s %(filename)s:%(lineno)-3d %(levelname)s %(message)s"
 LOG_FORMAT = "%(asctime)s:%(lineno)-3d %(levelname)s %(message)s"
-LOG_FILE = 'db.log'
+LOG_FILE_DB = 'db.log'
+LOG_FILE_SYSTEM = 'system.log'
 
 FORMATTER = logging.Formatter(LOG_FORMAT)
 
-FILE_HANDLER = logging.FileHandler(LOG_FILE)
-FILE_HANDLER.setFormatter(FORMATTER)
+FILE_HANDLER_DB = logging.FileHandler(LOG_FILE_DB, mode='w')
+FILE_HANDLER_DB.setFormatter(FORMATTER)
 
-LOGGER = logging.getLogger()
-LOGGER.addHandler(FILE_HANDLER)
+FILE_HANDLER_SYSTEM = logging.FileHandler(LOG_FILE_SYSTEM, mode='w')
+FILE_HANDLER_SYSTEM.setFormatter(FORMATTER)
 
-LOGGER.setLevel("INFO")
+DBLOG = logging.getLogger('DBLOG')
+DBLOG.addHandler(FILE_HANDLER_DB)
+DBLOG.setLevel("INFO")
+
+SYSTEMLOG = logging.getLogger('SYSTEMLOG')
+SYSTEMLOG.addHandler(FILE_HANDLER_SYSTEM)
+SYSTEMLOG.setLevel("INFO")
+
 
 def file_to_database(custfile):
     """
@@ -49,27 +56,27 @@ def file_to_database(custfile):
                             credit_limit=int(linelist[7]))
                         new_customer.save()
 
-                    LOGGER.info(f'Added to database: {linelist}')
+                    DBLOG.info(f'Added to database: {linelist}')
 
                 except IntegrityError as db_exception:
-                    LOGGER.error(f'Customer data failed entry {linelist}')
-                    LOGGER.error(f'Exception: {type(db_exception).__name__}')
+                    SYSTEMLOG.error(f'Customer data failed entry {linelist}')
+                    SYSTEMLOG.error(f'Exception: {type(db_exception).__name__}')
 
                 except ValueError as data_error:
-                    LOGGER.error(f'Data error for: {linelist}')
-                    LOGGER.error(f'Exception: {type(data_error).__name__}')
+                    SYSTEMLOG.error(f'Data error for: {linelist}')
+                    SYSTEMLOG.error(f'Exception: {type(data_error).__name__}')
                     continue
 
                 except AttributeError as data_error:
-                    LOGGER.error(f'Data error for: {linelist}')
-                    LOGGER.error(f'Exception: {type(data_error).__name__}')
+                    SYSTEMLOG.error(f'Data error for: {linelist}')
+                    SYSTEMLOG.error(f'Exception: {type(data_error).__name__}')
                     continue
 
     except IOError as db_fileerror:
-        LOGGER.error(f'File exception: {type(db_fileerror).__name__}')
+        SYSTEMLOG.error(f'File exception: {type(db_fileerror).__name__}')
 
     except OperationalError as db_fileerror:
-        LOGGER.error(f'Database exception: {type(db_fileerror).__name__}')
+        SYSTEMLOG.error(f'Database exception: {type(db_fileerror).__name__}')
 
     finally:
         DATABASE.close()
@@ -108,14 +115,14 @@ def add_customer(customer_id, name, lastname, home_address,
                 credit_limit=credit_limit)
             new_customer.save()
 
-        LOGGER.info(f'Customer {customer_id} successfully added to database.')
+        DBLOG.info(f'Customer {customer_id} successfully added to database.')
 
     except IntegrityError as db_exception:
-        LOGGER.error(f'Customer {customer_id} failed to be added to database.')
-        LOGGER.error(f'Exception: {type(db_exception).__name__}')
+        DBLOG.error(f'Customer {customer_id} failed to be added to database.')
+        SYSTEMLOG.error(f'Exception: {type(db_exception).__name__}')
 
     except AttributeError as data_error:
-        LOGGER.error(f'Data error: {type(data_error).__name__}')
+        SYSTEMLOG.error(f'Data error: {type(data_error).__name__}')
 
     finally:
         DATABASE.close()
@@ -131,18 +138,18 @@ def search_customer(customer_id):
         DATABASE.execute_sql('PRAGMA foreign_keys = ON;') # needed for sqlite only
 
         found_customer = Customer.get(Customer.customer_id == customer_id)
-        LOGGER.info(f'Customer {customer_id} found successfully.')
+        DBLOG.info(f'Customer {customer_id} found successfully.')
 
         DATABASE.close()
         return {'name': found_customer.name, 'lastname': found_customer.lastname, 'email': found_customer.email, 'phone_number': found_customer.phone_number}
 
     except DoesNotExist:
-        LOGGER.warning(f'Customer {customer_id} not found in database')
+        DBLOG.warning(f'Customer {customer_id} not found in database')
         DATABASE.close()
         return {}
 
     except InternalError:
-        LOGGER.error('Database error.')
+        SYSTEMLOG.error('Database error.')
         DATABASE.close()
         return {}
 
@@ -164,14 +171,14 @@ def search_lastname(srchlastname):
                                 Customer.phone_number
                                 ).where(Customer.lastname == srchlastname).dicts()
 
-        LOGGER.info(f'Found {sum(1 for i in query)} customers for name {srchlastname}.')
+        DBLOG.info(f'Found {sum(1 for i in query)} customers for name {srchlastname}.')
 
         DATABASE.close()
         return query
 
     except Exception as dberror:
-        LOGGER.warning(f'Customer search by last name failed.')
-        LOGGER.warning(f'Exception: {type(dberror).__name__}')
+        DBLOG.warning(f'Customer search by last name failed.')
+        SYSTEMLOG.warning(f'Exception: {type(dberror).__name__}')
         DATABASE.close()
         return {}
 
@@ -189,13 +196,13 @@ def delete_customer(customer_id):
             found_customer = Customer.get(Customer.customer_id == customer_id)
             found_customer.delete_instance()
 
-        LOGGER.info(f'Customer {customer_id} successfully deleted.')
+        DBLOG.info(f'Customer {customer_id} successfully deleted.')
 
     except DoesNotExist:
-        LOGGER.warning(f'Customer {customer_id} failed deletion.')
+        DBLOG.warning(f'Customer {customer_id} failed deletion.')
 
     except InternalError:
-        LOGGER.error('Database error.')
+        SYSTEMLOG.error('Database error.')
         DATABASE.close()
 
     finally:
@@ -216,14 +223,14 @@ def update_customer_credit(customer_id, credit_limit):
             customer_found.credit_limit = credit_limit
             customer_found.save()
 
-        LOGGER.info(f'Customer {customer_id} successfully updated.')
+        DBLOG.info(f'Customer {customer_id} successfully updated.')
 
     except DoesNotExist:
-        LOGGER.info(f'Customer {customer_id} failed update.')
+        DBLOG.info(f'Customer {customer_id} failed update.')
         raise ValueError('NoCustomer')
 
     except InternalError:
-        LOGGER.error('Database error.')
+        SYSTEMLOG.error('Database error.')
         DATABASE.close()
 
     finally:
@@ -241,10 +248,10 @@ def list_active_customers():
 
         actcount = Customer.select().where(Customer.status == 'active').count()
         # status should be lower case, controlled on db save
-        LOGGER.info(f'Active customer check in list_active_customers: {actcount}')
+        DBLOG.info(f'Active customer check in list_active_customers: {actcount}')
 
     except Exception as dberror:
-        LOGGER.warning(f'Database error occured: {type(dberror).__name__}')
+        SYSTEMLOG.warning(f'Database error occured: {type(dberror).__name__}')
 
     finally:
         DATABASE.close()
@@ -263,7 +270,7 @@ def total_db_record_count():
         totcount = Customer.select().count()
 
     except (InternalError, OperationalError):
-        LOGGER.error('Database error.')
+        SYSTEMLOG.error('Database error.')
 
     finally:
         DATABASE.close()
@@ -289,13 +296,13 @@ def search_kwarg(custfield, custvalue):
                                 Customer.phone_number
                                 ).where(getattr(Customer, custfield) == custvalue).dicts()
 
-        LOGGER.info(f'Found {sum(1 for i in query)} customers for {searchfield} = {custvalue}.')
+        DBLOG.info(f'Found {sum(1 for i in query)} customers for {searchfield} = {custvalue}.')
 
         DATABASE.close()
         return query
 
     except Exception as dberror:
-        LOGGER.warning(f'Customer search failed.')
-        LOGGER.warning(f'Exception: {type(dberror).__name__}')
+        DBLOG.warning(f'Customer search failed.')
+        SYSTEMLOG.warning(f'Exception: {type(dberror).__name__}')
         DATABASE.close()
         return {}
