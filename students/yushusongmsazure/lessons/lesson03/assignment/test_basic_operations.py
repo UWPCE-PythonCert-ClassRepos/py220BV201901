@@ -4,6 +4,7 @@ Assignment03
 '''
 import pytest
 from basic_operations import *
+from customer_db import DATABASE
 
 CUSTOMER_ID = 12345
 FIRST_NAME = 'Larry'
@@ -68,9 +69,9 @@ class TestBasicOperations():
             Customer.status == STATUS and
             Customer.credit_limit == credit_limit).count() == 1
 
-    def test_search_customer(self):
+    def test_search_customer_exist(self):
         '''
-        Test searching a customer given a customer ID
+        Test searching an existing customer given a customer ID
         '''
         customer = search_customer(CUSTOMER_ID)
 
@@ -80,20 +81,42 @@ class TestBasicOperations():
         assert customer['phone_number'] == PHONE_NUMBER
         assert customer['email'] == EMAIL_ADDRESS
 
+    def test_search_customer_nonexist(self):
+        '''
+        Test searching a non customer given a customer ID
+        '''
+        customer = search_customer(0)
+        assert not customer
+
     def test_list_active_customers(self):
         '''
         Test listing active customers
         '''
         assert Customer.select().where(Customer.status == 1).count() == 1
 
+    # def test_update_customer_credit_succeed(self):
+    #     '''
+    #     Test listing active customers
+    #     '''
+    #     new_credit = 20000.0
 
-    def test_update_customer_credit_succeed(self):
+    #     update_customer_credit(CUSTOMER_ID, new_credit)
+
+    #     updated_credit_limit = Customer.select().where(
+    #         Customer.customer_id == CUSTOMER_ID).get().credit_limit
+    #     print(f'Updated: {update_customer_credit}')
+    #     assert updated_credit_limit == new_credit
+
+    # def test_delete_customer(self):
+    #     '''
+    #     Test deleting a customer give a customer ID
+    #     '''
+    #     Customer.delete().where(Customer.customer_id == CUSTOMER_ID)
+    #     customer = search_customer(CUSTOMER_ID)
+    #     assert not customer
+
+    def clean_up(self):
         '''
-        Test listing active customers
+        Clean up Customer table after testing
         '''
-        new_credit = 20000.0
-
-        update_customer_credit(CUSTOMER_ID, new_credit)
-
-        assert Customer.select().where(
-            Customer.customer_id == CUSTOMER_ID).get().credit_limit == new_credit
+        clean_up_customer_db()

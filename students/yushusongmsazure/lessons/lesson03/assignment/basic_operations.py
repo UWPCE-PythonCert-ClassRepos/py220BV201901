@@ -54,18 +54,23 @@ def search_customer(customer_id):
     Search for a customer based on customer ID
     '''
     customer_dict = {}
-    customer = Customer.select().where(Customer.customer_id == customer_id).get()
 
-    LOGGER.info(f'Found customer_id: {customer.customer_id}')
+    try:
+        customer = Customer.select().where(Customer.customer_id == customer_id).get()
 
-    if customer:
-        customer_dict['customer_id'] = customer.customer_id
-        customer_dict['first_name'] = customer.first_name
-        customer_dict['last_name'] = customer.last_name
-        customer_dict['phone_number'] = customer.phone_number
-        customer_dict['email'] = customer.email_address
+        LOGGER.info(f'Found customer_id: {customer.customer_id}')
 
-    LOGGER.info(f'len is {len(customer_dict)}')
+        if customer:
+            customer_dict['customer_id'] = customer.customer_id
+            customer_dict['first_name'] = customer.first_name
+            customer_dict['last_name'] = customer.last_name
+            customer_dict['phone_number'] = customer.phone_number
+            customer_dict['email'] = customer.email_address
+
+        LOGGER.info(f'len is {len(customer_dict)}')
+    except Customer.DoesNotExist:
+        LOGGER.warning(f'Customer with ID {customer_id} does not exist!!!')
+
     return customer_dict
 
 def list_active_customers():
@@ -96,6 +101,12 @@ def update_customer_credit(customer_id, new_credit_limit):
 
     LOGGER.info(f'Update credit successfully to {customer.credit_limit}')
 
+def clean_up_customer_db():
+    '''
+    Clean up the customer db
+    '''
+    Customer.drop_table()
+
 def main():
     '''
     Main function
@@ -121,6 +132,7 @@ def main():
 
     list_active_customers()
     delete_customer(customer_id)
+    clean_up_customer_db()
 
 if __name__ == "__main__":
     main()
