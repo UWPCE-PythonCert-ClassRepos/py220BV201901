@@ -1,7 +1,9 @@
-#Inventory class
+# Inventory class
 """
     Doctring is a must have for module/file.  This is a Inventory class.
 """
+
+
 class Inventory():
     """
     Docstring is a must have for class.
