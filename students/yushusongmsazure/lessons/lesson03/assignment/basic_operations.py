@@ -84,11 +84,17 @@ def update_customer_credit(customer_id, new_credit_limit):
     '''
     Update a customer's credit limit
     '''
+    LOGGER.info(f'{customer_id} needs to increase credit_limit to {new_credit_limit}')
     customer = Customer.select().where(Customer.customer_id == customer_id).get()
+
     if customer:
+        LOGGER.info(f'Old credit_limit {customer.credit_limit}; new credit_limit {new_credit_limit}')
         customer.credit_limit = new_credit_limit
     else:
+        LOGGER.warning(f'Not customer found for ID {customer_id}')
         raise ValueError
+
+    LOGGER.info(f'Update credit successfully to {customer.credit_limit}')
 
 def main():
     '''

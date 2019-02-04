@@ -12,7 +12,6 @@ HOME_ADDRESS = 'Palo Alto, California'
 PHONE_NUMBER = '650-329-2100'
 EMAIL_ADDRESS = 'lpage@gmail.com'
 STATUS = 0
-CREDIT_LIMIT = 58766628.00
 
 class TestBasicOperations():
     '''
@@ -49,6 +48,7 @@ class TestBasicOperations():
         '''
         Test adding a customer
         '''
+        credit_limit = 1500.0
         add_customer(customer_id=CUSTOMER_ID,
                      first_name=FIRST_NAME,
                      last_name=LAST_NAME,
@@ -56,7 +56,7 @@ class TestBasicOperations():
                      phone_number=PHONE_NUMBER,
                      email_address=EMAIL_ADDRESS,
                      status=STATUS,
-                     credit_limit=CREDIT_LIMIT)
+                     credit_limit=credit_limit)
 
         assert Customer.select().where(
             Customer.customer_id == CUSTOMER_ID and
@@ -66,7 +66,7 @@ class TestBasicOperations():
             Customer.email_address == EMAIL_ADDRESS and
             Customer.phone_number == PHONE_NUMBER and
             Customer.status == STATUS and
-            Customer.credit_limit == CREDIT_LIMIT).count() == 1
+            Customer.credit_limit == credit_limit).count() == 1
 
     def test_search_customer(self):
         '''
@@ -79,3 +79,21 @@ class TestBasicOperations():
         assert customer['last_name'] == LAST_NAME
         assert customer['phone_number'] == PHONE_NUMBER
         assert customer['email'] == EMAIL_ADDRESS
+
+    def test_list_active_customers(self):
+        '''
+        Test listing active customers
+        '''
+        assert Customer.select().where(Customer.status == 1).count() == 1
+
+
+    def test_update_customer_credit_succeed(self):
+        '''
+        Test listing active customers
+        '''
+        new_credit = 20000.0
+
+        update_customer_credit(CUSTOMER_ID, new_credit)
+
+        assert Customer.select().where(
+            Customer.customer_id == CUSTOMER_ID).get().credit_limit == new_credit
