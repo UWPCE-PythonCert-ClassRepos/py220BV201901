@@ -18,10 +18,12 @@ FILE_HANDLER_DB.setFormatter(FORMATTER)
 FILE_HANDLER_SYSTEM = logging.FileHandler(LOG_FILE_SYSTEM, mode='w')
 FILE_HANDLER_SYSTEM.setFormatter(FORMATTER)
 
+# Database access logging
 DBLOG = logging.getLogger('DBLOG')
 DBLOG.addHandler(FILE_HANDLER_DB)
 DBLOG.setLevel("INFO")
 
+# General logging
 SYSTEMLOG = logging.getLogger('SYSTEMLOG')
 SYSTEMLOG.addHandler(FILE_HANDLER_SYSTEM)
 SYSTEMLOG.setLevel("INFO")
@@ -59,7 +61,7 @@ def file_to_database(custfile):
                     DBLOG.info(f'Added to database: {linelist}')
 
                 except IntegrityError as db_exception:
-                    SYSTEMLOG.error(f'Customer data failed entry {linelist}')
+                    DBLOG.error(f'Customer data failed entry {linelist}')
                     SYSTEMLOG.error(f'Exception: {type(db_exception).__name__}')
 
                 except ValueError as data_error:
@@ -171,7 +173,7 @@ def search_lastname(srchlastname):
                                 Customer.phone_number
                                 ).where(Customer.lastname == srchlastname).dicts()
 
-        DBLOG.info(f'Found {sum(1 for i in query)} customers for name {srchlastname}.')
+        DBLOG.info(f'Found {sum(1 for line in query)} customers for name {srchlastname}.')
 
         DATABASE.close()
         return query
@@ -258,10 +260,13 @@ def list_active_customers():
 
     return actcount
 
+
 def total_db_record_count():
     """
     Returns the count of records in the database.
     """
+
+    totcount = 0
 
     try:
         DATABASE.connect()
@@ -296,7 +301,7 @@ def search_kwarg(custfield, custvalue):
                                 Customer.phone_number
                                 ).where(getattr(Customer, custfield) == custvalue).dicts()
 
-        DBLOG.info(f'Found {sum(1 for i in query)} customers for {searchfield} = {custvalue}.')
+        DBLOG.info(f'Found {sum(1 for line in query)} customers for {searchfield} = {custvalue}.')
 
         DATABASE.close()
         return query
