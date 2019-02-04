@@ -1,9 +1,7 @@
-"""
-    Simple database examle with Peewee ORM, sqlite and Python
-    Here we define the schema
-    Use logging for messages so they can be turned off
-
-"""
+'''
+Yushu Song
+Assignment03
+'''
 
 from peewee import *
 

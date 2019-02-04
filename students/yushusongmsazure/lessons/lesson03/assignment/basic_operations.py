@@ -2,8 +2,17 @@
 Yushu Song
 Assignment03
 '''
+
+import logging
 import random
 from customer_db import DATABASE, Customer
+
+LOGGER = logging.getLogger()
+HANDLER = logging.StreamHandler()
+FORMATTER = logging.Formatter('%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
+HANDLER.setFormatter(FORMATTER)
+LOGGER.addHandler(HANDLER)
+LOGGER.setLevel(logging.INFO)
 
 def init_db():
     '''
@@ -46,15 +55,17 @@ def search_customer(customer_id):
     '''
     customer_dict = {}
     customer = Customer.select().where(Customer.customer_id == customer_id).get()
-    print(f'Count in search {Customer.select().where(Customer.customer_id == customer_id).count()}')
-    if not customer:
+
+    LOGGER.info(f'Found customer_id: {customer.customer_id}')
+
+    if customer:
         customer_dict['customer_id'] = customer.customer_id
         customer_dict['first_name'] = customer.first_name
         customer_dict['last_name'] = customer.last_name
         customer_dict['phone_number'] = customer.phone_number
         customer_dict['email'] = customer.email_address
 
-    print(f'len is {len(customer_dict)}')
+    LOGGER.info(f'len is {len(customer_dict)}')
     return customer_dict
 
 def list_active_customers():
@@ -73,8 +84,8 @@ def update_customer_credit(customer_id, new_credit_limit):
     '''
     Update a customer's credit limit
     '''
-    if not Customer.select().where(Customer.customer_id == customer_id).count():
-        customer = Customer.select().where(Customer.customer_id == customer_id).get()
+    customer = Customer.select().where(Customer.customer_id == customer_id).get()
+    if customer:
         customer.credit_limit = new_credit_limit
     else:
         raise ValueError
@@ -96,7 +107,12 @@ def main():
                  credit_limit=58766628.00)
 
     search_customer(customer_id)
-    update_customer_credit(customer_id, new_credit_limit)
+
+    try:
+        update_customer_credit(customer_id, new_credit_limit)
+    except ValueError:
+        print("No customer found for ID {customer_id}")
+
     list_active_customers()
     delete_customer(customer_id)
 
