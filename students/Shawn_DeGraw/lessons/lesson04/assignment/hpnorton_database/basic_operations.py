@@ -143,7 +143,11 @@ def search_customer(customer_id):
         DBLOG.info(f'Customer {customer_id} found successfully.')
 
         DATABASE.close()
-        return {'name': found_customer.name, 'lastname': found_customer.lastname, 'email': found_customer.email, 'phone_number': found_customer.phone_number}
+        return {'name': found_customer.name,
+                'lastname': found_customer.lastname,
+                'email': found_customer.email,
+                'phone_number': found_customer.phone_number
+                }
 
     except DoesNotExist:
         DBLOG.warning(f'Customer {customer_id} not found in database')
@@ -157,6 +161,9 @@ def search_customer(customer_id):
 
 def search_lastname(srchlastname):
     """
+    **DEPRICATED: method no longer needed due to search_kwarg can
+    do the same thing and is reusable for all fields.
+
     Returns dictionary object with customer id, name, lastname, email and phone.
     Returns empty object if customer not found.
     Query could return more than one object.
@@ -249,6 +256,7 @@ def list_active_customers():
         DATABASE.execute_sql('PRAGMA foreign_keys = ON;') # needed for sqlite only
 
         actcount = Customer.select().where(Customer.status == 'active').count()
+
         # status should be lower case, controlled on db save
         DBLOG.info(f'Active customer check in list_active_customers: {actcount}')
 
@@ -289,7 +297,7 @@ def search_kwarg(custfield, custvalue):
     """
 
     searchfield = f'Customer.{custfield}'
-    
+
     try:
         DATABASE.connect()
         DATABASE.execute_sql('PRAGMA foreign_keys = ON;') # needed for sqlite only
