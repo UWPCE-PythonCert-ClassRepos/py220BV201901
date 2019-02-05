@@ -25,20 +25,21 @@ class Customer(BaseModel):
     Name. Lastname. Home address. Phone number. Email address. Credit limit.
     """
 
-    customer_id = CharField(primary_key = True, unique = True, max_length=30)
+    customer_id = CharField(primary_key = True, max_length=30)
     customer_name = CharField(max_length=30)
     last_name = CharField(max_length=30)
     home_address = CharField(max_length=50)
-    phone_number = IntegerField()
+    phone_number = CharField(max_length=12)
     email = TextField()
     credit_limit = DecimalField(decimal_places=2)
 
-class Sale(Model):
+class Sale(BaseModel):
     """
     keep track of montly sales, if a customer has sales in this month,
-    this customer would be seen as active customer.
+    the status of this customer would be seen as active customer.
     """
     logging.info("Sale class, keep track of monthly sale")
-    order_number = IntegerField(primary_key=True)
+    order_number = CharField(primary_key=True, max_length=5)
     order_date = DateField(formats='YYYY-MM-DD')
-    customer = ForeignKeyField(Customer, related_name='was filled by', null=False)
+    status = BooleanField(help_text='True means active, False means in-active', null=False)
+    customer_id = ForeignKeyField(Customer, related_name='was filled by', null=False)
