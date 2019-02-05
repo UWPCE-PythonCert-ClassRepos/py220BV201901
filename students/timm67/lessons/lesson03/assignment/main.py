@@ -7,13 +7,6 @@ from basic_operations import list_active_customers
 from loguru import logger
 from sys import stdout
 
-from peewee import *
-
-
-#database = SqliteDatabase('personjob.db')
-#database.connect()
-#database.execute_sql('PRAGMA foreign_keys = ON;') # needed for sqlite only
-
 
 def main():
     """
@@ -23,7 +16,7 @@ def main():
 
     # Standalone function to initialize logging
 
-    logger.add(sys.stdout, level='INFO')
+    logger.add(stdout, level='INFO')
     logger.add("logfile_{time}.txt", level='DEBUG')
     logger.enable(__name__)
 
