@@ -8,6 +8,8 @@
 
 import pytest
 import lesson04.assignment.hpnorton_database.basic_operations as l
+from peewee import *
+from lesson04.assignment.hpnorton_database.hpnortondbmodel import *
 
 
 @pytest.fixture
@@ -257,5 +259,11 @@ def test_all_records():
 def test_various_searches():
     """ verify result count of various searches """
 
-    assert sum(1 for line in l.search_kwarg('name', 'John')) == 5
-    assert sum(1 for line in l.search_kwarg('email', 'Alfonzo.Terry@norberto.name')) == 1
+    result = l.search_kwarg('name', 'John')
+    assert sum(1 for line in result) == 5
+
+    result = l.search_kwarg('email', 'Alfonzo.Terry@norberto.name')
+    assert sum(1 for line in result) == 1
+
+    result = l.search_kwarg('status', 'active')
+    assert sum(1 for line in result) == 6953
