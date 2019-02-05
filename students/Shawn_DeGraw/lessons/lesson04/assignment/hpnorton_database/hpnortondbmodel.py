@@ -20,7 +20,7 @@ class Customer(BaseModel):
         This class defines Customer. Contains all customer information
         for HP Norton.
 
-        customerid, name, lastname, homeaddress, 
+        customerid, name, lastname, homeaddress,
         phonenumber, email, status, creditlimit
     """
 
