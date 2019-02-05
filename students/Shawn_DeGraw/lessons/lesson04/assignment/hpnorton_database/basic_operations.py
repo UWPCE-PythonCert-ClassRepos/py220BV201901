@@ -38,7 +38,7 @@ def file_to_database(custfile):
 
     try:
 
-        DATABASE.connect()
+        DATABASE.connect(reuse_if_open=True)
         DATABASE.execute_sql('PRAGMA foreign_keys = ON;') # needed for sqlite only
 
         with open(custfile, 'r') as filename:
@@ -64,12 +64,7 @@ def file_to_database(custfile):
                     DBLOG.error(f'Customer data failed entry {linelist}')
                     SYSTEMLOG.error(f'Exception: {type(db_exception).__name__}')
 
-                except ValueError as data_error:
-                    SYSTEMLOG.error(f'Data error for: {linelist}')
-                    SYSTEMLOG.error(f'Exception: {type(data_error).__name__}')
-                    continue
-
-                except AttributeError as data_error:
+                except (ValueError, AttributeError) as data_error:
                     SYSTEMLOG.error(f'Data error for: {linelist}')
                     SYSTEMLOG.error(f'Exception: {type(data_error).__name__}')
                     continue
@@ -102,7 +97,7 @@ def add_customer(customer_id, name, lastname, home_address,
     """
 
     try:
-        DATABASE.connect()
+        DATABASE.connect(reuse_if_open=True)
         DATABASE.execute_sql('PRAGMA foreign_keys = ON;') # needed for sqlite only
 
         with DATABASE.transaction():
@@ -136,7 +131,7 @@ def search_customer(customer_id):
     Returns empty object if customer not found.
     """
     try:
-        DATABASE.connect()
+        DATABASE.connect(reuse_if_open=True)
         DATABASE.execute_sql('PRAGMA foreign_keys = ON;') # needed for sqlite only
 
         found_customer = Customer.get(Customer.customer_id == customer_id)
@@ -170,7 +165,7 @@ def search_lastname(srchlastname):
     """
 
     try:
-        DATABASE.connect()
+        DATABASE.connect(reuse_if_open=True)
         DATABASE.execute_sql('PRAGMA foreign_keys = ON;') # needed for sqlite only
 
         query = Customer.select(Customer.customer_id,
@@ -198,7 +193,7 @@ def delete_customer(customer_id):
     """
 
     try:
-        DATABASE.connect()
+        DATABASE.connect(reuse_if_open=True)
         DATABASE.execute_sql('PRAGMA foreign_keys = ON;') # needed for sqlite only
 
         with DATABASE.transaction():
@@ -224,7 +219,7 @@ def update_customer_credit(customer_id, credit_limit):
     """
 
     try:
-        DATABASE.connect()
+        DATABASE.connect(reuse_if_open=True)
         DATABASE.execute_sql('PRAGMA foreign_keys = ON;') # needed for sqlite only
 
         with DATABASE.transaction():
@@ -240,7 +235,6 @@ def update_customer_credit(customer_id, credit_limit):
 
     except InternalError:
         SYSTEMLOG.error('Database error.')
-        DATABASE.close()
 
     finally:
         DATABASE.close()
@@ -251,8 +245,10 @@ def list_active_customers():
     Returns the number of active customers.
     """
 
+    actcount = 0
+
     try:
-        DATABASE.connect()
+        DATABASE.connect(reuse_if_open=True)
         DATABASE.execute_sql('PRAGMA foreign_keys = ON;') # needed for sqlite only
 
         actcount = Customer.select().where(Customer.status == 'active').count()
@@ -277,7 +273,7 @@ def total_db_record_count():
     totcount = 0
 
     try:
-        DATABASE.connect()
+        DATABASE.connect(reuse_if_open=True)
         DATABASE.execute_sql('PRAGMA foreign_keys = ON;') # needed for sqlite only
 
         totcount = Customer.select().count()
@@ -299,7 +295,7 @@ def search_kwarg(custfield, custvalue):
     searchfield = f'Customer.{custfield}'
 
     try:
-        DATABASE.connect()
+        DATABASE.connect(reuse_if_open=True)
         DATABASE.execute_sql('PRAGMA foreign_keys = ON;') # needed for sqlite only
 
         query = Customer.select(Customer.customer_id,
@@ -309,7 +305,7 @@ def search_kwarg(custfield, custvalue):
                                 Customer.phone_number
                                 ).where(getattr(Customer, custfield) == custvalue).dicts()
 
-        DBLOG.info(f'Found {sum(1 for line in query)} customers for {searchfield} = {custvalue}.')
+        DBLOG.info(f'Accessing customers for {searchfield} = {custvalue}.')
 
         DATABASE.close()
         return query
