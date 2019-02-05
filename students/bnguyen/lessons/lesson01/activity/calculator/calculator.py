@@ -3,6 +3,7 @@ Module:calculator with basic methods.
 """
 from .exceptions import InsufficientOperands
 
+
 #class Calculator(object):
 class Calculator:
     """
@@ -29,7 +30,7 @@ class Calculator:
         """
         try:
             #result = operator.calc(self.stack[0], self.stack[1]) #ORG
-            result = operator.calc(self.stack[1], self.stack[0])  #Integration test to pass
+            result = operator.calc(self.stack[1], self.stack[0])  # Integration test to pass
         except IndexError:
             raise InsufficientOperands
 
