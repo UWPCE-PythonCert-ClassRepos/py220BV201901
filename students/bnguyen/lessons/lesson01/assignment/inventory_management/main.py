@@ -10,10 +10,12 @@ import sys
 
 #USING this to see:  NOT working
 #ModuleNotFoundError: __path__ attribute not found on 'inventory_management.main
-from .market_prices import get_latest_price
+from inventory_management import market_prices
 from .inventory_class import Inventory
 from .furniture_class import Furniture
 from .electric_appliances_class import ElectricAppliances
+
+from inventory_management import *
 
 FULL_INVENTORY = {}
 
