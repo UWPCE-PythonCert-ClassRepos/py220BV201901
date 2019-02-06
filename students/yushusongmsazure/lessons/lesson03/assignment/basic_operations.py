@@ -83,7 +83,9 @@ def delete_customer(customer_id):
     '''
     Delete a customer based on the customer ID
     '''
-    Customer.delete().where(Customer.customer_id == customer_id)
+    customer = Customer.get(Customer.customer_id == customer_id)
+    customer.delete_instance()
+    # Customer.delete().where(Customer.customer_id == customer_id).execute()
 
 def update_customer_credit(customer_id, new_credit_limit):
     '''
@@ -93,15 +95,18 @@ def update_customer_credit(customer_id, new_credit_limit):
     customer = Customer.select().where(Customer.customer_id == customer_id).get()
 
     if customer:
-        LOGGER.info(f'Old credit_limit {customer.credit_limit}; new credit_limit {new_credit_limit}')
-        customer.credit_limit = new_credit_limit
+        LOGGER.info(
+            f'Old credit_limit {customer.credit_limit}; new credit_limit {new_credit_limit}')
+        Customer.update(
+            credit_limit=new_credit_limit).where(Customer.customer_id == customer_id).execute()
+
     else:
         LOGGER.warning(f'Not customer found for ID {customer_id}')
         raise ValueError
 
     LOGGER.info(f'Update credit successfully to {customer.credit_limit}')
 
-def clean_up_customer_db():
+def clean_up_db():
     '''
     Clean up the customer db
     '''
@@ -111,6 +116,7 @@ def main():
     '''
     Main function
     '''
+    clean_up_db()
     init_db()
     customer_id = 12345
     new_credit_limit = 10000.00
@@ -132,7 +138,6 @@ def main():
 
     list_active_customers()
     delete_customer(customer_id)
-    clean_up_customer_db()
 
 if __name__ == "__main__":
     main()
