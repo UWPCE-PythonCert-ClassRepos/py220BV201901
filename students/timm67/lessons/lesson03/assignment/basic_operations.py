@@ -65,7 +65,7 @@ def search_customer(customer_id):
             cust = Customer.get(Customer.customer_id == customer_id)
             if cust is not None:
                 ret_dict['name'] = cust.name
-                ret_dict['last_name'] = cust.last_name
+                ret_dict['lastname'] = cust.lastname
                 ret_dict['email_address'] = cust.email_address
                 ret_dict['phone_number'] = cust.phone_number
             else:
@@ -104,12 +104,23 @@ def update_customer_credit(customer_id, credit_limit):
     This function will search an existing customer by customer_id
     and update their credit limit or raise a ValueError exception
     if the customer does not exist.
+
+    The credit limit stored in the database is returned as a float.
+    The value is 0.0 if the customer_id is not valid. The value is
+    the current value in the database if it _cannot_ be updated, 
+    else it is the updated value stored in the databsae
     """
+    ret_credit = float(0.0)
+
     try:
         with database.transaction():
             cust = Customer.get(Customer.customer_id == customer_id)
             if cust is not None:
+                ret_credit = cust.credit_limit
+                logger.info(f'Updating credit limit from {cust.credit_limit} to {credit_limit}')    
                 cust.credit_limit = credit_limit
+                ret_credit = cust.credit_limit
+                cust.save()
             else:
                 logger.error(f'Customer {customer_id} not found')
                 raise ValueError
@@ -120,6 +131,8 @@ def update_customer_credit(customer_id, credit_limit):
     finally:
         logger.info('Database update successful')
         # close database
+
+    return ret_credit
 
 
 def list_active_customers():
@@ -142,3 +155,18 @@ def list_active_customers():
         # close database
 
     return active_cust
+
+
+def util_drop_tables():
+    """
+    Utility function that drops tables after testing
+    """
+    try:
+        database.drop_tables(Customer)
+    except Exception as thrown_exception:
+        logger.info('Error dropping Customer table')
+        logger.info(thrown_exception)
+        logger.info('See how the database protects our data')
+    finally:
+        logger.info('Database table drop successful')
+        # close database
