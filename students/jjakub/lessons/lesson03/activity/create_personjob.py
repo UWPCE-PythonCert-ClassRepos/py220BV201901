@@ -1,5 +1,5 @@
 """
-    Create database examle with Peewee ORM, sqlite and Python
+    Create database example with Peewee ORM, sqlite and Python
 
 """
 
