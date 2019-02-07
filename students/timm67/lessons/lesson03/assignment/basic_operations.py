@@ -5,6 +5,12 @@
 from loguru import logger
 from customer_model import Customer
 from customer_model import database
+import sys
+
+
+logger.add(sys.stdout, level='INFO')
+logger.add("logfile_{time}.txt", level='DEBUG')
+logger.enable(__name__)
 
 
 def test_var_kwargs(farg, **kwargs):
