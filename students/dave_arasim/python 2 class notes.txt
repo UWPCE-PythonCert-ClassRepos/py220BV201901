@@ -93,6 +93,10 @@ class Job(BaseModel):
 
 use sqlitetutorial.net to install sqlite!!
 
+============================================================================================
+1/30/19:
+MongoDB - new database to be used in this class (noSQL database: 'schema-less')
+
 
 
 
