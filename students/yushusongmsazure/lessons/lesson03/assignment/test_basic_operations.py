@@ -3,8 +3,6 @@ Yushu Song
 Assignment03
 '''
 import pytest
-import unittest
-
 from basic_operations import *
 from customer_db import DATABASE
 
@@ -16,27 +14,23 @@ PHONE_NUMBER = '650-329-2100'
 EMAIL_ADDRESS = 'lpage@gmail.com'
 STATUS = 0
 
-class TestBasicOperations(unittest.TestCase):
+class TestBasicOperations():
     '''
     Test class for bassic_operations
     '''
 
-    def tearDown(self):
+    def test_clean_up(self):
         '''
         Clean up Customer table after testing
         '''
         clean_up_db()
 
-    def setUp(self):
-        '''
-        Set up the Customer DB
-        '''
-        init_db()
-
     def test_init(self):
         '''
         Test init_db function
         '''
+        init_db()
+
         # Check record for customer Kate Perry
         assert Customer.select().where(
             Customer.first_name == 'Kate' and
@@ -119,11 +113,10 @@ class TestBasicOperations(unittest.TestCase):
         print(f'Updated: {update_customer_credit}')
         assert updated_credit_limit == pytest.approx(new_credit)
 
-    # def test_delete_customer(self):
-    #     '''
-    #     Test deleting a customer give a customer ID
-    #     '''
-    #     delete_customer(CUSTOMER_ID)
-    #     customer = search_customer(CUSTOMER_ID)
-
-    #     assert not customer
+    def test_delete_customer(self):
+        '''
+        Test deleting a customer give a customer ID
+        '''
+        delete_customer(CUSTOMER_ID)
+        customer = search_customer(CUSTOMER_ID)
+        assert not customer
