@@ -1,14 +1,15 @@
 """
-    Module doc goes here
+    Basic database operations corresponding to the customer model
+    defined in basic
 """
 
+import sys
 from loguru import logger
 from customer_model import Customer
 from customer_model import database
-import sys
 
 
-logger.add(sys.stdout, level='INFO')
+logger.add(sys.stdout, level='DEBUG')
 logger.add("logfile_{time}.txt", level='DEBUG')
 logger.enable(__name__)
 
@@ -24,7 +25,7 @@ def test_var_kwargs(farg, **kwargs):
         print("another keyword arg: %s: %s" % (key, kwargs[key]))
 
 
-def add_customer(customer_id, **kwargs):
+def add_customer(**kwargs):
     """
     This function will add a new customer to the sqlite3 database. keyword
     args to keep pylint happy are the following:
@@ -38,7 +39,7 @@ def add_customer(customer_id, **kwargs):
     try:
         with database.transaction():
             new_cust = Customer.create(
-                customer_id=customer_id,
+                customer_id=kwargs['customer_id'],
                 name=kwargs['name'],
                 lastname=kwargs['lastname'],
                 home_address=kwargs['home_address'],
@@ -51,11 +52,12 @@ def add_customer(customer_id, **kwargs):
         logger.error('kwargs not complete')
         raise ValueError
     except Exception as thrown_exception:
-        logger.info(f'Error creating {customer_id}')
+        logger.info(f'Error creating customer')
         logger.info(thrown_exception)
         logger.info('See how the database protects our data')
     finally:
-        logger.info('Database add successful')
+        logger.info('Database add successful; closing database')
+        database.close()
         # close database
 
 
@@ -74,6 +76,7 @@ def search_customer(customer_id):
                 ret_dict['lastname'] = cust.lastname
                 ret_dict['email_address'] = cust.email_address
                 ret_dict['phone_number'] = cust.phone_number
+                logger.info('Database query successful')
             else:
                 logger.error(f'Customer {customer_id} not found')
                 raise ValueError
@@ -82,8 +85,8 @@ def search_customer(customer_id):
         logger.info(thrown_exception)
         logger.info('See how the database protects our data')
     finally:
-        logger.info('Database query successful')
-        # close database
+        pass
+
     return ret_dict
 
 
@@ -93,6 +96,7 @@ def delete_customer(customer_id):
             cust = Customer.get(Customer.customer_id == customer_id)
             if cust is not None:
                 cust.delete_instance()
+                logger.info('Database delete successful')
             else:
                 logger.error(f'Customer {customer_id} not found')
                 raise ValueError
@@ -101,8 +105,7 @@ def delete_customer(customer_id):
         logger.info(thrown_exception)
         logger.info('See how the database protects our data')
     finally:
-        logger.info('Database delete successful')
-        # close database
+        pass
 
 
 def update_customer_credit(customer_id, credit_limit):
@@ -127,6 +130,7 @@ def update_customer_credit(customer_id, credit_limit):
                 cust.credit_limit = credit_limit
                 ret_credit = cust.credit_limit
                 cust.save()
+                logger.info('Database update successful')
             else:
                 logger.error(f'Customer {customer_id} not found')
                 raise ValueError
@@ -135,8 +139,7 @@ def update_customer_credit(customer_id, credit_limit):
         logger.info(thrown_exception)
         logger.info('See how the database protects our data')
     finally:
-        logger.info('Database update successful')
-        # close database
+        pass
 
     return ret_credit
 
@@ -146,19 +149,20 @@ def list_active_customers():
     This function will return an integer with the number of
     customers whose status is currently active.
     """
-    active_cust = int(0)
+    active_cust = 0
 
     try:
-        for cust in Customer.select().where(Customer.status is True):
+        for cust in Customer.select().where(Customer.status != 0):
             logger.info(f'Customer {cust.customer_id} is active')
             active_cust += 1
+            logger.debug(f"active_cust: {active_cust}")
+        logger.info('Database query successful')
     except Exception as thrown_exception:
         logger.info(f'Error querying database')
         logger.info(thrown_exception)
         logger.info('See how the database protects our data')
     finally:
-        logger.info('Database query successful')
-        # close database
+        pass
 
     return active_cust
 
@@ -169,10 +173,10 @@ def util_drop_tables():
     """
     try:
         database.drop_tables(Customer)
+        logger.info('Database table drop successful')
     except Exception as thrown_exception:
         logger.info('Error dropping Customer table')
         logger.info(thrown_exception)
         logger.info('See how the database protects our data')
     finally:
-        logger.info('Database table drop successful')
-        # close database
+        pass

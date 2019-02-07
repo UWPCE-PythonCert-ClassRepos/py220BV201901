@@ -17,6 +17,10 @@ class BaseModel(Model):
 
 
 class Customer(BaseModel):
+    """
+    Customer model to store basic information such as name, address, 
+    phone number, email, customer status, and credit limit
+    """
     customer_id = IntegerField(unique=True, primary_key=True)
     name = CharField(max_length=30)
     lastname = CharField(max_length=30)
@@ -30,3 +34,5 @@ class Customer(BaseModel):
 database.create_tables([
     Customer
     ])
+
+database.close()
