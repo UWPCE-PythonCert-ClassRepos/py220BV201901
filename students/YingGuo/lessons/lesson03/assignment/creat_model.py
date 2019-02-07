@@ -1,4 +1,4 @@
-from management_database_model import *
+from lesson03.assignment.management_database_model import *
 
 import logging
 

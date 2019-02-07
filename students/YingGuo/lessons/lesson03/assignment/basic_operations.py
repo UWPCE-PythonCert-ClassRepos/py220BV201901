@@ -1,6 +1,6 @@
 """hw3, sqlite databass, Peewee"""
 
-from management_database_model import *
+from lesson03.assignment.management_database_model import *
 import logging
 
 log_format = "%(asctime)s %(filename)s:%(lineno)-3d %(levelname)s %(message)s"
@@ -140,7 +140,9 @@ def update_customer_credit(update_input=None, update_input_credit=None):
         with database.transaction():
             a_record = Customer.get(Customer.customer_id == update_input)
             a_record.credit_limit = update_customer_credit
-            logging.info(f"ID:{update_input}, New credit:{update_input_credit}, is saved")
+            a_record.save()
+            #print(a_record.credit_limit)
+            logging.info(f"ID:{update_input}, New credit:{a_record.credit_limit}, is saved")
     except Exception as e:
         logging.info(f"{update_input}, {update_input_credit}, is Not saved")
         logging.info(e)
