@@ -1,6 +1,6 @@
 """hw3, sqlite databass, Peewee"""
 
-from management_database_model import *
+from lesson03.assignment.management_database_model import *
 import logging
 
 log_format = "%(asctime)s %(filename)s:%(lineno)-3d %(levelname)s %(message)s"
@@ -14,7 +14,6 @@ def add_customer():
     logging.info("connect to data base")
     database = SqliteDatabase('customer.db')
     database.connect()
-    database.create_tables([Customer, Sale])
     database.execute_sql('PRAGMA foreign_keys = ON;')
 
     logging.info("getting user input")
@@ -141,7 +140,9 @@ def update_customer_credit(update_input=None, update_input_credit=None):
         with database.transaction():
             a_record = Customer.get(Customer.customer_id == update_input)
             a_record.credit_limit = update_customer_credit
-            logging.info(f"ID:{update_input}, New credit:{update_input_credit}, is saved")
+            a_record.save()
+            #print(a_record.credit_limit)
+            logging.info(f"ID:{update_input}, New credit:{a_record.credit_limit}, is saved")
     except Exception as e:
         logging.info(f"{update_input}, {update_input_credit}, is Not saved")
         logging.info(e)
@@ -192,34 +193,3 @@ def list_active_customer():
     logging.info(f'the number of customers whose status is currently active is {number}')
     database.close()
     return number
-
-
-if __name__ == "__main__":
-    #add new customer to database
-    #add_customer()
-
-    #populate database with a group of records
-    dict_example_customers = {'002':["Lily", "Harmon", "Redmond WA", "111-111-1111", "Lily@gmail.com", 5000],
-                    '003':["Jonathan", "Curtis", "Renton WA", "333-333-3333", 'Jon@gmail.com', 8888],
-                    '004':["Tim", "Briest", "Seattle WA", "444-444-8888", 'tim@gmail.com', 6666]}
-    add_customers(dict_example_customers)
-
-    #search
-    search_customer('002')
-
-    #delete
-    delete_customer('001')
-
-    #update
-    update_customer_credit('002', '222222')
-
-    #add new sale, got datatype mismatch error on the foreign key field
-    dict_example_sales = {'CO01':['2019-01-01', False, '002'],
-                        'CO02':['2019-02-02', True, '002'],
-                        'CO03':['2019-02-03', True, '003']}
-
-    add_sales(dict_example_sales)
-
-
-    #populate Sale table and count active customers
-    #list_active_customer()

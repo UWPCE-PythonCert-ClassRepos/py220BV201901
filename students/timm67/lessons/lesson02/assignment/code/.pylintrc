@@ -32,7 +32,17 @@ load-plugins=
 # Disable the message, report, category or checker with the given id(s). You
 # can either give multiple identifier separated by comma (,) or put this option
 # multiple time.
-#disable=
+# disable= too-few-public-methods, too-many-arguments
+
+
+[REPORTS]
+
+# Set the output format. Available formats are text, parseable, colorized, msvs
+# (visual studio) and html
+output-format=text
+
+# Include message's id in output
+include-ids=no
 
 
 [REPORTS]
@@ -133,7 +143,7 @@ notes=FIXME,XXX,TODO
 [FORMAT]
 
 # Maximum number of characters on a single line.
-max-line-length=90
+max-line-length=80
 
 # Maximum number of lines in a module
 max-module-lines=1000
