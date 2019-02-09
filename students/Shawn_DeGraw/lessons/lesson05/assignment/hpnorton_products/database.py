@@ -50,10 +50,21 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
 
     try:
         with open(Path(directory_name) + product_file, 'r') as prodfile:
+
             for line in prodfile:
                 linelist = line.split(',')
 
-                
+                MYDB.productcollection.insert(
+                    {
+                        linelist[0] :
+                            {
+                                'description' : linelist[1],
+                                'product_type' : linelist[2],
+                                'quantity_available' : linelist[3]
+                            }
+                    })
+
+                DBLOG.info(f'Added product DB entry: {linelist[0]}')
 
     except FileNotFoundError as fileerror:
-        SYSTEMLOG.error(f'File not found at {directory_name + product_file}, exception {fileerror.__name__}')
+        SYSTEMLOG.error(f'File not found at {directory_name + product_file}, exception {type(fileerror).__name__}')
