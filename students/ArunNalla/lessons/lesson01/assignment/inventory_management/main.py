@@ -2,10 +2,11 @@
 """ functional code to manage the items infos"""
 import sys
 from collections import defaultdict
-import market_prices
-import inventory_class as ic
-import furniture_class as fc
-import electric_appliances_class as eac
+from inventory_management.inventory_class import Inventory
+from inventory_management.electric_appliances_class import ElectricAppliances
+from inventory_management.furniture_class import Furniture
+import inventory_management.market_prices
+
 
 FULL_INVENTORY = defaultdict(dict)
 
@@ -44,21 +45,20 @@ def add_new_item():
     if is_furniture.lower() == "y":
         item_material = input("Enter item material: ")
         item_size = input("Enter item size (S,M,L,XL): ")
-        new_item = fc.Furniture(item_code, item_description, item_price,
-                                item_rental_price,
-                                item_material, item_size)
+        new_item = Furniture(item_code, item_description, item_price,
+                             item_rental_price, item_material, item_size)
     else:
         is_electric_appliance = input("Is this item an electric "
                                       "appliance? (Y/N): ")
         if is_electric_appliance.lower() == "y":
             item_brand = input("Enter item brand: ")
             item_voltage = input("Enter item voltage: ")
-            new_item = eac.ElectricAppliances(item_code, item_description,
-                                              item_price, item_rental_price,
-                                              item_brand, item_voltage)
+            new_item = ElectricAppliances(item_code, item_description,
+                                          item_price, item_rental_price,
+                                          item_brand, item_voltage)
         else:
-            new_item = ic.Inventory(item_code, item_description, item_price,
-                                    item_rental_price)
+            new_item = Inventory(item_code, item_description, item_price,
+                                 item_rental_price)
     FULL_INVENTORY[item_code] = new_item.return_as_dictionary()
     print("New inventory item added")
     return FULL_INVENTORY
