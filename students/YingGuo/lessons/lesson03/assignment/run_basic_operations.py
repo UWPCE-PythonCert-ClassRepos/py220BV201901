@@ -25,3 +25,6 @@ update_customer_credit('002', '222222')
 
 #count active customers
 list_active_customer()
+
+#upload csv file to database
+add_customer_csv("customer")

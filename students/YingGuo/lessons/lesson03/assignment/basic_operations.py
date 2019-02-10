@@ -8,7 +8,7 @@ from decimal import Decimal
 log_format = "%(asctime)s %(filename)s:%(lineno)-3d %(levelname)s %(message)s"
 logging.basicConfig(level=logging.INFO, format=log_format)
 
-def add_customer():
+def add_customer(input_list = []):
     """
     add a new customer record to database Customer table
     (customer_id, name, lastname, home_address, phone_number,
@@ -18,16 +18,31 @@ def add_customer():
     database = SqliteDatabase('customer.db')
     database.connect()
     database.execute_sql('PRAGMA foreign_keys = ON;')
+    if input_list == []:
+        logging.info("getting user input")
+        user_input_1 = input("What's the ID you would like for the new customer?")
+        user_input_2 = input("What's the customer's name?")
+        user_input_3 = input("What's the last name?")
+        user_input_4 = input("What's the home address?")
+        user_input_5 = input("Phone number?")
+        user_input_6 = input("Email?")
+        user_input_7 = input('Status?')
+        user_input_8 = input("What's the allowed credit limit?")
 
-    logging.info("getting user input")
-    user_input_1 = input("What's the ID you would like for the new customer?")
-    user_input_2 = input("What's the customer's name?")
-    user_input_3 = input("What's the last name?")
-    user_input_4 = input("What's the home address?")
-    user_input_5 = input("Phone number?")
-    user_input_6 = input("Email?")
-    user_input_7 = input('Status?')
-    user_input_8 = input("What's the allowed credit limit?")
+    else:
+        logging.info("getting data from a list")
+        user_input_1 = input_list[0]
+        user_input_2 = input_list[1]
+        user_input_3 = input_list[2]
+        user_input_4 = input_list[3]
+        user_input_5 = input_list[4]
+        user_input_6 = input_list[5]
+        if input_list[6] == "Active":
+            user_input_7 = True
+        if input_list[6] == "Inactive":
+            user_input_7 = False
+        user_input_8 = input_list[7]
+
     try:
         with database.transaction():
             a_class_instance = Customer.create(customer_id=user_input_1,
@@ -78,12 +93,12 @@ def add_customer_csv(file_name):
     """
     This function write csv file into database
     """
-    with open ("file_name.csv", 'rb') as csvfile:
-        #csv couldn't work here.
-        csv_reader = csv.reader(csvfile, delimiter=' ', quotechar='|')
-        for row in csv_reader:
-            add_customers(row)
-
+    fh = open("{}.csv".format(file_name))
+    reader = csv.reader(fh)
+    for row in reader:
+        add_customer(row)
+    logging.info("csv file is loaded to database")
+    fh.close()
 
 def search_customer(search_input=None):
     """
