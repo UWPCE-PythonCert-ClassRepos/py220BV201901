@@ -156,3 +156,25 @@ def show_available_products():
             }
 
     return result
+
+
+def show_rentals(product_id):
+    """
+    Return dictionary of customers.
+
+    :param: product id rented by a customer
+    """
+
+    result = {}
+
+    for document in MYDB.CUSTOMERCOLLECTION.find({"rentals": {"$in": [product_id]}}):
+        key = document['customer_id']
+
+        result[key] = {
+            'name': document['name'],
+            'address': document['address'],
+            'phone_number': document['phone_number'],
+            'email': document['email']
+            }
+
+    return result
