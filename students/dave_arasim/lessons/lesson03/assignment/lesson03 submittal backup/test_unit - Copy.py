@@ -8,21 +8,17 @@ from basic_operations import *
 # Create the database 'customers.db'.  Subsequent attempts to run script do
 # not disturb 'customers.db' database if it already exists--as expected.
 create_database()
-show_customers()
-
-# NOTE:  Comment out the rest of program from here to create empty database.
-# Other pytest testing scripts require the database is already created.
 
 # Some test customer records to add to the database.
 cust_list = [
     (1111, 'Dave', 'Arasim', '11 Cherry Lane', 2065551111,
-     'dave@hotmail.com', 'Active', 1000),
+     'dave@hotmail.com', True, 1000),
     (2222, 'Daniel', 'Ash', '22 Apple Ave', 4255552222,
      'daniel@yahoo.com', True, 2000),
     (3333, 'Steve', 'Howe', '33 Orange Blvd', 4255553333,
      'steve@gmail.com', True, 3000),
     (4444, 'Tony', 'Levin', '44 Banana Ct', 4255554444,
-     'tony@hotmail.com', 'Actif', 4000),
+     'tony@hotmail.com', True, 4000),
     (5555, 'Randy', 'Rhoads', '55 Lime Way', 4255555555,
      'randy@yahoo.com', True, 5000),
     ]
@@ -51,16 +47,16 @@ show_customers()
 
 # Update customer records in database for 'status'.
 # Note: cust_id '3333' is expected to be there, but cust_id '9999' is not.
-update_customer_credit(3333, 'status', False) # Existing customer status
-update_customer_credit(9999, 'status', False) # Non-existing customer status
+update_customer(3333, 'status', False) # Existing customer status
+update_customer(9999, 'status', False) # Non-existing customer status
 
 # Update customer records in database for 'cred_limit'.
 # Note: cust_id '3333' is expected to be there, but cust_id '9999' is not.
-update_customer_credit(3333, 'cred_limit', 6000) # Existing customer credit
-update_customer_credit(9999, 'cred_limit', 9000) # Non-existing customer credit
+update_customer(3333, 'cred_limit', 6000) # Existing customer credit
+update_customer(9999, 'cred_limit', 9000) # Non-existing customer credit
 
 # Return count of active customers as integer ('status' == True)
-list_active_customers()
+list_customers()
 
 # Print out all the customers records to show successful content/updates.
 show_customers()
