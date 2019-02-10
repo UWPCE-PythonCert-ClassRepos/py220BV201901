@@ -2,6 +2,8 @@
 
 from lesson03.assignment.management_database_model import *
 import logging
+import csv
+from decimal import Decimal
 
 log_format = "%(asctime)s %(filename)s:%(lineno)-3d %(levelname)s %(message)s"
 logging.basicConfig(level=logging.INFO, format=log_format)
@@ -72,6 +74,16 @@ def add_customers(a_dict):
         logging.info(e)
         logging.info(f'Recored ID:{key} is not saved')
 
+def add_customer_csv(file_name):
+    """
+    This function write csv file into database
+    """
+    with open ("file_name.csv", 'rb') as csvfile:
+        #csv couldn't work here.
+        csv_reader = csv.reader(csvfile, delimiter=' ', quotechar='|')
+        for row in csv_reader:
+            add_customers(row)
+
 
 def search_customer(search_input=None):
     """
@@ -139,9 +151,12 @@ def update_customer_credit(update_input=None, update_input_credit=None):
         update_input_credit = int(input("What's the new credit limit?"))
     try:
         with database.transaction():
-            u = Customer.update({Customer.credit_limit == update_input_credit}).where(Customer.customer_id == update_input)
-            u.execute()
-            logging.info(f"ID:{update_input}, New credit:???, is saved")
+            res = (Customer.update({Customer.credit_limit: Decimal(update_input_credit)})
+            .where(Customer.customer_id == update_input)
+            .execute())
+            logging.info(f"ID:{update_input},\
+            New credit:{Customer.select(Customer.credit_limit).where(Customer.customer_id == update_input)},\
+            is saved")
     except Exception as e:
         logging.info(f"{update_input}, {update_input_credit}, is Not saved")
         logging.info(e)
@@ -156,7 +171,7 @@ def list_active_customer():
     #    print (customer.customer_name)
     #logging.info("print customers whose status is currently active")
     #number = query.count()
-    query = Customer.where(Customer.status == True)
+    query = Customer.select().where(Customer.status == True)
     for customer in query:
         print(customer.name)
     number = query.count()
