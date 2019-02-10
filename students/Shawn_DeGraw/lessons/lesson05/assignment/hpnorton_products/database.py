@@ -29,7 +29,7 @@ SYSTEMLOG = logging.getLogger('SYSTEMLOG')
 SYSTEMLOG.addHandler(FILE_HANDLER_SYSTEM)
 SYSTEMLOG.setLevel("INFO")
 
-MYCLIENT = pymongo.MongoClient("mongodb://localhost:27017/")
+MYCLIENT = pymongo.MongoClient("mongodb://10.0.0.22:27017/")
 MYDB = MYCLIENT["HPNorton"]
 
 PRODUCTCOLLECTION = MYDB["products"]
@@ -51,24 +51,23 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
     productsuccesscount, productfailurecount = 0, 0
     rentalsuccesscount, rentalfailurecount = 0, 0
 
-
+    # Process product file and add to mongoDB
     try:
-        with open(Path(directory_name) + product_file, 'r') as prodfile:
+        with open(Path(directory_name, product_file), 'r') as prodfile:
 
+            next(prodfile) # skip header line
             for line in prodfile:
-                linelist = line.split(',')
+                linelist = [x.strip() for x in line.split(',')] 
 
-                result = MYDB.PRODUCTCOLLECTION.insert(
+                result = MYDB.PRODUCTCOLLECTION.insert_one(
                             {
-                                linelist[0] :
-                                    {
-                                        'description' : linelist[1],
-                                        'product_type' : linelist[2],
-                                        'quantity_available' : linelist[3]
-                                    }
+                                'product_id' : linelist[0],
+                                'description' : linelist[1],
+                                'product_type' : linelist[2],
+                                'quantity_available' : linelist[3]
                             })
 
-                if result.WriteResult["nInserted"]:
+                if result.acknowledged:
                     productsuccesscount += 1
                 else:
                     productfailurecount += 1
@@ -79,26 +78,26 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
         SYSTEMLOG.error(f'File not found at {directory_name + product_file}, exception {type(fileerror).__name__}')
 
 
+    # Process customer file and add to mongoDB
     try:
-        with open(Path(directory_name) + customer_file, 'r') as custfile:
+        with open(Path(directory_name, customer_file), 'r') as custfile:
 
+            next(custfile) # skip header line
             for line in custfile:
-                linelist = line.split(',')
+                linelist = [x.strip() for x in line.split(',')]
 
-                result = MYDB.CUSTOMERCOLLECTION.insert(
+                result = MYDB.CUSTOMERCOLLECTION.insert_one(
                             {
-                                linelist[0] :
-                                    {
-                                        'name' : linelist[1],
-                                        'address' : linelist[2],
-                                        'zip_code' : linelist[3],
-                                        'phone_number' : linelist[4],
-                                        'email' : linelist[5],
-                                        'rentals' : []
-                                    }
+                                'customer_id' : linelist[0],
+                                'name' : linelist[1],
+                                'address' : linelist[2],
+                                'zip_code' : linelist[3],
+                                'phone_number' : linelist[4],
+                                'email' : linelist[5],
+                                'rentals' : []
                             })
 
-                if result.WriteResult["nInserted"]:
+                if result.acknowledged:
                     customersuccesscount += 1
                 else:
                     customerfailurecount += 1
@@ -109,17 +108,26 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
         SYSTEMLOG.error(f'File not found at {directory_name + product_file}, exception {type(fileerror).__name__}')
 
 
+    # Process rental file and add to mongoDB in customer collection
     try:
-        with open(Path(directory_name) + rentals_file, 'r') as rentfile:
+        with open(Path(directory_name, rentals_file), 'r') as rentfile:
 
+            next(rentfile) # skip header line
             for line in rentfile:
-                linelist = line.split(',')
+                linelist = [x.strip() for x in line.split(',')]
 
-                result = MYDB.CUSTOMERCOLLECTION.updateOne(
-                            { linelist[1] },
-                            { $addToSet: { 'rentals' : [ linelist[0] ] } } )
+                result = MYDB.CUSTOMERCOLLECTION.update_one(
+                    {
+                        'customer_id' : linelist[1]
+                    },
+                    {
+                        '$addToSet' :
+                        {
+                            'rentals' : linelist[0]
+                        }
+                    })
 
-                if result.WriteResult["modifiedCount"]:
+                if result.acknowledged:
                     rentalsuccesscount += 1
                 else:
                     rentalfailurecount += 1
@@ -128,3 +136,23 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
 
     except FileNotFoundError as fileerror:
         SYSTEMLOG.error(f'File not found at {directory_name + product_file}, exception {type(fileerror).__name__}')
+
+    return [(productsuccesscount, customersuccesscount, rentalsuccesscount),
+            (productfailurecount, customerfailurecount, rentalfailurecount)]
+
+
+def show_available_products():
+    """ Returns all products with quantity greater than 0 """
+
+    result = {}
+
+    for document in MYDB.PRODUCTCOLLECTION.find({"quantity_available": {"$gt": "0"}}):
+        key = document['product_id']
+
+        result[key] = {
+            'description': document['description'],
+            'product_type': document['product_type'],
+            'quantity_available': document['quantity_available']
+            }
+
+    return result
