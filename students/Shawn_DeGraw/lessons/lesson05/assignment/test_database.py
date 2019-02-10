@@ -62,3 +62,26 @@ def test_show_avail_products():
                             'product_type':'livingroom',
                             'quantity_available':'3'
                         }}
+
+
+def test_show_rentals():
+    """ test for available products """
+
+    result = mongo.show_rentals('prd002')
+
+    assert result == {
+        'user005':
+            {
+                'name':'Dan Sounders',
+                'address':'861 Honeysuckle Lane',
+                'phone_number':'206-279-1723',
+                'email':'soundersoccer@mls.com'
+            },
+        'user008':
+            {
+                'name':'Shirlene Harris',
+                'address':'4329 Honeysuckle Lane',
+                'phone_number':'206-279-5340',
+                'email':'harrisfamily@gmail.com'
+            }
+        }
