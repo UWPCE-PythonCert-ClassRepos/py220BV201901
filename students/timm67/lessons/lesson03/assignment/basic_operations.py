@@ -6,6 +6,7 @@
 import sys
 from loguru import logger
 from customer_model import Customer
+from customer_model import PhoneInfo
 from customer_model import database
 
 
@@ -37,15 +38,17 @@ def add_customer(**kwargs):
     when the app is first run. Call it customers.db
     """
     try:
+        database.connect()
+        database.execute_sql('PRAGMA foreign_keys = ON;') # needed for sqlite
         with database.transaction():
             new_cust = Customer.create(
                 customer_id=kwargs['customer_id'],
                 name=kwargs['name'],
                 lastname=kwargs['lastname'],
                 home_address=kwargs['home_address'],
-                phone_number=kwargs['phone_number'],
+                phone_info=kwargs['phone_number'],
                 email_address=kwargs['email_address'],
-                status=kwargs['status'],
+                status=True if kwargs['status'] == 'Active' else False,
                 credit_limit=kwargs['credit_limit'])
             new_cust.save()
     except KeyError:
@@ -69,13 +72,15 @@ def search_customer(customer_id):
     """
     ret_dict = {}
     try:
+        database.connect()
+        database.execute_sql('PRAGMA foreign_keys = ON;') # needed for sqlite
         with database.transaction():
             cust = Customer.get(Customer.customer_id == customer_id)
             if cust is not None:
                 ret_dict['name'] = cust.name
                 ret_dict['lastname'] = cust.lastname
                 ret_dict['email_address'] = cust.email_address
-                ret_dict['phone_number'] = cust.phone_number
+                ret_dict['phone_number'] = cust.phone_info
                 logger.info('Database query successful')
             else:
                 logger.error(f'Customer {customer_id} not found')
@@ -85,13 +90,19 @@ def search_customer(customer_id):
         logger.info(thrown_exception)
         logger.info('See how the database protects our data')
     finally:
-        pass
+        database.close()
 
     return ret_dict
 
 
 def delete_customer(customer_id):
+    """
+    This function will delete the record of a customer matching
+    customer_id
+    """
     try:
+        database.connect()
+        database.execute_sql('PRAGMA foreign_keys = ON;') # needed for sqlite
         with database.transaction():
             cust = Customer.get(Customer.customer_id == customer_id)
             if cust is not None:
@@ -105,7 +116,7 @@ def delete_customer(customer_id):
         logger.info(thrown_exception)
         logger.info('See how the database protects our data')
     finally:
-        pass
+        database.close()
 
 
 def update_customer_credit(customer_id, credit_limit):
@@ -116,17 +127,19 @@ def update_customer_credit(customer_id, credit_limit):
 
     The credit limit stored in the database is returned as a float.
     The value is 0.0 if the customer_id is not valid. The value is
-    the current value in the database if it _cannot_ be updated, 
+    the current value in the database if it _cannot_ be updated,
     else it is the updated value stored in the databsae
     """
     ret_credit = float(0.0)
 
     try:
+        database.connect()
+        database.execute_sql('PRAGMA foreign_keys = ON;') # needed for sqlite
         with database.transaction():
             cust = Customer.get(Customer.customer_id == customer_id)
             if cust is not None:
                 ret_credit = cust.credit_limit
-                logger.info(f'Updating credit limit from {cust.credit_limit} to {credit_limit}')    
+                logger.info(f'Updating credit limit from {cust.credit_limit} to {credit_limit}')
                 cust.credit_limit = credit_limit
                 ret_credit = cust.credit_limit
                 cust.save()
@@ -139,7 +152,7 @@ def update_customer_credit(customer_id, credit_limit):
         logger.info(thrown_exception)
         logger.info('See how the database protects our data')
     finally:
-        pass
+        database.close()
 
     return ret_credit
 
@@ -152,6 +165,8 @@ def list_active_customers():
     active_cust = 0
 
     try:
+        database.connect()
+        database.execute_sql('PRAGMA foreign_keys = ON;') # needed for sqlite
         for cust in Customer.select().where(Customer.status != 0):
             logger.info(f'Customer {cust.customer_id} is active')
             active_cust += 1
@@ -162,7 +177,7 @@ def list_active_customers():
         logger.info(thrown_exception)
         logger.info('See how the database protects our data')
     finally:
-        pass
+        database.close()
 
     return active_cust
 
@@ -171,12 +186,16 @@ def util_drop_tables():
     """
     Utility function that drops tables after testing
     """
+    tables = [Customer, PhoneInfo]
+
     try:
-        database.drop_tables(Customer)
+        database.connect()
+        database.execute_sql('PRAGMA foreign_keys = ON;') # needed for sqlite
+        database.drop_tables(tables)
         logger.info('Database table drop successful')
     except Exception as thrown_exception:
         logger.info('Error dropping Customer table')
         logger.info(thrown_exception)
         logger.info('See how the database protects our data')
     finally:
-        pass
+        database.close()
