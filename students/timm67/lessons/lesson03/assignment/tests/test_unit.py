@@ -1,4 +1,4 @@
-""" Unit tests for assignment01 """
+""" Unit tests for assignment03 """
 import pytest
 
 from basic_operations import add_customer
@@ -15,61 +15,85 @@ logger.add(stdout, level='INFO')
 logger.enable(__name__)
 
 test_new_credit_limit = 3000.00
-test_customer_id = 1234
-test_data = {
-    'customer_id' : test_customer_id,
-    'name' : 'Greg',
-    'lastname' : 'Smith',
-    'home_address' : '123 Main St., Bothell, WA 98104',
-    'phone_number' : '(425) 555-1212',
-    'email_address' : 'greg.smith@email.com',
-    'status' : True,
-    'credit_limit' : 1500.00
-}
+test_delete_customer_id = 'C01'
+test_data = [
+    {
+        'customer_id' : 'C01',
+        'name' : 'Greg',
+        'lastname' : 'Smith',
+        'home_address' : '123 Main St., Bothell, WA 98104',
+        'phone_number' : '(425) 555-1212',
+        'email_address' : 'greg.smith@email.com',
+        'status' : 'Active',
+        'credit_limit' : 1500.00
+    },
+    {
+        'customer_id' : 'C02',
+        'name' : 'Mary',
+        'lastname' : 'Smith',
+        'home_address' : '123 Main St., Bothell, WA 98104',
+        'phone_number' : '(425) 555-1213',
+        'email_address' : 'mary.smith@email.com',
+        'status' : 'Active',
+        'credit_limit' : 1500.00
+    }
+]
 
-def test_01_add_customer():
-    """ Test adding a customer  """
-    global test_data, test_customer_id
 
-    try:
-        add_customer(**test_data)
-    except ValueError:
-        logger.error(f'Customer id {test_customer_id} not found')
+def test_01_add_customers():
+    """ Test adding customers  """
+    for customer in test_data:
+        try:
+            add_customer(**customer)
+        except ValueError:
+            logger.error(f"Customer id { customer['customer_id'] } not found")
+            assert False
+            return
 
-    try:
-        db_dict = search_customer(test_customer_id)
-    except ValueError:
-        logger.error(f'Customer id {test_customer_id} not found')
+        try:
+            db_dict = search_customer(customer['customer_id'])
+        except ValueError:
+            logger.error(f"Customer id {customer['customer_id']} not found")
+            assert False
+            return
 
-    assert db_dict != {}
-    assert test_data['name'] == db_dict['name']
-    assert test_data['lastname'] == db_dict['lastname']
-    assert test_data['email_address'] == db_dict['email_address']
-    assert test_data['phone_number'] == db_dict['phone_number']
+        assert db_dict != {}
+        assert customer['name'] == db_dict['name']
+        assert customer['lastname'] == db_dict['lastname']
+        assert customer['email_address'] == db_dict['email_address']
+        assert customer['phone_number'] == db_dict['phone_number']
 
 
 def test_02_search_customer():
     """ Test querying a customer """
-    try:
-        db_dict = search_customer(test_customer_id)
-    except ValueError:
-        logger.error(f'Customer id {test_customer_id} not found')
+    for customer in test_data:
+        try:
+            db_dict = search_customer(customer['customer_id'])
+        except ValueError:
+            logger.error(f"Customer id {customer['customer_id']} not found")
+            assert False
+            return
 
-    assert db_dict != {}
-    assert test_data['name'] == db_dict['name']
-    assert test_data['lastname'] == db_dict['lastname']
-    assert test_data['email_address'] == db_dict['email_address']
-    assert test_data['phone_number'] == db_dict['phone_number']
+        assert db_dict != {}
+        assert customer['name'] == db_dict['name']
+        assert customer['lastname'] == db_dict['lastname']
+        assert customer['email_address'] == db_dict['email_address']
+        assert customer['phone_number'] == db_dict['phone_number']
 
 
 def test_03_update_customer_credit():
     """ Test updating a customer credit limit"""
-    try:
-        new_credit_limit = update_customer_credit(test_customer_id, test_new_credit_limit)
-    except ValueError:
-        logger.error(f'Customer id {test_customer_id} not found')
+    for customer in test_data:
+        try:
+            new_credit_limit = update_customer_credit(customer['customer_id'],
+                                                      test_new_credit_limit)
+        except ValueError:
+            logger.error(f"Customer id {customer['customer_id']} not found")
+            assert False
+            return
 
-    assert new_credit_limit == test_new_credit_limit
+        assert new_credit_limit == test_new_credit_limit
+
 
 def test_04_list_active_customers():
     """ Test list active customers """
@@ -77,24 +101,31 @@ def test_04_list_active_customers():
         num_customers = list_active_customers()
     except ValueError:
         assert False
-    assert num_customers == 1
+        return
+
+    assert num_customers == len(test_data)
 
 
 def test_05_delete_customer():
     """ Test deleting a customer """
     try:
-        delete_customer(test_customer_id)
+        delete_customer(test_delete_customer_id)
     except ValueError:
-        logger.error(f'Customer id {test_customer_id} not found')
+        logger.error(f'Customer id {test_delete_customer_id} not found')
+        assert False
+        return
 
     try:
         num_customers = list_active_customers()
-    except ValueError:
-        logger.error(f'Customer id {test_customer_id} not found')
+    except Exception as e:
+        logger.info(e)
+        assert False
+        return
 
-    assert num_customers == 0
+    assert num_customers == (len(test_data) - 1)
 
 
 def test_06_drop_tables():
+    """ Test teardown function to drop tables """
     logger.info('Dropping tables (cleanup)')
     util_drop_tables()

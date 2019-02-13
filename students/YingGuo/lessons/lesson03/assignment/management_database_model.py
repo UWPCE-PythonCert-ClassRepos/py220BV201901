@@ -1,5 +1,5 @@
 """
-Creat database for HP Norton to store customer information,
+Database model for HP Norton to store customer information,
 custommer credit information,
 monthly active customer informaiont
 """
@@ -21,25 +21,15 @@ class BaseModel(Model):
 class Customer(BaseModel):
     logging.info("Customer class, coresponses to customer table in database")
     """
-    This class defines customer, which includes information of Customer ID.
-    Name. Lastname. Home address. Phone number. Email address. Credit limit.
+    This class defines customer, which includes information of customer_id,
+    name, lastname, home_address, phone_number, email_address, status, credit_limit.
     """
 
     customer_id = CharField(primary_key = True, max_length=30)
-    customer_name = CharField(max_length=30)
+    name = CharField(max_length=30)
     last_name = CharField(max_length=30)
     home_address = CharField(max_length=50)
     phone_number = CharField(max_length=12)
-    email = TextField()
-    credit_limit = DecimalField(decimal_places=2)
-
-class Sale(BaseModel):
-    """
-    keep track of montly sales, if a customer has sales in this month,
-    the status of this customer would be seen as active customer.
-    """
-    logging.info("Sale class, keep track of monthly sale")
-    order_number = CharField(primary_key=True, max_length=5)
-    order_date = DateField(formats='YYYY-MM-DD')
+    email_address = TextField()
     status = BooleanField(help_text='True means active, False means in-active', null=False)
-    customer_id = ForeignKeyField(Customer, related_name='was filled by', null=False)
+    credit_limit = DecimalField(decimal_places=2)

@@ -6,9 +6,7 @@ logging.basicConfig(level=logging.INFO)
 
 logging.info('One off program to build the classes from the model in the database')
 
-database.create_tables([
-        Customer,
-        Sale,
-    ])
+database.create_tables([Customer])
+logging.info("Customer model is created")
 
 database.close()
