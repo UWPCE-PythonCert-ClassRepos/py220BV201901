@@ -97,6 +97,15 @@ use sqlitetutorial.net to install sqlite!!
 1/30/19:
 MongoDB - new database to be used in this class (noSQL database: 'schema-less')
 
+============================================================================================
+2/06/19:
+python -m cProfile <python program name>
+Allows timing for optimization
 
+Look at e-mail from Andy for 'mocking' technique.  There is a tutorial he sent last Wed or so (1/30)
 
+www.dbader.org/blog/python-memoization for 'memoization' (cache) examples.
 
+Make sure to close database BEFORE the returns in basic_operations.py!!
+
+Give feedback to Andy!
