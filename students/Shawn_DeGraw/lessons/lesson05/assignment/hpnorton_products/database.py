@@ -29,11 +29,14 @@ SYSTEMLOG = logging.getLogger('SYSTEMLOG')
 SYSTEMLOG.addHandler(FILE_HANDLER_SYSTEM)
 SYSTEMLOG.setLevel("INFO")
 
-MYCLIENT = pymongo.MongoClient("mongodb://10.0.0.22:27017/")
+MYCLIENT = pymongo.MongoClient("mongodb://127.0.0.1:27017/")
 MYDB = MYCLIENT["HPNorton"]
 
 PRODUCTCOLLECTION = MYDB["products"]
 CUSTOMERCOLLECTION = MYDB["customers"]
+
+MYDB.PRODUCTCOLLECTION.create_index('product_id', unique=True)
+MYDB.CUSTOMERCOLLECTION.create_index('customer_id', unique=True)
 
 
 def import_data(directory_name, product_file, customer_file, rentals_file):
@@ -57,20 +60,25 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
 
             next(prodfile) # skip header line
             for line in prodfile:
-                linelist = [x.strip() for x in line.split(',')] 
+                linelist = [x.strip() for x in line.split(',')]
 
-                result = MYDB.PRODUCTCOLLECTION.insert_one(
-                            {
-                                'product_id' : linelist[0],
-                                'description' : linelist[1],
-                                'product_type' : linelist[2],
-                                'quantity_available' : linelist[3]
-                            })
+                try:
+                    result = MYDB.PRODUCTCOLLECTION.insert_one(
+                        {
+                            'product_id' : linelist[0],
+                            'description' : linelist[1],
+                            'product_type' : linelist[2],
+                            'quantity_available' : linelist[3]
+                        })
+                    if result.acknowledged:
+                        productsuccesscount += 1
+                    else:
+                        productfailurecount += 1
 
-                if result.acknowledged:
-                    productsuccesscount += 1
-                else:
+                except pymongo.errors.DuplicateKeyError:
                     productfailurecount += 1
+                    continue
+
 
                 DBLOG.info(f'Added product DB entry: {linelist[0]}')
 
@@ -86,21 +94,26 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
             for line in custfile:
                 linelist = [x.strip() for x in line.split(',')]
 
-                result = MYDB.CUSTOMERCOLLECTION.insert_one(
-                            {
-                                'customer_id' : linelist[0],
-                                'name' : linelist[1],
-                                'address' : linelist[2],
-                                'zip_code' : linelist[3],
-                                'phone_number' : linelist[4],
-                                'email' : linelist[5],
-                                'rentals' : []
-                            })
+                try:
+                    result = MYDB.CUSTOMERCOLLECTION.insert_one(
+                        {
+                            'customer_id' : linelist[0],
+                            'name' : linelist[1],
+                            'address' : linelist[2],
+                            'zip_code' : linelist[3],
+                            'phone_number' : linelist[4],
+                            'email' : linelist[5],
+                            'rentals' : []
+                        })
 
-                if result.acknowledged:
-                    customersuccesscount += 1
-                else:
+                    if result.acknowledged:
+                        customersuccesscount += 1
+                    else:
+                        customerfailurecount += 1
+
+                except pymongo.errors.DuplicateKeyError:
                     customerfailurecount += 1
+                    continue
 
                 DBLOG.info(f'Added customer DB entry: {linelist[0]}')
 
@@ -127,7 +140,7 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
                         }
                     })
 
-                if result.acknowledged:
+                if result.modified_count:
                     rentalsuccesscount += 1
                 else:
                     rentalfailurecount += 1
