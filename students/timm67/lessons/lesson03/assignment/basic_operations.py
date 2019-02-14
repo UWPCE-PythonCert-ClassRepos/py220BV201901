@@ -132,6 +132,11 @@ def update_customer_credit(customer_id, credit_limit):
     """
     ret_credit = float(0.0)
 
+    if credit_limit < 0.0:
+        logger.info(f'Error setting credit limit for {customer_id}')
+        logger.info(f'Credit limit is below 0: {credit_limit}')
+        raise ValueError
+
     try:
         database.connect()
         database.execute_sql('PRAGMA foreign_keys = ON;') # needed for sqlite
@@ -139,7 +144,8 @@ def update_customer_credit(customer_id, credit_limit):
             cust = Customer.get(Customer.customer_id == customer_id)
             if cust is not None:
                 ret_credit = cust.credit_limit
-                logger.info(f'Updating credit limit from {cust.credit_limit} to {credit_limit}')
+                logger.info(f'Updating credit limit from {cust.credit_limit} \
+                              to {credit_limit}')
                 cust.credit_limit = credit_limit
                 ret_credit = cust.credit_limit
                 cust.save()
