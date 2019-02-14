@@ -201,11 +201,3 @@ def show_customers(*args):
                     f'ST:{customer.status}, CR:{customer.cred_limit}')
 
     print()
-
-
-def drop_database(*args):
-    ''' Drop customers database 'customers.db' '''
-    logger.info('Drop "customers.db" database\n')
-
-    Customers.drop_table()
-    database.close()

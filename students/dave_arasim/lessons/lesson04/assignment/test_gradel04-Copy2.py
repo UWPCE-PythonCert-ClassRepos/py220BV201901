@@ -7,7 +7,9 @@
 """
 
 import pytest
-import basic_operations as l
+
+#from lessons.lesson03.assignment import basic_operations as l  DKA
+import basic_operations as l  # DKA
 
 @pytest.fixture
 def _add_customers():
@@ -59,11 +61,8 @@ def _list_active_customers():
 def _add_customers_from_file():
     return "customer_test.csv"
 
+
 ##################################################################################
-
-def test_create_database():
-    l.create_database()
-
 
 def test_list_active_customers(_list_active_customers):
     """ actives """
@@ -79,10 +78,11 @@ def test_list_active_customers(_list_active_customers):
                        )
     actives = l.list_active_customers()
 
-    assert actives == 4
+    assert actives == 4  # DKA was 2
 
     for customer in _list_active_customers:
         l.delete_customer(customer[0])
+
 
 
 def test_add_customer(_add_customers):
@@ -105,6 +105,7 @@ def test_add_customer(_add_customers):
 
     for customer in _add_customers:
         l.delete_customer(customer[0])
+
 
 
 def test_search_customer(_search_customers):
@@ -133,6 +134,7 @@ def test_search_customer(_search_customers):
         l.delete_customer(customer[0])
 
 
+
 def test_delete_customer(_delete_customers):
     """ delete """
     for customer in _delete_customers:
@@ -151,6 +153,7 @@ def test_delete_customer(_delete_customers):
 
         deleted = l.search_customer(customer[0])
         assert deleted == {}
+
 
 
 def test_update_customer_credit(_update_customer_credit):
@@ -178,6 +181,7 @@ def test_update_customer_credit(_update_customer_credit):
         l.delete_customer(customer[0])
 
 
+
 def test_add_customers_from_file(_add_customers_from_file):
     """ additions from 'csv' file """
     try:
@@ -193,10 +197,4 @@ def test_add_customers_from_file(_add_customers_from_file):
     except FileNotFoundError:
         print(f'File not found: {_add_customers_from_file}')
 
-
-def test_show_customers():
-    l.show_customers()
-
-
-def test_drop_database():
-    l.drop_database()
+#    assert False # DKA

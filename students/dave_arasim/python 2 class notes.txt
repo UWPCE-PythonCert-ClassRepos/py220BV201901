@@ -109,3 +109,8 @@ www.dbader.org/blog/python-memoization for 'memoization' (cache) examples.
 Make sure to close database BEFORE the returns in basic_operations.py!!
 
 Give feedback to Andy!
+
+============================================================================================
+2/13/19:
+Using MongoDB for lesson 5...see e-mail examples
+
