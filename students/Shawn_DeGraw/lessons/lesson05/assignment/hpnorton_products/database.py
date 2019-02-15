@@ -29,6 +29,7 @@ SYSTEMLOG = logging.getLogger('SYSTEMLOG')
 SYSTEMLOG.addHandler(FILE_HANDLER_SYSTEM)
 SYSTEMLOG.setLevel("INFO")
 
+# MongoDB configurations
 MYCLIENT = pymongo.MongoClient("mongodb://127.0.0.1:27017/")
 MYDB = MYCLIENT["HPNorton"]
 
@@ -150,8 +151,7 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
     except FileNotFoundError as fileerror:
         SYSTEMLOG.error(f'File not found at {directory_name + product_file}, exception {type(fileerror).__name__}')
 
-    return [(productsuccesscount, customersuccesscount, rentalsuccesscount),
-            (productfailurecount, customerfailurecount, rentalfailurecount)]
+    return (productsuccesscount, customersuccesscount, rentalsuccesscount), (productfailurecount, customerfailurecount, rentalfailurecount)
 
 
 def show_available_products():
@@ -173,7 +173,8 @@ def show_available_products():
 
 def show_rentals(product_id):
     """
-    Return dictionary of customers.
+    Returns dictionary of customers with the provided
+    product_id in the rentals field.
 
     :param: product id rented by a customer
     """
