@@ -1,0 +1,40 @@
+Refactored code snippit with four runtimes:
+
+starttime = time.time()
+for new in new_ones:
+    try:
+        year_count[(lambda x: new[0][6:] if new[0][6:] != '2018' else '2017')(new)] += 1
+    except KeyError:
+        continue
+endtime = time.time()
+print(f"time: {endtime - starttime}")
+
+time: 0.68715500831604
+time: 0.7559976577758789
+time: 0.6761574745178223
+time: 0.6811888217926025
+
+
+Original code snippit with four runtimes:
+
+starttime = time.time()
+for new in new_ones:
+    if new[0][6:] == '2013':
+        year_count["2013"] += 1
+    if new[0][6:] == '2014':
+        year_count["2014"] += 1
+    if new[0][6:] == '2015':
+        year_count["2015"] += 1
+    if new[0][6:] == '2016':
+        year_count["2016"] += 1
+    if new[0][6:] == '2017':
+        year_count["2017"] += 1
+    if new[0][6:] == '2018':
+        year_count["2017"] += 1
+endtime = time.time()
+print(f"time: {endtime - starttime}")
+
+time: 0.7200698852539062
+time: 0.7051050662994385
+time: 0.8367605209350586
+time: 0.7764654159545898
