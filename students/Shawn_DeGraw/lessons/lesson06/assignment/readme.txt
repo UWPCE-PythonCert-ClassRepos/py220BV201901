@@ -8,7 +8,7 @@ cprofileresultgoodsecond.txt
 cprofileresultgoodthird.txt
 cprofileresultgoodfourth.txt
 
-I had missed that 2018 was suppose to peg the 2017 count from the original poor file so I had to adjust my design and implemented a lambda to handle this specific case. 
+I had missed that 2018 was suppose to peg the 2017 count from the original poor file so I had to adjust my design and implemented a lambda to handle this specific case. My new version had far more function calls in it but it was still faster. Iterating through the file and using strip() and split() were faster than using the csv.read. This is seen in cprofile third and fourth.
 
 The file codecomparison.txt is a test of one code snippet change using just time stampstamps to compare the old code with the new code. The improvement was minimal between the two snippets.
 
