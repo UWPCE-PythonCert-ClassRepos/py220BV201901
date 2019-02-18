@@ -11,6 +11,7 @@ logging.basicConfig(level=logging.INFO)
 log_format = ("%(asctime)s %(filename)s:%(lineno)-3d %(levelname)s %(message)s")
 formatter = logging.Formatter(log_format)
 
+
 file_handler = logging.FileHandler('db.log', mode='w')
 file_handler.setFormatter(formatter)
 file_handler.setLevel(logging.INFO)
@@ -18,7 +19,6 @@ file_handler.setLevel(logging.INFO)
 console_handler = logging.StreamHandler()
 console_handler.setFormatter(formatter)
 console_handler.setLevel(logging.DEBUG)
-
 
 logger = logging.getLogger()
 logger.addHandler(file_handler)
@@ -38,7 +38,7 @@ class Customer(Model):
     customer_email = CharField(max_length=100)
     customer_status = CharField(max_length=10)
     customer_credit_limit = DecimalField(max_digits=5, decimal_places=2)
-    logging.info('Assigned field names to Customer table.')
+    logger.info('Assigned field names to Customer table.')
 
     class Meta:
         """refernce to the database"""
@@ -49,21 +49,8 @@ def create_customer_table():
     db.connect()
     db.execute_sql('PRAGMA foreign_keys = ON;')
     db.create_tables([Customer])
-    logging.info('Created a new table/update existing database table.')
+    logger.info('Created a new table/update existing database table.')
     db.close()
-
-def convert_csv_dict(filename):
-    """Function to convert data from the csv file to list comprsing of dict values"""
-    try:
-        with open(filename, 'r') as file:
-            logger.info(f'Sucessfully opened and read data from "{filename}".')
-            yield [list(row) for row in csv.reader(file)]
-            logger.info('Generator: CSV file is iterated')
-
-    except FileNotFoundError:
-        logger.warning('CSV file don\'t exist in current working folder.')
-    except Exception as err:
-        logger.warning(f'File {filename} unable to open due to {type(err)}.')
 
 def total_customer():
     """Function to determin total number of customer in the database"""
@@ -77,22 +64,36 @@ def add_customer(*customer_data):
 
     try:
         with db.transaction():
-            logging.info('Database connect at add_instance level')
+            logger.info('Database connect at add_instance level')
             new_customer = Customer.create(
                 customer_ID=customer_data[0],
                 customer_name=customer_data[1],
-                customer_last_name=customer_data[2],                    customer_address=customer_data[3],
+                customer_last_name=customer_data[2],
+                customer_address=customer_data[3],
                 customer_phone=customer_data[4],
                 customer_email=customer_data[5],
                 customer_status=customer_data[6],
                 customer_credit_limit=customer_data[7])
             new_customer.save()
 
-            logging.info(f'New customer "{new_customer.customer_name}" eith customer ID "{new_customer.customer_ID}" has been generated')
+            logger.info(f'New customer "{new_customer.customer_name}" eith customer ID "{new_customer.customer_ID}" has been generated')
     except IntegrityError:
-        logging.warning(f'Unable to create/update database')
+        logger.warning(f'Unable to create/update database')
         db.close()
-        logging.info('Database is close after adding customer to the table')
+        logger.info('Database is close after adding customer to the table')
+
+def convert_csv_dict(filename):
+    """Function to convert data from the csv file to list comprsing of dict values"""
+    try:
+        with open(filename, 'r') as file:
+            next(csv.reader(file))
+            logger.info(f'Sucessfully opened and read data from "{filename}".')
+            yield [row for row in csv.reader(file)]
+            logger.info('Generator: CSV file is iterated')
+    except FileNotFoundError:
+        logger.warning('CSV file don\'t exist in current working folder.')
+    except Exception as err:
+        logger.warning(f'File {filename} unable to open due to {type(err)}.')
 
 def add_customer_csv(input_data=None):
     """Function to add a new customers (row/instance) to the main table"""
@@ -105,7 +106,6 @@ def add_customer_csv(input_data=None):
             logger.info(f' Iterable: Using Generators: File type {type(customer_data)}')
     except TypeError:
         logger.warning(f'Check data type {type(customer_data)}.')
-
     try:
         with db.transaction():
             num_cust = total_customer() # Customer number before adding new customers
@@ -121,13 +121,12 @@ def add_customer_csv(input_data=None):
                         customer_status=customer[6],
                         customer_credit_limit=customer[7])
                 new_customer.save()
-                logging.info(f'Added "{total_customer() - num_cust}"'
+                logger.info(f'Added "{total_customer() - num_cust}"'
                 ' customers to the {Customer} database.')
             except StopIteration:
-                logging.error(f' Generator ended {customer_data}.')
-
+                logger.info(f' Generator ended {customer_data}.')
     except IntegrityError:
-        logging.warning(f'Rows/Customers already exists or Unable to create/update database.')
+        logger.warning(f'Rows/Customers already exists or Unable to create/update database.')
 
     logger.info(f'Number of customer in {Customer} database: "{total_customer()}".')
 
@@ -142,12 +141,12 @@ def search_customer(customer_id):
         query = Customer.select().where(Customer.customer_ID == customer_id).get()
         data_dict = {"name":query.customer_name, "lastname":query.customer_last_name,
             "email": query.customer_email, "phone_number":query.customer_phone}
-        logging.info(f'Dict of queried ID "{query.customer_ID}" is\n{data_dict}')
+        logger.info(f'Dict of queried ID "{query.customer_ID}" is\n{data_dict}')
         return data_dict
 
     except DoesNotExist:
         return {}
-        logging.warning(f'The "{customer_id}" is not in the customer database')
+        logger.warning(f'The "{customer_id}" is not in the customer database')
     db.close()
 
 def delete_customer(cust_id_del):
@@ -160,7 +159,7 @@ def delete_customer(cust_id_del):
         logger.info(f'Number of customers updated from "{num_cust}" to "{total_customer()}".')
         return query not in Customer
     except DoesNotExist:
-        logging.warning(f'The costumer with {cust_id_del} d\'not exits in the database')
+        logger.warning(f'The costumer with {cust_id_del} d\'not exits in the database')
     db.close()
 
 def update_customer_credit(customer_id, cre_lim):
@@ -169,19 +168,19 @@ def update_customer_credit(customer_id, cre_lim):
         query = Customer.select().where(Customer.customer_ID == customer_id).get()
         if query not in Customer:
             raise ValueError
-            logging.error(f'"{customer_id}" not present in database')
+            logger.error(f'"{customer_id}" not present in database')
         else:
             query.customer_credit_limit = cre_lim 
             query.save()
-            logging.info (f'Updated credit limit of {query.customer_name} to {query.customer_credit_limit}')
+            logger.info (f'Updated credit limit of {query.customer_name} to {query.customer_credit_limit}')
     except DoesNotExist:
-        logging.warning(f'The "{customer_id}" doesn\'t exist in database')
+        logger.warning(f'The "{customer_id}" doesn\'t exist in database')
         raise ValueError
     db.close()
 
 def list_active_customers():
     """Function to determine the number of active customers - count"""
-    query = Customer.select().where(Customer.customer_status=='active').count()
+    query = Customer.select().where(Customer.customer_status == 'active').count()
     return query
     logger.info(f'Total number of active customers are {query}.')
 
@@ -194,3 +193,9 @@ def clear_table():
 if __name__ == '__main__':
     create_customer_table()
     filename = 'data_customer.csv'
+    # t1  = time.time()
+    # add_customer_csv(convert_csv_dict)
+    # t2 = time.time()
+    # print (t2-t1)
+    # print (len(Customer))
+    
