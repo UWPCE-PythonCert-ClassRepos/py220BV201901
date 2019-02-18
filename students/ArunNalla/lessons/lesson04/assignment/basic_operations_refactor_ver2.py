@@ -1,13 +1,28 @@
 #! usr/bin/env python
-""" Creating a customer database
-by Arun Nalla 01/30/2019 Assignment 3"""
+""" Refactored customer database
+by Arun Nalla 02/16/2019 Assignment 4"""
 
+import csv
 import logging
 from peewee import *
-import csv
-
+import time
 
 logging.basicConfig(level=logging.INFO)
+log_format = ("%(asctime)s %(filename)s:%(lineno)-3d %(levelname)s %(message)s")
+formatter = logging.Formatter(log_format)
+
+file_handler = logging.FileHandler('db.log', mode='w')
+file_handler.setFormatter(formatter)
+file_handler.setLevel(logging.INFO)
+
+console_handler = logging.StreamHandler()
+console_handler.setFormatter(formatter)
+console_handler.setLevel(logging.DEBUG)
+
+
+logger = logging.getLogger()
+logger.addHandler(file_handler)
+logger.addHandler(console_handler)
 
 db = SqliteDatabase('customer.db')
 
@@ -23,20 +38,37 @@ class Customer(Model):
     customer_email = CharField(max_length=100)
     customer_status = CharField(max_length=10)
     customer_credit_limit = DecimalField(max_digits=5, decimal_places=2)
+    logging.info('Assigned field names to Customer table.')
 
     class Meta:
         """refernce to the database"""
         database = db
-    logging.info('Generated Customer database')
 
 def create_customer_table():
     """Function to create table"""
     db.connect()
     db.execute_sql('PRAGMA foreign_keys = ON;')
-    Customer.create_table()
-    logging.info('Created a new table/update an existing table')
+    db.create_tables([Customer])
+    logging.info('Created a new table/update existing database table.')
     db.close()
-    logging.info('Database is successfully closed')
+
+def convert_csv_dict(filename):
+    """Function to convert data from the csv file to list comprsing of dict values"""
+    try:
+        with open(filename, 'r') as file:
+            logger.info(f'Sucessfully opened and read data from "{filename}".')
+            yield [list(row) for row in csv.reader(file)]
+            logger.info('Generator: CSV file is iterated')
+
+    except FileNotFoundError:
+        logger.warning('CSV file don\'t exist in current working folder.')
+    except Exception as err:
+        logger.warning(f'File {filename} unable to open due to {type(err)}.')
+
+def total_customer():
+    """Function to determin total number of customer in the database"""
+    total_count = Customer.select().count()
+    return total_count
 
 def add_customer(*customer_data):
     """customer_id, name, lastname, home_address,
@@ -62,24 +94,46 @@ def add_customer(*customer_data):
         db.close()
         logging.info('Database is close after adding customer to the table')
 
-def add_new_instance_csv(filename):
-    """Function to convert data from the file to list comprsing of dict values"""
+def add_customer_csv(input_data=None):
+    """Function to add a new customers (row/instance) to the main table"""
+
+    """Converting raw data either from csv (using convert_csv_dict function)
+    or python data types in a dict"""
     try:
-        with open(filename, 'r') as file:
-            reader = csv.reader(file)
-            logging.info(f'Sucessfully opened and read data from "{filename}".')
-            for row in reader:
-                add_customer(*row)
-        logging.info(f'Added customers to the {Customer} database.')
-
-    except FileNotFoundError:
-        logging.warning('CSV file don\'t exist in current working folder.')
+        if input_data == convert_csv_dict:
+            customer_data = convert_csv_dict(filename)
+            logger.info(f' Iterable: Using Generators: File type {type(customer_data)}')
     except TypeError:
-        logging.warning(f'File {filename} unable to open.')
+        logger.warning(f'Check data type {type(customer_data)}.')
 
-    logging.info(f'Number of customer in {Customer} database: "{len(Customer)}".')
+    try:
+        with db.transaction():
+            num_cust = total_customer() # Customer number before adding new customers
+            try:
+                for customer in next(customer_data):
+                    new_customer = Customer.create(
+                        customer_ID=customer[0],
+                        customer_name=customer[1],
+                        customer_last_name=customer[2],
+                        customer_address=customer[3],
+                        customer_phone=customer[4],
+                        customer_email=customer[5],
+                        customer_status=customer[6],
+                        customer_credit_limit=customer[7])
+                new_customer.save()
+                logging.info(f'Added "{total_customer() - num_cust}"'
+                ' customers to the {Customer} database.')
+            except StopIteration:
+                logging.error(f' Generator ended {customer_data}.')
+
+    except IntegrityError:
+        logging.warning(f'Rows/Customers already exists or Unable to create/update database.')
+
+    logger.info(f'Number of customer in {Customer} database: "{total_customer()}".')
+
     db.close()
-    logging.info('Database is successfully closed.')
+
+    logger.info('Database is successfully closed.')
 
 
 def search_customer(customer_id):
@@ -89,7 +143,6 @@ def search_customer(customer_id):
         data_dict = {"name":query.customer_name, "lastname":query.customer_last_name,
             "email": query.customer_email, "phone_number":query.customer_phone}
         logging.info(f'Dict of queried ID "{query.customer_ID}" is\n{data_dict}')
-
         return data_dict
 
     except DoesNotExist:
@@ -100,15 +153,16 @@ def search_customer(customer_id):
 def delete_customer(cust_id_del):
     """Function to delete a single instance/row from the table"""
     try:
+        num_cust = total_customer()
         query = Customer.select().where(Customer.customer_ID == cust_id_del).get()
         query.delete_instance()
-
-        logging.info (f'Deleted "{query.customer_name}" with "{query.customer_email}" from the database')
+        logger.info(f'Deleted "{query.customer_name, query.customer_last_name.upper()}" from database.')
+        logger.info(f'Number of customers updated from "{num_cust}" to "{total_customer()}".')
         return query not in Customer
     except DoesNotExist:
         logging.warning(f'The costumer with {cust_id_del} d\'not exits in the database')
     db.close()
-    
+
 def update_customer_credit(customer_id, cre_lim):
     ''' Function to update the customer credit limit'''
     try:
@@ -125,27 +179,18 @@ def update_customer_credit(customer_id, cre_lim):
         raise ValueError
     db.close()
 
-
 def list_active_customers():
     """Function to determine the number of active customers - count"""
-
-    query = Customer.select().where(Customer.customer_status == 'active').count()
+    query = Customer.select().where(Customer.customer_status=='active').count()
     return query
-    logging.info (f'Total number of acitve customers are {query}')
+    logger.info(f'Total number of active customers are {query}.')
 
 def clear_table():
     #Clean data
     db.connect()
     db.drop_tables([Customer])
-    logging.info(f'The inforation in the {Customer} table has been dropped')
-    db.close()
-
-
+    logger.info(f'The information in the {Customer} table has been dropped.')
 
 if __name__ == '__main__':
     create_customer_table()
-    filename = 'customer.csv'
-    
-
-
-
+    filename = 'data_customer.csv'
