@@ -19,6 +19,12 @@ class TestBasicOperations():
     Test class for bassic_operations
     '''
 
+    def test_clean_up(self):
+        '''
+        Clean up Customer table after testing
+        '''
+        clean_up_db()
+
     def test_init(self):
         '''
         Test init_db function
@@ -94,29 +100,23 @@ class TestBasicOperations():
         '''
         assert Customer.select().where(Customer.status == 1).count() == 1
 
-    # def test_update_customer_credit_succeed(self):
-    #     '''
-    #     Test listing active customers
-    #     '''
-    #     new_credit = 20000.0
-
-    #     update_customer_credit(CUSTOMER_ID, new_credit)
-
-    #     updated_credit_limit = Customer.select().where(
-    #         Customer.customer_id == CUSTOMER_ID).get().credit_limit
-    #     print(f'Updated: {update_customer_credit}')
-    #     assert updated_credit_limit == new_credit
-
-    # def test_delete_customer(self):
-    #     '''
-    #     Test deleting a customer give a customer ID
-    #     '''
-    #     Customer.delete().where(Customer.customer_id == CUSTOMER_ID)
-    #     customer = search_customer(CUSTOMER_ID)
-    #     assert not customer
-
-    def clean_up(self):
+    def test_update_customer_credit_succeed(self):
         '''
-        Clean up Customer table after testing
+        Test listing active customers
         '''
-        clean_up_customer_db()
+        new_credit = 20000.0
+
+        update_customer_credit(CUSTOMER_ID, new_credit)
+
+        updated_credit_limit = Customer.select().where(
+            Customer.customer_id == CUSTOMER_ID).get().credit_limit
+        print(f'Updated: {update_customer_credit}')
+        assert updated_credit_limit == pytest.approx(new_credit)
+
+    def test_delete_customer(self):
+        '''
+        Test deleting a customer give a customer ID
+        '''
+        delete_customer(CUSTOMER_ID)
+        customer = search_customer(CUSTOMER_ID)
+        assert not customer
