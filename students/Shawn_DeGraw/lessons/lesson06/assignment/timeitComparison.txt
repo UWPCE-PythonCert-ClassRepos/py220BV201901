@@ -1,0 +1,14 @@
+timeit result from original poor_perf:
+
+In [7]: timeit.timeit('poor_perf.analyze("data/exercise.csv")', globals = globals(), number=1)
+{'2013': 5911, '2014': 5854, '2015': 5994, '2016': 5762, '2017': 11600, '2018': 0}
+'ao' was found 63395 times
+Out[7]: 7.980007135000051
+
+
+timeit result from refactored good_perf_refact:
+
+In [4]: timeit.timeit('good_perf_refact.analyze("data/exercise.csv")', globals = globals(), number=1)
+{'2013': 5911, '2014': 5854, '2015': 5994, '2016': 5762, '2017': 11600, '2018': 0}
+'ao' was found 63395 times
+Out[4]: 2.4818834779998724
