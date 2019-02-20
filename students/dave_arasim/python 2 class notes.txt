@@ -114,3 +114,15 @@ Give feedback to Andy!
 2/13/19:
 Using MongoDB for lesson 5...see e-mail examples
 
+Lesson 4 submittals:
+customer_test.csv  (customer.csv truncated to 5 records, including header row)
+basic_operations.py  (all operations against database)
+customers.db  (the database created)
+test_gradel04.py  (pytest script for unit testing--includes database create/drop)
+basic_operations2019-02-13.log  (log file of all database transactions as pytest script is run)
+customers_model.py  (the database definition object)
+Note:  Included non '.py' items in the zip file
+
+cd to C:\Program Files\MongoDB\Server\4.0\bin> 
+enter command mongod
+leave open and running!
