@@ -26,7 +26,6 @@ class MongoDBConnection(object):
 
 def print_mdb_collection(collection_name):
     """ Print out the particular MongoDB database collection """
-
     mongo = MongoDBConnection()
 
     with mongo:
@@ -43,8 +42,6 @@ def print_mdb_collection(collection_name):
 
 
 def show_available_products():
-    """ Print out formatted products MongoDB database collection """
-
     out_doc = {}
 
     mongo = MongoDBConnection()
@@ -53,8 +50,10 @@ def show_available_products():
         # mongodb database defined
         db = mongo.connection.media
 
-        # products collection in the MongoDB database
+        # collections in the MongoDB database
         products = db["products"]
+        customers = db["customers"]
+        rentals = db["rentals"]
 
         for doc in products.find():
             out_doc[doc['product_id']] = {
@@ -67,8 +66,6 @@ def show_available_products():
 
 
 def show_rentals(search_product_id):
-    """ Print out formatted rentals MongoDB database collection """
-
     out_doc = {}
 
     mongo = MongoDBConnection()
@@ -77,7 +74,9 @@ def show_rentals(search_product_id):
         # mongodb database defined
         db = mongo.connection.media
 
-        # rentals collection in the MongoDB database
+        # collections in the MongoDB database
+        products = db["products"]
+        customers = db["customers"]
         rentals = db["rentals"]
 
         for doc in rentals.find():
@@ -93,8 +92,6 @@ def show_rentals(search_product_id):
 
 
 def import_data(data_dir, products_file, customers_file, rentals_file):
-    """ Load entire MongoDB database collection from .csv files """
-
     mongo = MongoDBConnection()
 
     with mongo:
@@ -191,8 +188,6 @@ def import_data(data_dir, products_file, customers_file, rentals_file):
 
 
 def drop_data():
-    """ Drop entire MongoDB database collection """
-
     mongo = MongoDBConnection()
 
     with mongo:
@@ -203,15 +198,13 @@ def drop_data():
         products = db["products"]
         customers = db["customers"]
         rentals = db["rentals"]
-
+        
         products.drop()
         customers.drop()
         rentals.drop()
 
 
 def main():
-    """ Extra testing scenarios...also works with pytest 'test_database.py' """
-
     mongo = MongoDBConnection()
 
     with mongo:
@@ -233,27 +226,25 @@ def main():
         print_mdb_collection(products)
         print()
         print()
-
         print('Customers:')
         print_mdb_collection(customers)
         print()
         print()
-
         print('Rentals:')
         print_mdb_collection(rentals)
         print()
         print()
 
-        print('show_available_products output:')
+        print ('show_available_products output:')
         print(show_available_products())
         print()
         print()
 
-        print('show_rentals output for product_id P000003:')
+        print ('show_rentals output for P000003:')
         print(show_rentals('P000003'))
         print()
         print()
-
+        
         # Option to drop data from collections
         yorn = input("Drop data?")
 
@@ -261,5 +252,5 @@ def main():
             drop_data()
 
 
-if __name__ == "__main__":
+if __name__== "__main__":
     main()
