@@ -12,6 +12,7 @@ def parse_cmd_arguments():
     parser = argparse.ArgumentParser(description='Process some integers.')
     parser.add_argument('-i', '--input', help='input JSON file', required=True)
     parser.add_argument('-o', '--output', help='out JSON file', required=True)
+    parser.add_argument('-l', '--level', help="debug level", required=True)
     return parser.parse_args()
 
 
@@ -27,40 +28,34 @@ def load_rentals_file(filename):
 
 def calculate_additional_fields(data):
     record_num = 0
+    year = datetime.datetime.now().year
+    month = datetime.datetime.now().month
+    day = datetime.datetime.now().day
     for value in data.values():
+        logger.debug(f"record num: {record_num}")
         try:
-            logger.debug(f"record num: {record_num}")
             rental_start = datetime.datetime.strptime(value['rental_start'],
                                                       '%m/%d/%y')
-            if (rental_start == ''):
+        except ValueError:
+            if (value['rental_start'] == ""):
                 logger.warning("rental start not present! Using today's date")
-                year = datetime.datetime.now().year
-                month = datetime.datetime.now().month
-                day = datetime.datetime.now().day
+
                 value['rental_start'] = "{0}/{1}/{2}".format(month, day, year)
+        try:
             rental_end = datetime.datetime.strptime(value['rental_end'],
                                                     '%m/%d/%y')
-            if (rental_end == ''):
-                logger.warning("rental end not present! Using today's date")
-                year = datetime.datetime.now().year
-                month = datetime.datetime.now().month
-                day = datetime.datetime.now().day
-                value['rental_end'] = "{0}/{1}/{2}".format(month, day, year)
-            logger.debug(f"rental start: {rental_start}")
-            logger.debug(f"rental end: {rental_end}")
-            value['total_days'] = abs((rental_end - rental_start).days)
-            logger.debug(f"total days: {value['total_days']}")
-            value['total_price'] = value['total_days'] * value['price_per_day']
-            logger.debug(f"total price: {value['total_price']}")
-            value['sqrt_total_price'] = math.sqrt(value['total_price'])
-            logger.debug(f"total price sqrt: {value['sqrt_total_price']}")
-            if (value['units_rented'] == 0):
-                logger.warning("units_rented is zero; using 1 as substitute")
-                value['units_rented'] = 1
-            value['unit_cost'] = value['total_price'] / value['units_rented']
-            logger.debug(f"unit cost: {value['unit_cost']}")
         except ValueError:
-            logger.warning("invalid date")
+            if (value['rental_end'] == ""):
+                logger.warning("rental end not present! Using today's date")
+                value['rental_end'] = "{0}/{1}/{2}".format(month, day, year)
+        value['total_days'] = abs((rental_end - rental_start).days)
+        logger.debug(f"total days: {value['total_days']}")
+        value['total_price'] = value['total_days'] * value['price_per_day']
+        value['sqrt_total_price'] = math.sqrt(value['total_price'])
+        if (value['units_rented'] == 0):
+            logger.warning("units_rented is zero; using 1 as substitute")
+            value['units_rented'] = 1
+        value['unit_cost'] = value['total_price'] / value['units_rented']
         record_num += 1
     return data
 
@@ -72,12 +67,39 @@ def save_to_json(filename, data):
         except TypeError:
             logger.error("JSON serialization error")
 
+
 if __name__ == "__main__":
+    logfilename = "debugger_log_{time}.txt"
     logger.enable('__main__')
-    logger.add("debugger_log_{time}.txt")
+    logger.add(logfilename)
     logger.info('logger enabled')
     args = parse_cmd_arguments()
-    logger.debug(f"Input arg: {args.input}")
+
+    print(f"Debug level: {args.level}")
+
+    #
+    # log levels per the assignment
+    # 0: No debug messages or log file.
+    # 1: Only error messages.
+    # 2: Error messages and warnings.
+    # 3: Error messages, warnings and debug messages.
+    #
+
+    if args.level == 0:
+        logger.disable('__main__')
+        logger.remove(logfilename)
+    elif args.level == 1:
+        logger.level = logger.error
+        logger.add(logfilename, level=logger.error)
+    elif args.level == 2:
+        logger.level = logger.warning
+        logger.add(logfilename, level=logger.warning)
+    elif args.level == 3:
+        logger.level = logger.debug
+        logger.add(logfilename, level=logger.debug)
+    else:
+        pass
+
     data = load_rentals_file(args.input)
     data = calculate_additional_fields(data)
     save_to_json(args.output, data)

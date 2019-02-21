@@ -1,6 +1,6 @@
 # inventory_class
 """ Parent class : Inventory class"""
-class Inventory:
+class Inventory: # pylint: disable=too-few-public-methods
     """ parent class comprising basic info of items which will
     will be used in subclasses"""
 
