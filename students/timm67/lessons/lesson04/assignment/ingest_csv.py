@@ -10,6 +10,9 @@ from csv import reader as csv_reader
 
 from zipfile import ZipFile
 
+zip_filename = 'customer.zip'
+csv_filename = 'customer.csv'
+
 # indeces into array returned by CSV reader
 cust_id = 0
 cust_name = 1
@@ -28,5 +31,14 @@ def import_csv(csv_filename):
         myreader = csv_reader(csv_fd.readline())
         line = myreader()
         while line != []:
-            line = myreader()
             yield line
+            line = myreader()
+
+
+def ingest_csv():
+    extract_csv(zip_filename)
+    importer = import_csv(csv_filename)
+    data = next(importer)
+    while (data != [])
+        # TODO: extract items from list and add record to database
+        pass
