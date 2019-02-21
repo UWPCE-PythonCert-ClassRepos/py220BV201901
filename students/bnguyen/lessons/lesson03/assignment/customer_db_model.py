@@ -2,17 +2,15 @@
 # Class:   Advance Python 220 - Jan2019
 # Lesson03 - customer_db_model.py
 """
-This will create a customer model and database that can be used at HP Norton with the following data:
+This will create a customer model and database that can be used at HP Norton with the 
+following data:
 Customer ID. Name. Lastname. Home address.
 Phone number. Email address.
 Status (active or inactive customer).  Credit limit.
 """
-import logging
 from peewee import *
 
-
 DB = SqliteDatabase('customers.db')
-
 
 class BaseModel(Model):
     """ base Model peewee Object Relational Mapping - ORM """
@@ -39,7 +37,7 @@ class Customer(BaseModel):
     email = CharField(null=True, max_length=254)  # RFC xxyy
     status = CharField(null=True, max_length=8)
     credit_limit = CharField(null=True)
-    # These will fail Andy's test
+    # These will fail Andy's tests
     #status = CharField(null=True, constraints=[Check("status == 'active' or status == 'inactive'")])
     #credit_limit = IntegerField(null=True, constraints=[Check('credit_limit <= 0')])
 
