@@ -1,5 +1,4 @@
 # Unit Test
-# pylint: disable=wildcard-import
 """
 Module to define the unit tests for the Basic Operations module
 """
@@ -7,6 +6,7 @@ Module to define the unit tests for the Basic Operations module
 import sys
 from unittest import TestCase
 from basic_operations import *
+import csv
 
 TEST_01 = ('test_001', 'test_name', 'test_last_name', 'test_address',
            'test_phone_number', 'test_email', 'test_status', 000)
@@ -43,26 +43,28 @@ UPDATE_DICT_TEST = {'customer_id': 'test_003',
 
 CUST_LIST_TEST = {TEST_01, TEST_02, TEST_03}
 
-if Customer.table_exists() == False:
-    Customer.create_table()
-else:
-    print("Table already exists, tests not performed")
-    sys.exit()
-
-
-with DATABASE.atomic():
-    Customer.insert_many(CUST_LIST_TEST, [Customer.customer_id,
-                                          Customer.name,
-                                          Customer.last_name,
-                                          Customer.home_address,
-                                          Customer.phone_number,
-                                          Customer.email_address,
-                                          Customer.status,
-                                          Customer.credit_limit]).execute()
-
 
 class CustomerTest(TestCase):
     """ Customer test class """
+
+
+    def setUp(self):
+        """ Add test records to table """
+        with DATABASE.atomic():
+            Customer.insert_many(CUST_LIST_TEST, [Customer.customer_id,
+                                                  Customer.name,
+                                                  Customer.last_name,
+                                                  Customer.home_address,
+                                                  Customer.phone_number,
+                                                  Customer.email_address,
+                                                  Customer.status,
+                                                  Customer.credit_limit]).execute()
+
+
+    def tearDown(self):
+        """ Delete all test records from table """
+        Customer.delete().execute()
+
 
     def test_table_exists(self):
         """ Table exists """

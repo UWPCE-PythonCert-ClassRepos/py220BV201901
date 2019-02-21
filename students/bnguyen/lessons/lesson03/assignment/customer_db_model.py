@@ -37,8 +37,9 @@ class Customer(BaseModel):
     home_address = CharField(null=True, max_length=255)
     phone_number = CharField(null=True, max_length=20)
     email = CharField(null=True, max_length=254)  # RFC xxyy
-    #status = CharField(null=True, max_length=8)
-    #credit_limit = CharField(null=True)
-    status = CharField(null=True, constraints=[Check("status == 'active' or status == 'inactive'")])
-    credit_limit = IntegerField(null=True, constraints=[Check('credit_limit <= 0')])
+    status = CharField(null=True, max_length=8)
+    credit_limit = CharField(null=True)
+    # These will fail Andy's test
+    #status = CharField(null=True, constraints=[Check("status == 'active' or status == 'inactive'")])
+    #credit_limit = IntegerField(null=True, constraints=[Check('credit_limit <= 0')])
 

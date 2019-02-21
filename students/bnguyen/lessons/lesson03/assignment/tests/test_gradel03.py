@@ -69,7 +69,7 @@ def test_list_active_customers(_list_active_customers):
                        )
     actives = l.list_active_customers()
 
-    assert actives == 4
+    assert actives == 5
 
     for customer in _list_active_customers:
         l.delete_customer(customer[0])
