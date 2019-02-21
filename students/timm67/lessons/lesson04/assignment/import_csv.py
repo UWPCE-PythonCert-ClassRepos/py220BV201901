@@ -13,8 +13,7 @@ from zipfile import ZipFile
 # indeces into array returned by CSV reader
 cust_id = 0
 cust_name = 1
-zip_filename = 'customer.zip'
-csv_filename = 'customer.csv'
+
 
 def extract_csv(zip_filename):
     # opening the zip file in READ mode 
