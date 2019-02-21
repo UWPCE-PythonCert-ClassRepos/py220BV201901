@@ -29,16 +29,40 @@ try:
     c_rentals = db['rentals']
     logging.info (f'Collections successfully done')
 except Exception as error3:
-    logging.error("Unable tp create collection")
+    logging.error("Unable to create collection")
 
 client.close()
 
 data_dir = os.path.dirname(os.path.abspath(__file__))
 
-def import_data(data_dir, customer, product, rental):
+def import_data(data_dir,  product, customer, rental):
     """Function to create three collections and add documents from CSV files"""
     added = []
     errors = []
+    try:
+        with open(os.path.join(data_dir, product), 'r') as file:
+            header = next(csv.reader(file))
+            logging.info(f'Header seprated from "{product}"')
+            add = 0
+            error = 0
+            logging.info(f'Reading file: "{product}"')
+            for row in csv.reader(file):
+                c_product.insert_one({header[0] : row[0],
+                                    header[1]:row[1],
+                                    header[2]:row[2],
+                                    header[3]:row[3]})
+                if c_product.acknowledged:
+                    add += 1
+                else:
+                    logging.warning(f'Error occured in reading "{row}" of "{product}"')
+                    error += 1
+            added.insert(0, add)
+            errors.insert(0, error)
+            logging.info(f'Succesfully added "{add}" documents with "{error}" errors to collection from "{product}"')
+    except FileNotFoundError:
+        logging.error(f'{product} not in folder')
+    except Exception as err2:
+        logging.error(f'"{type(err2)}" occured reading: "{product}"')
     try:
         with open(os.path.join(data_dir, customer), 'r') as file:
             header = next(csv.reader(file))
@@ -68,31 +92,6 @@ def import_data(data_dir, customer, product, rental):
         logging.error(f'{customer} not in folder')
     except Exception as err:
         logging.error(f'"{type(err)}" occured reading : "{customer}"')
-
-    try:
-        with open(os.path.join(data_dir, product), 'r') as file:
-            header = next(csv.reader(file))
-            logging.info(f'Header seprated from "{product}"')
-            add = 0
-            error = 0
-            logging.info(f'Reading file: "{product}"')
-            for row in csv.reader(file):
-                c_product.insert_one({header[0] : row[0],
-                                    header[1]:row[1],
-                                    header[2]:row[2],
-                                    header[3]:row[3]})
-                if c_product.acknowledged:
-                    add += 1
-                else:
-                    logging.warning(f'Error occured in reading "{row}" of "{product}"')
-                    error += 1
-            added.insert(0, add)
-            errors.insert(0, error)
-            logging.info(f'Succesfully added "{add}" documents with "{error}" errors to collection from "{product}"')
-    except FileNotFoundError:
-        logging.error(f'{product} not in folder')
-    except Exception as err2:
-        logging.error(f'"{type(err2)}" occured reading: "{product}"')
 
     try:
         with open(os.path.join(data_dir, rental), 'r') as file:
@@ -125,6 +124,12 @@ def import_data(data_dir, customer, product, rental):
 
 def show_available_products():
     """ Function to pull 'quering' out all prodcuts"""
+
+    update_type = c_product.update_many({'product_type': 'Livingroom'},
+                        {'$set' : {'product_type':'livingroom'}})
+    logging.info('Updated Livingroom from Capitalise to lowercase.' + 
+    f' Updated "{update_type.modified_count}" collections.')
+
     try:
         query = c_product.find({}, {'_id': 0, 'product_id': 1, 'description': 1,
                                     'product_type': 1, 'quantity_available': 1})
@@ -159,10 +164,11 @@ def del_coll():
     c_customer.drop()
     c_product.drop()
     c_rentals.drop()
+    logging.info("Collection were deleted from database")
 
 if __name__ == '__main__':
     del_coll()
-    import_data(data_dir, 'customer.csv', 'product.csv', 'rental.csv')
-    show_available_products()
-    show_rentals()
+    # import_data(data_dir, 'product.csv', 'customer.csv', 'rental.csv')
+    # show_available_products()
+    # show_rentals()
 
