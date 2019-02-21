@@ -7,11 +7,7 @@ from basic_operations import list_active_customers
 from loguru import logger
 from sys import stdout
 
-from import_csv import extract_csv
-from import_csv import import_csv
-
-zip_filename = 'customer.zip'
-csv_filename = 'customer.csv'
+from ingest_csv import ingest_csv
 
 def main():
     """
@@ -25,11 +21,8 @@ def main():
     logger.add("logfile_{time}.txt", level='DEBUG')
     logger.enable(__name__)
 
-    # Extract the customer CSV file
-    extract_csv(zip_filename)
-
     # TODO: load the CSV file using generator and doing profiling
-    import_csv_gen = import_csv('customer_lesson3.csv')
+    ingest_csv_gen = ingest_csv()
 
     #
     # ingest_csv contains the generator function that iterates through the CSV
