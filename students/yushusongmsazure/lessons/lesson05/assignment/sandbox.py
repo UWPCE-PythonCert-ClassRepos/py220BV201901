@@ -3,10 +3,6 @@ import csv
 import os
 from database import MongoDBConnection
 
-
-
-
-
 def import_data(directory_name, product_file, customer_file, rentals_file):
     mongo = MongoDBConnection()
     with mongo:
@@ -14,36 +10,73 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
         db = mongo.connection.inventory
         # collection in database
 
-
+        # process customers data
         with open(os.path.join(directory_name, customer_file),
                 encoding='utf-8-sig',
                 newline='') as csvfile:
 
+            # add customer collection
             customer_data = csv.DictReader(csvfile)
             customer_col = db["customers"]
             for row in customer_data:
                 customer_col.insert_one(row)
 
+        # process products data
+        with open(os.path.join(directory_name, product_file),
+                encoding='utf-8-sig',
+                newline='') as prod_file:
 
+            # add customer collection
+            prod_data = csv.DictReader(prod_file)
+            prod_col = db["products"]
 
+            for row in prod_data:
+                quantity = int(row["quantity_available"])
+                prod_col.insert_one({"product_id":row["product_id"],
+                                     "description":row["description"],
+                                     "product_type":row["product_type"],
+                                     "quantity_available":quantity})
 
+        # process rentals data
+        with open(os.path.join(directory_name, rentals_file),
+                encoding='utf-8-sig',
+                newline='') as rent_file:
 
-        # for row in customers_data:
-        #     # print(row)
-        #     print(row['user_id'], row['name'], row['address'], row['zip_code'], row['phone_number'], row['email'])
+            # add customer collection
+            rent_data = csv.DictReader(rent_file)
+            rent_col = db["rentals"]
+            rent_col.insert_many(rent_data)
 
+def show_available_products():
+    mongo = MongoDBConnection()
+    with mongo:
+        db = mongo.connection.inventory
+        prod_col = db["products"]
+        products={}
 
+        for a in prod_col.find({"quantity_available": {"$gt": 0}}):
+            products[a["product_id"]] = {"description":a["description"],"product_type":a["product_type"],"quantity_available":a["quantity_available"]}
+        
+        return products
 
-# def print_mdb_collection(collection_name):
-#     for doc in collection_name.find():
-#         print(doc)
+        # prod_col.find({quantity_available : {$gt:0}})
+        # print_mdb_collection(t)
+        # for prod in prod_col.find():
+        #     if int(prod["quantity_available"]) > 0:
+
+def show_rentals(product_id):
+    mongo = MongoDBConnection()
+    with mongo:
+        db = mongo.connection.inventory
+        prod_col = db["products"]
+        users={}
 
 def main():
     import_data(os.path.dirname(os.path.abspath(__file__)),
                 'products.csv',
                 'customers.csv',
                 'rentals.csv')
-
+    show_available_products()
 
 #         # notice how easy these are to create and that they are "schemaless"
 #         # that is, the Python module defines the data structure in a dict,
@@ -83,9 +116,8 @@ def main():
 #         yorn = input("Drop data?")
 #         if yorn.upper() == 'Y':
 #             cd.drop()
-#         collector.drop()
+#             collector.drop()
 
-# # of course!
  
 if __name__== "__main__":
     main()
