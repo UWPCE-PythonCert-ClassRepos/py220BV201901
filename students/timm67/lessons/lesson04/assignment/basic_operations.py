@@ -15,17 +15,6 @@ logger.add("logfile_{time}.txt", level='DEBUG')
 logger.enable(__name__)
 
 
-def test_var_kwargs(farg, **kwargs):
-    """
-    test function, invoke as follows:
-    kwargs = {"arg3": 3, "arg2": "two"}
-    test_var_args_call(1, **kwargs)
-    """
-    print("formal arg:", farg)
-    for key in kwargs:
-        print("another keyword arg: %s: %s" % (key, kwargs[key]))
-
-
 def add_customer(**kwargs):
     """
     This function will add a new customer to the sqlite3 database. keyword
