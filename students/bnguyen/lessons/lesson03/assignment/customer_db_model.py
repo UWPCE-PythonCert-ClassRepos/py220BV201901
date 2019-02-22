@@ -37,7 +37,16 @@ class Customer(BaseModel):
     email = CharField(null=True, max_length=254)  # RFC xxyy
     status = CharField(null=True, max_length=8)
     credit_limit = CharField(null=True)
-    # These will fail Andy's tests
-    #status = CharField(null=True, constraints=[Check("status == 'active' or status == 'inactive'")])
-    #credit_limit = IntegerField(null=True, constraints=[Check('credit_limit <= 0')])
 
+
+class CustomerA(BaseModel):
+    """This class is similar to Customer except that this one has constraints"""
+    customer_id = CharField(primary_key=True, max_length=20)
+    name = CharField(null=True)
+    lastname = CharField(null=True)
+    home_address = CharField(null=True, max_length=255)
+    phone_number = CharField(null=True, max_length=20)
+    email = CharField(null=True, max_length=254)  # RFC xxyy
+    # These will fail some Andy's tests if in Customer
+    status = CharField(null=True, constraints=[Check("status == 'active' or status == 'inactive'")])
+    credit_limit = IntegerField(null=True, constraints=[Check('credit_limit >= 0')])

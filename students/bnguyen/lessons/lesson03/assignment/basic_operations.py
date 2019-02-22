@@ -19,7 +19,7 @@ LOGGER = logging.getLogger(__name__)
 LOGGER.info('Starting program action.')
 
 
-def initialize_db():
+def initialize_db(tablename):
     """
     Create DB to meet requirement # 6.
     Ensure you application will create an empty database if one doesn’t
@@ -29,11 +29,13 @@ def initialize_db():
         LOGGER.info('Creating Database..')
         DB.connect()
         DB.execute_sql('PRAGMA foreign_keys = ON;') # needed for sqlite only
-        Customer.create_table()
+        tablename.create_table()
     except Exception as errs:
         LOGGER.warning(f'Creating DB issue.  {errs}')
+    DB.close()
 
-initialize_db()
+# Creating the database with table Customer First!
+initialize_db(Customer)
 
 
 def db_initial_steps():
