@@ -5,7 +5,15 @@ Assignment 05
 
 import csv
 import os
+import logging
 from pymongo import MongoClient
+
+LOGGER = logging.getLogger()
+HANDLER = logging.StreamHandler()
+FORMATTER = logging.Formatter('%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
+HANDLER.setFormatter(FORMATTER)
+LOGGER.addHandler(HANDLER)
+LOGGER.setLevel(logging.INFO)
 
 class MongoDBConnection(object):
     """MongoDB Connection"""
@@ -62,8 +70,9 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
                                          "quantity_available":quantity})
                     product_added += 1
 
-        except FileNotFoundError:
+        except Exception as ex:
             product_error += 1
+            LOGGER.error(ex)
 
         try:
             # process customers data
@@ -78,8 +87,9 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
                     customer_col.insert_one(row)
                     customer_added += 1
 
-        except FileNotFoundError:
+        except Exception as ex:
             customer_error += 1
+            LOGGER.error(ex)
 
         try:
             # process rentals data
@@ -94,8 +104,9 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
                     rent_col.insert_one(rent)
                     rental_added += 1
 
-        except FileNotFoundError:
+        except Exception as ex:
             rental_error += 1
+            LOGGER.error(ex)
 
     return ((product_added, customer_added, rental_added),
             (product_error, customer_error, rental_error))
