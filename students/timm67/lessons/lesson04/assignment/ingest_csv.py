@@ -1,11 +1,13 @@
 from sys import stdout
-from csv import reader as csv_reader
+import io
+import csv
 from zipfile import ZipFile
 from loguru import logger
 from basic_operations import add_customer
 
-ZIP_FILENAME = 'customer.zip'
+ZIP_FILENAME = './lessons/lesson04/assignment/customer.zip'
 CSV_FILENAME = 'customer.csv'
+EXTRACT_PATH = './lessons/lesson04/assignment/'
 
 # indexes into array returned by CSV reader
 CUST_ID = 0
@@ -18,25 +20,30 @@ CUST_STATUS = 6
 CUST_CREDIT_LIMIT = 7
 
 
-def extract_csv(zip_filename):
+def extract_csv(zip_filename, csv_filename, extract_path):
     """
-    Extract .csv file from .zip file (req'd for github file siz limits)
+    Extract .csv file from .zip file (req'd for github file size limits)
     """
     with ZipFile(zip_filename, 'r') as ziparchive:
-        # extract all files in the zip archive
-        ziparchive.extractall()
+        # extract csv file using EXTRACT_PATH
+        ziparchive.extract(csv_filename, path=extract_path)
 
 
 def import_csv_gen(csv_filename):
     """
-    Import csv file generator (yields one record per next())
+    Import csv file generator (yields one record per yield)
     """
     with open(csv_filename, 'r') as csv_fd:
-        myreader = csv_reader(csv_fd.readline())
-        line = myreader()
-        while line != []:
-            yield line
-            line = myreader()
+        line_num = 0
+        line = 'foo'
+        while line:
+            line_num += 1
+            try:
+                line = csv_fd.readline()
+                yield line.rstrip('\n').split(',')
+            except EOFError:
+                return
+
 
 
 def ingest_csv():
@@ -44,17 +51,21 @@ def ingest_csv():
     Ingest csv function to combine extract and import gen functions,
     and populate data from generator in database
     """
-    kwargs = {}
+
     # Extract the CSV file from the zip archive
-    extract_csv(ZIP_FILENAME)
+    extract_csv(ZIP_FILENAME, CSV_FILENAME, EXTRACT_PATH)
     # Create a CSV import generator (next yields one db row)
-    import_generator = import_csv_gen(CSV_FILENAME)
+    import_generator = import_csv_gen(EXTRACT_PATH + CSV_FILENAME)
     # Skip over the title row
     next(import_generator)
     # Iterate over all other rows
     while True:
+        kwargs = {}
         try:
             data = next(import_generator)
+            if len(data) != 8:
+                logger.error(f'Got data item with incorrect item count: {len(data)}')
+                continue
             # extract items from list and add record to database
             kwargs['customer_id'] = data[CUST_ID]
             kwargs['name'] = data[CUST_NAME]
@@ -63,7 +74,7 @@ def ingest_csv():
             kwargs['phone_number'] = data[CUST_PHONE]
             kwargs['email_address'] = data[CUST_EMAIL]
             kwargs['status'] = data[CUST_STATUS]
-            kwargs['credit_limit'] = data[CUST_CREDIT_LIMIT]
+            kwargs['credit_limit'] = float(data[CUST_CREDIT_LIMIT])
             try:
                 add_customer(**kwargs)
             except ValueError:

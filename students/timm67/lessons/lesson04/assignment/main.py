@@ -16,7 +16,6 @@ def main():
     """
 
     # Standalone function to initialize logging
-
     logger.add(stdout, level='INFO')
     logger.add("logfile_{time}.txt", level='DEBUG')
     logger.enable(__name__)

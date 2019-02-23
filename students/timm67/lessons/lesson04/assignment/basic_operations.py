@@ -40,15 +40,15 @@ def add_customer(**kwargs):
                 status=True if kwargs['status'] == 'Active' else False,
                 credit_limit=kwargs['credit_limit'])
             new_cust.save()
+        logger.info('Database add successful')
     except KeyError:
         logger.error('kwargs not complete')
         raise ValueError
     except Exception as thrown_exception:
-        logger.info(f'Error creating customer')
+        logger.info('Error creating customer')
         logger.info(thrown_exception)
         logger.info('See how the database protects our data')
     finally:
-        logger.info('Database add successful; closing database')
         database.close()
 
 
