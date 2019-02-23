@@ -20,7 +20,7 @@ def add_customer(**kwargs):
     This function will add a new customer to the sqlite3 database. keyword
     args to keep pylint happy are the following:
 
-    name, lastname, home_address, phone_number,
+    customer_id, name, lastname, home_address, phone_number,
     email_address, status, credit_limit
 
     Ensure you application will create an empty database if one doesn’t exist
@@ -50,7 +50,6 @@ def add_customer(**kwargs):
     finally:
         logger.info('Database add successful; closing database')
         database.close()
-        # close database
 
 
 def search_customer(customer_id):
