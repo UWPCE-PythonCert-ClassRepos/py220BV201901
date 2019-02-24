@@ -40,7 +40,7 @@ def add_customer(**kwargs):
                 status=True if kwargs['status'] == 'Active' else False,
                 credit_limit=kwargs['credit_limit'])
             new_cust.save()
-        logger.info('Database add successful')
+        # logger.info('Database add successful')
     except KeyError:
         logger.error('kwargs not complete')
         raise ValueError

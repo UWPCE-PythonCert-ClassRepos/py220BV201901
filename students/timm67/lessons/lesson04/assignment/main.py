@@ -16,8 +16,8 @@ def main():
     """
 
     # Standalone function to initialize logging
-    logger.add(stdout, level='INFO')
-    logger.add("logfile_{time}.txt", level='DEBUG')
+    logger.add(stdout, level='WARNING')
+    logger.add("logfile_{time}.txt", level='INFO')
     logger.enable(__name__)
 
     # TODO: load the CSV file using generator and doing profiling

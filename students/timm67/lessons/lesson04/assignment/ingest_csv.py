@@ -1,13 +1,18 @@
-from sys import stdout
-import io
-import csv
+"""
+ingest_csv.py module uses generator to perform per-line import
+from specified CSV file and ingest as record into sqlite3 db
+using basic_operations.py
+"""
+
 from zipfile import ZipFile
 from loguru import logger
 from basic_operations import add_customer
 
-ZIP_FILENAME = './lessons/lesson04/assignment/customer.zip'
+ZIP_FILENAME_DBG = './lessons/lesson04/assignment/customer.zip'
+ZIP_FILENAME = './customer.zip'
 CSV_FILENAME = 'customer.csv'
-EXTRACT_PATH = './lessons/lesson04/assignment/'
+EXTRACT_PATH_DBG = './lessons/lesson04/assignment/'
+EXTRACT_PATH = './'
 
 # indexes into array returned by CSV reader
 CUST_ID = 0
@@ -40,6 +45,9 @@ def import_csv_gen(csv_filename):
             line_num += 1
             try:
                 line = csv_fd.readline()
+                # generator 'yield' statement for each
+                # line of the CSV file below. Python CSV
+                # support does not allow per-line parsing
                 yield line.rstrip('\n').split(',')
             except EOFError:
                 return
@@ -51,7 +59,6 @@ def ingest_csv():
     Ingest csv function to combine extract and import gen functions,
     and populate data from generator in database
     """
-
     # Extract the CSV file from the zip archive
     extract_csv(ZIP_FILENAME, CSV_FILENAME, EXTRACT_PATH)
     # Create a CSV import generator (next yields one db row)
@@ -64,7 +71,7 @@ def ingest_csv():
         try:
             data = next(import_generator)
             if len(data) != 8:
-                logger.error(f'Got data item with incorrect item count: {len(data)}')
+                logger.error(f'Data with incorrect item count: {len(data)}')
                 continue
             # extract items from list and add record to database
             kwargs['customer_id'] = data[CUST_ID]
