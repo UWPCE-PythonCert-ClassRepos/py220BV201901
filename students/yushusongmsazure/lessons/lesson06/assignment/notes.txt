@@ -1,0 +1,8 @@
+Step 1: Add logging using a decorator
+--The purpose is to calculate how much time spent to run analyze function without doing any improvements.
+--The approach was to run poor_perf.py for 10 times and found the average time spent of each run is around 10 seconds.
+
+Step 2: Reduce file I/O time
+--Within analyze function, the csv file has been opened/closed 2 times to filful 2 different data analyze processes.
+--However, we can combine these 2 processes into 1 file I/O.
+--Time reduced by half based on 10 runs.

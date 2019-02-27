@@ -69,7 +69,7 @@ def test_list_active_customers(_list_active_customers):
                        )
     actives = l.list_active_customers()
 
-    assert actives == 2
+    assert actives == 5
 
     for customer in _list_active_customers:
         l.delete_customer(customer[0])
@@ -139,7 +139,7 @@ def test_delete_customer(_delete_customers):
                        )
 
         response = l.delete_customer(customer[0])
-        assert response is True
+        assert response is None
 
         deleted = l.search_customer(customer[0])
         assert deleted == {}
