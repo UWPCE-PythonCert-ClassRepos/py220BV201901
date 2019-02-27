@@ -23,5 +23,13 @@ def test_update_customer_credit():
     query = Customer.get(Customer.customer_id == '003')
     assert query.credit_limit == 80000
 
+def test_search_customer():
+    a = search_customer("C000020")
+    result = {"C000020": ["Wendy", "Schneider", "58859 Schmeler Wall", "(346)696-3257", "Randi@bridie.info", True, 249]}
+    assert a == result
+
+def test_delete_customer():
+    delete_customer("123")
+    assert search_customer("123") == {}
 
 database.close()

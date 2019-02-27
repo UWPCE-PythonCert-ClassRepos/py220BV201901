@@ -3,9 +3,42 @@ poorly performing, poorly written module
 
 """
 
-import datetime
 import csv
+import datetime
+import logging
 
+LOGGER = logging.getLogger()
+# create file handler
+FILE_HANDLER = logging.FileHandler('poor_perf.log')
+# create console handler
+CONSOLE_HANDLER = logging.StreamHandler()
+# create formatter
+FORMATTER = logging.Formatter('%(asctime)s %(name)-6s %(levelname)-6s %(message)s')
+# set formater to file handler
+FILE_HANDLER.setFormatter(FORMATTER)
+# set formater to console handler
+CONSOLE_HANDLER.setFormatter(FORMATTER)
+# add file handle
+LOGGER.addHandler(FILE_HANDLER)
+# add console handle
+LOGGER.addHandler(CONSOLE_HANDLER)
+# add log level at root level
+LOGGER.setLevel(logging.INFO)
+
+
+def profile(func):
+    '''
+    Profile how long a give function runs
+    '''
+    def wrap(filename):
+        start = datetime.datetime.now()
+        x = func(filename)
+        elapsed = datetime.datetime.now()
+        LOGGER.info(f"[{func.__name__}] Elapsed Time = {elapsed-start}")
+        return x
+    return wrap
+
+@profile
 def analyze(filename):
     start = datetime.datetime.now()
     with open(filename) as csvfile:
@@ -59,7 +92,6 @@ def analyze(filename):
 def main():
     filename = "data/exercise.csv"
     analyze(filename)
-
 
 if __name__ == "__main__":
     main()
