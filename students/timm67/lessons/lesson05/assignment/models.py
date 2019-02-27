@@ -5,6 +5,8 @@ from mongoengine import ReferenceField
 
 
 """
+Reference example:
+
 class Author(Document):
     name = StringField()
 
@@ -16,15 +18,16 @@ Post.objects.first().author.name
 
 
 class Customer(Document):
-    user_id = StringField(required=True, max_length=15)
+    user_id = StringField(PrimaryKey=True, required=True, max_length=15)
     name = StringField(required=True, max_length=30)
     address = StringField(required=True, max_length=40)
+    zip_code = IntField()
     phone = StringField(required=True, max_length=15)
     email = StringField(required=True, max_length=40)
 
 
 class Product(Document):
-    prod_id = StringField(required=True, max_length=15)
+    prod_id = StringField(PrimaryKey=True, required=True, max_length=15)
     description = StringField(required=True, max_length=30)
     prod_type = StringField(required=True, max_length=15)
     quantity = IntField()

@@ -3,8 +3,7 @@
 import sys
 from loguru import logger
 
-from mongoengine import connect
-from mongoengine import disconnect
+from mongoengine import *
 
 from models import Customer
 from models import Product
@@ -26,11 +25,11 @@ class MongoDBConnection():
         self.dbname = dbname
 
     def __enter__(self):
-        self.connection = connect(self.host, self.port, self.dbname)
+        connect(self.dbname, host=self.host, port=self.port)
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        self.connection.disconnect()
+        pass
 
 
 def show_available_products():

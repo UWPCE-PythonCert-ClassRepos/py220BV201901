@@ -4,34 +4,29 @@ from specified CSV file and ingest as record into sqlite3 db
 using basic_operations.py
 """
 
-from zipfile import ZipFile
 from loguru import logger
-from basic_operations import add_customer
 
-ZIP_FILENAME_DBG = './lessons/lesson05/assignment/customer.zip'
-ZIP_FILENAME = './customer.zip'
-CSV_FILENAME = 'customer.csv'
-EXTRACT_PATH_DBG = './lessons/lesson05/assignment/'
-EXTRACT_PATH = './'
+from models import Customer
+from models import Product
+from models import Rental
+
+
 
 # indexes into array returned by CSV reader
-CUST_ID = 0
+CUST_USERID = 0
 CUST_NAME = 1
-CUST_LASTNAME = 2
-CUST_ADDRESS = 3
+CUST_ADDRESS = 2
+CUST_ZIPCODE = 3
 CUST_PHONE = 4
 CUST_EMAIL = 5
-CUST_STATUS = 6
-CUST_CREDIT_LIMIT = 7
 
+PROD_ID = 0
+PROD_DESC = 1
+PROD_TYPE = 2
+PROD_QTY = 3
 
-def extract_csv(zip_filename, csv_filename, extract_path):
-    """
-    Extract .csv file from .zip file (req'd for github file size limits)
-    """
-    with ZipFile(zip_filename, 'r') as ziparchive:
-        # extract csv file using EXTRACT_PATH
-        ziparchive.extract(csv_filename, path=extract_path)
+RENTAL_PROD_ID = 0
+RENTAL_USER_ID = 1
 
 
 def import_csv_gen(csv_filename):
@@ -53,38 +48,84 @@ def import_csv_gen(csv_filename):
                 return
 
 
-
-def ingest_csv():
+def ingest_customer_csv(csv_path):
     """
     Ingest csv function to combine extract and import gen functions,
     and populate data from generator in database
     """
-    # Extract the CSV file from the zip archive
-    extract_csv(ZIP_FILENAME, CSV_FILENAME, EXTRACT_PATH)
     # Create a CSV import generator (next yields one db row)
-    import_generator = import_csv_gen(EXTRACT_PATH + CSV_FILENAME)
+    import_generator = import_csv_gen(csv_path)
     # Skip over the title row
     next(import_generator)
     # Iterate over all other rows
     while True:
-        kwargs = {}
         try:
             data = next(import_generator)
             if len(data) != 8:
                 logger.error(f'Data with incorrect item count: {len(data)}')
                 continue
             # extract items from list and add record to database
-            kwargs['customer_id'] = data[CUST_ID]
-            kwargs['name'] = data[CUST_NAME]
-            kwargs['lastname'] = data[CUST_LASTNAME]
-            kwargs['home_address'] = data[CUST_ADDRESS]
-            kwargs['phone_number'] = data[CUST_PHONE]
-            kwargs['email_address'] = data[CUST_EMAIL]
-            kwargs['status'] = data[CUST_STATUS]
-            kwargs['credit_limit'] = float(data[CUST_CREDIT_LIMIT])
-            try:
-                add_customer(**kwargs)
-            except ValueError:
-                logger.error(f'Unable to add {data[CUST_ID]} to database')
+            customer = Customer(
+                user_id = data[CUST_USERID],
+                name = data[CUST_NAME],
+                address = data[CUST_ADDRESS],
+                zip_code = int(data[CUST_ZIPCODE]),
+                phone_number = data[CUST_PHONE],
+                email = data[CUST_EMAIL]
+            )
+            customer.save()
+        except StopIteration:
+            break
+
+
+def ingest_product_csv(csv_path):
+    """
+    Ingest csv function to combine extract and import gen functions,
+    and populate data from generator in database
+    """
+    # Create a CSV import generator (next yields one db row)
+    import_generator = import_csv_gen(csv_path)
+    # Skip over the title row
+    next(import_generator)
+    # Iterate over all other rows
+    while True:
+        try:
+            data = next(import_generator)
+            if len(data) != 4:
+                logger.error(f'Data with incorrect item count: {len(data)}')
+                continue
+            product = Product(
+                product_id=data[PROD_ID],
+                description=data[PROD_DESC],
+                product_type=data[PROD_TYPE],
+                quantity_available=data[PROD_QTY]
+            )
+            product.save()
+        except StopIteration:
+            break
+
+
+def ingest_rental_csv(csv_path):
+    """
+    Ingest csv function to combine extract and import gen functions,
+    and populate data from generator in database
+    """
+    # Create a CSV import generator (next yields one db row)
+    import_generator = import_csv_gen(csv_path)
+    # Skip over the title row
+    next(import_generator)
+    # Iterate over all other rows
+    while True:
+        try:
+            data = next(import_generator)
+            if len(data) != 2:
+                logger.error(f'Data with incorrect item count: {len(data)}')
+                continue
+            # extract items from list and add record to database
+            rental = Rental(
+                prod_id=data[RENTAL_PROD_ID],
+                user_id=data[RENTAL_USER_ID]
+            )
+            rental.save()       # This will perform an insert
         except StopIteration:
             break

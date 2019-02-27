@@ -1,9 +1,16 @@
 from loguru import logger
 from sys import stdout
 
-from ingest_csv import ingest_csv
+from ingest_csv import ingest_customer_csv
+from ingest_csv import ingest_product_csv
+from ingest_csv import ingest_rental_csv
 
 from database import MongoDBConnection
+
+CUST_CSV_FILENAME = 'customers.csv'
+PROD_CSV_FILENAME = 'products.csv'
+RNTL_CSV_FILENAME = 'rentals.csv'
+CSV_PATH_DBG = './lessons/lesson05/assignment/'
 
 def main():
     """
@@ -17,8 +24,9 @@ def main():
     logger.enable(__name__)
 
     with MongoDBConnection():
-        ingest_csv()
-
+        ingest_customer_csv(CSV_PATH_DBG + CUST_CSV_FILENAME)
+        ingest_product_csv(CSV_PATH_DBG + PROD_CSV_FILENAME)
+        ingest_rental_csv(CSV_PATH_DBG + RNTL_CSV_FILENAME)
 
 if  __name__ == '__main__':
     main()
