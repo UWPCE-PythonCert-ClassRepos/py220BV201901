@@ -1,0 +1,325 @@
+Arun@LAPTOP-LV6ICMG8 MINGW64 ~/py220BV201901/students/ArunNalla/lessons/lesson06/assignment (master)
+$ C:/Users/Arun/AppData/Local/Programs/Python/Python37/python.exe c:/Users/Arun/py220BV201901/students/ArunNal
+la/lessons/lesson06/assignment/poor_perf.py
+{'2013': 5911, '2014': 5854, '2015': 5994, '2016': 5762, '2017': 11600, '2018': 0}
+'ao' was found 63395 times
+0:00:10.532797 Time taken to complete
+
+Arun@LAPTOP-LV6ICMG8 MINGW64 ~/py220BV201901/students/ArunNalla/lessons/lesson06/assignment (master)
+$ python -m cProfile -s cumulative poor_perf.py
+{'2013': 5911, '2014': 5854, '2015': 5994, '2016': 5762, '2017': 11600, '2018': 0}
+'ao' was found 63395 times
+0:00:10.601642 Time taken to complete
+         1087364 function calls (1087347 primitive calls) in 10.716 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+      3/1    0.000    0.000   10.716   10.716 {built-in method builtins.exec}
+        1    0.000    0.000   10.716   10.716 poor_perf.py:4(<module>)
+        1    0.110    0.110   10.712   10.712 poor_perf.py:59(main)
+        1    9.615    9.615   10.602   10.602 poor_perf.py:9(analyze)
+    43050    0.033    0.000    0.867    0.000 cp1252.py:22(decode)
+    43050    0.834    0.000    0.834    0.000 {built-in method _codecs.charmap_decode}
+  1000012    0.119    0.000    0.119    0.000 {method 'append' of 'list' objects}
+      5/2    0.000    0.000    0.004    0.002 <frozen importlib._bootstrap>:978(_find_and_load)
+      5/2    0.000    0.000    0.004    0.002 <frozen importlib._bootstrap>:948(_find_and_load_unlocked)
+      5/2    0.000    0.000    0.003    0.001 <frozen importlib._bootstrap>:663(_load_unlocked)
+        2    0.000    0.000    0.002    0.001 <frozen importlib._bootstrap_external>:722(exec_module)
+        5    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap>:882(_find_spec)
+        2    0.000    0.000    0.001    0.001 <frozen importlib._bootstrap_external>:1272(find_spec)
+        2    0.000    0.000    0.001    0.001 <frozen importlib._bootstrap_external>:1240(_get_spec)
+       10    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap_external>:1356(find_spec)
+      8/2    0.000    0.000    0.001    0.001 <frozen importlib._bootstrap>:211(_call_with_frames_removed)
+        2    0.000    0.000    0.001    0.001 <frozen importlib._bootstrap_external>:793(get_code)
+       14    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap_external>:74(_path_stat)
+       14    0.001    0.000    0.001    0.000 {built-in method nt.stat}
+        1    0.000    0.000    0.001    0.001 datetime.py:5(<module>)
+        3    0.001    0.000    0.001    0.000 {built-in method builtins.print}
+        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:914(get_data)
+        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:523(_compile_bytecode)
+        2    0.000    0.000    0.000    0.000 {built-in method marshal.loads}
+        2    0.000    0.000    0.000    0.000 {built-in method io.open}
+       13    0.000    0.000    0.000    0.000 {built-in method builtins.__build_class__}
+        5    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:576(module_from_spec)
+        1    0.000    0.000    0.000    0.000 csv.py:4(<module>)
+        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:740(create_module)
+        3    0.000    0.000    0.000    0.000 {built-in method _imp.create_builtin}
+        9    0.000    0.000    0.000    0.000 datetime.py:472(__new__)
+        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:93(_path_isfile)
+        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:84(_path_is_mode_type)
+        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:951(path_stats)
+        2    0.000    0.000    0.000    0.000 {method 'read' of '_io.FileIO' objects}
+       50    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:56(_path_join)
+        5    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:504(_init_module_attrs)
+        5    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:147(__enter__)
+        1    0.000    0.000    0.000    0.000 datetime.py:453(timedelta)
+        5    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:157(_get_module_lock)
+       50    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:58(<listcomp>)
+        4    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:271(cache_from_source)
+        4    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:403(cached)
+        5    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:719(find_spec)
+        1    0.000    0.000    0.000    0.000 datetime.py:2097(timezone)
+        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:369(_get_cached)
+        5    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:58(__init__)
+        3    0.000    0.000    0.000    0.000 datetime.py:1496(__new__)
+        5    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:318(__exit__)
+        2    0.000    0.000    0.000    0.000 _bootlocale.py:11(getpreferredencoding)
+        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:433(spec_from_loader)
+       10    0.000    0.000    0.000    0.000 {built-in method _thread.allocate_lock}
+        2    0.000    0.000    0.000    0.000 {built-in method now}
+        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1351(_get_spec)
+        5    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:151(__exit__)
+       55    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:222(_verbose_message)
+       33    0.000    0.000    0.000    0.000 {built-in method builtins.hasattr}
+        4    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:62(_path_split)
+        5    0.000    0.000    0.000    0.000 datetime.py:395(_check_date_fields)
+        3    0.000    0.000    0.000    0.000 {built-in method _csv.register_dialect}
+        5    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:78(acquire)
+      173    0.000    0.000    0.000    0.000 {built-in method builtins.isinstance}
+       24    0.000    0.000    0.000    0.000 {built-in method builtins.getattr}
+        9    0.000    0.000    0.000    0.000 {built-in method builtins.round}
+       12    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1203(_path_importer_cache)
+
+        5    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:103(release)
+        5    0.000    0.000    0.000    0.000 datetime.py:408(_check_time_fields)
+       35    0.000    0.000    0.000    0.000 datetime.py:378(_check_int_field)
+        2    0.000    0.000    0.000    0.000 {built-in method _locale._getdefaultlocale}
+      104    0.000    0.000    0.000    0.000 {method 'rstrip' of 'str' objects}
+       72    0.000    0.000    0.000    0.000 {built-in method builtins.abs}
+       45    0.000    0.000    0.000    0.000 {built-in method builtins.divmod}
+        2    0.000    0.000    0.000    0.000 datetime.py:1176(__new__)
+       54    0.000    0.000    0.000    0.000 {method 'join' of 'str' objects}
+        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:438(_classify_pyc)
+        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:574(spec_from_file_locatio
+n)
+        1    0.000    0.000    0.000    0.000 datetime.py:645(__neg__)
+        2    0.000    0.000    0.000    0.000 datetime.py:803(__new__)
+        1    0.000    0.000    0.000    0.000 datetime.py:1488(datetime)
+        5    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:176(cb)
+        6    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1009(_handle_fromlist)
+        5    0.000    0.000    0.000    0.000 {built-in method builtins.any}
+        5    0.000    0.000    0.000    0.000 {built-in method _imp.is_builtin}
+        2    0.000    0.000    0.000    0.000 {built-in method _csv.reader}
+        6    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:51(_r_long)
+        1    0.000    0.000    0.000    0.000 datetime.py:773(date)
+        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:748(exec_module)
+        1    0.000    0.000    0.000    0.000 datetime.py:1151(time)
+        5    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:143(__init__)
+        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:232(_requires_builtin_wrapper)
+        5    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:416(parent)
+       10    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:36(_relax_case)
+        9    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:859(__exit__)
+        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:471(_validate_timestamp_py
+c)
+        1    0.000    0.000    0.000    0.000 csv.py:81(DictReader)
+       19    0.000    0.000    0.000    0.000 {built-in method __new__ of type object at 0x00007FFC4EB78D30}
+       24    0.000    0.000    0.000    0.000 {method 'rpartition' of 'str' objects}
+        5    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:369(__init__)
+        9    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:855(__enter__)
+        5    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:311(__enter__)
+        2    0.000    0.000    0.000    0.000 {built-in method nt.getcwd}
+       19    0.000    0.000    0.000    0.000 {built-in method _imp.release_lock}
+       20    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:321(<genexpr>)
+        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:792(find_spec)
+        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:401(_check_name_wrapper)
+        3    0.000    0.000    0.000    0.000 datetime.py:40(_days_before_year)
+        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:35(_new_module)
+        5    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:307(__init__)
+        2    0.000    0.000    0.000    0.000 codecs.py:260(__init__)
+       10    0.000    0.000    0.000    0.000 {method 'get' of 'dict' objects}
+        3    0.000    0.000    0.000    0.000 datetime.py:2117(_create)
+       10    0.000    0.000    0.000    0.000 {built-in method _thread.get_ident}
+        6    0.000    0.000    0.000    0.000 {built-in method from_bytes}
+        4    0.000    0.000    0.000    0.000 {method 'rsplit' of 'str' objects}
+        2    0.000    0.000    0.000    0.000 {method 'endswith' of 'str' objects}
+        6    0.000    0.000    0.000    0.000 {built-in method builtins.len}
+        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:884(__init__)
+        5    0.000    0.000    0.000    0.000 datetime.py:45(_days_in_month)
+        6    0.000    0.000    0.000    0.000 {built-in method nt.fspath}
+       19    0.000    0.000    0.000    0.000 {built-in method _imp.acquire_lock}
+        5    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:424(has_location)
+        1    0.000    0.000    0.000    0.000 csv.py:24(Dialect)
+        1    0.000    0.000    0.000    0.000 datetime.py:1081(tzinfo)
+        1    0.000    0.000    0.000    0.000 csv.py:55(excel)
+        1    0.000    0.000    0.000    0.000 csv.py:166(Sniffer)
+        3    0.000    0.000    0.000    0.000 {built-in method _imp.exec_builtin}
+        2    0.000    0.000    0.000    0.000 {built-in method _imp._fix_co_filename}
+        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:765(is_package)
+        1    0.000    0.000    0.000    0.000 csv.py:65(excel_tab)
+        1    0.000    0.000    0.000    0.000 csv.py:70(unix_dialect)
+        1    0.000    0.000    0.000    0.000 csv.py:131(DictWriter)
+        1    0.000    0.000    0.000    0.000 {method 'setter' of 'property' objects}
+        2    0.000    0.000    0.000    0.000 {built-in method _imp.is_frozen}
+        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:719(create_module)
+        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:909(get_filename)
+        5    0.000    0.000    0.000    0.000 datetime.py:425(_check_tzinfo_arg)
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+
+
+
+Arun@LAPTOP-LV6ICMG8 MINGW64 ~/py220BV201901/students/ArunNalla/lessons/lesson06/assignment (master)
+$ C:/Users/Arun/AppData/Local/Programs/Python/Python37/python.exe c:/Users/Arun/py220BV201901/students/ArunNal
+la/lessons/lesson06/assignment/good_perf_v1.py
+{'2013': 5911, '2014': 5854, '2015': 5994, '2016': 5762, '2017': 11600, '2018': 0}
+'ao' was found 63395 times
+0:00:05.412492 Time taken to complete
+
+Arun@LAPTOP-LV6ICMG8 MINGW64 ~/py220BV201901/students/ArunNalla/lessons/lesson06/assignment (master)
+$ python -m cProfile -s cumulative good_perf_v1.py
+{'2013': 5911, '2014': 5854, '2015': 5994, '2016': 5762, '2017': 11600, '2018': 0}
+'ao' was found 63395 times
+0:00:05.519236 Time taken to complete
+         44684 function calls (44661 primitive calls) in 5.525 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+      4/1    0.000    0.000    5.525    5.525 {built-in method builtins.exec}
+        1    0.000    0.000    5.525    5.525 good_perf_v1.py:6(<module>)
+        1    0.000    0.000    5.519    5.519 good_perf_v1.py:47(main)
+        1    5.081    5.081    5.519    5.519 good_perf_v1.py:12(analyze)
+    21525    0.017    0.000    0.438    0.000 cp1252.py:22(decode)
+    21525    0.422    0.000    0.422    0.000 {built-in method _codecs.charmap_decode}
+      7/3    0.000    0.000    0.005    0.002 <frozen importlib._bootstrap>:978(_find_and_load)
+      7/3    0.000    0.000    0.005    0.002 <frozen importlib._bootstrap>:948(_find_and_load_unlocked)
+      7/3    0.000    0.000    0.003    0.001 <frozen importlib._bootstrap>:663(_load_unlocked)
+        3    0.000    0.000    0.003    0.001 <frozen importlib._bootstrap_external>:722(exec_module)
+        7    0.000    0.000    0.002    0.000 <frozen importlib._bootstrap>:882(_find_spec)
+        3    0.000    0.000    0.002    0.001 <frozen importlib._bootstrap_external>:1272(find_spec)
+        3    0.000    0.000    0.002    0.001 <frozen importlib._bootstrap_external>:1240(_get_spec)
+       15    0.000    0.000    0.002    0.000 <frozen importlib._bootstrap_external>:1356(find_spec)
+       21    0.000    0.000    0.002    0.000 <frozen importlib._bootstrap_external>:74(_path_stat)
+       21    0.002    0.000    0.002    0.000 {built-in method nt.stat}
+        3    0.000    0.000    0.002    0.001 <frozen importlib._bootstrap_external>:793(get_code)
+     11/3    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap>:211(_call_with_frames_removed)
+        1    0.000    0.000    0.001    0.001 datetime.py:5(<module>)
+        3    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap_external>:523(_compile_bytecode)
+        3    0.001    0.000    0.001    0.000 {built-in method marshal.loads}
+        3    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap_external>:914(get_data)
+       14    0.000    0.000    0.000    0.000 {built-in method builtins.__build_class__}
+        7    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:576(module_from_spec)
+        1    0.000    0.000    0.000    0.000 csv.py:4(<module>)
+        3    0.000    0.000    0.000    0.000 {built-in method builtins.print}
+        4    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:740(create_module)
+        4    0.000    0.000    0.000    0.000 {built-in method _imp.create_builtin}
+        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:93(_path_isfile)
+        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:84(_path_is_mode_type)
+        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:951(path_stats)
+        3    0.000    0.000    0.000    0.000 {method 'read' of '_io.FileIO' objects}
+        9    0.000    0.000    0.000    0.000 datetime.py:472(__new__)
+        1    0.000    0.000    0.000    0.000 {built-in method io.open}
+       75    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:56(_path_join)
+        1    0.000    0.000    0.000    0.000 timeit.py:49(<module>)
+        7    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:504(_init_module_attrs)
+        7    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:147(__enter__)
+        7    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:157(_get_module_lock)
+        6    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:271(cache_from_source)
+        1    0.000    0.000    0.000    0.000 datetime.py:453(timedelta)
+       75    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:58(<listcomp>)
+        6    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:403(cached)
+        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:369(_get_cached)
+        7    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:719(find_spec)
+        7    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:58(__init__)
+        1    0.000    0.000    0.000    0.000 datetime.py:2097(timezone)
+        7    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:318(__exit__)
+       14    0.000    0.000    0.000    0.000 {built-in method _thread.allocate_lock}
+        4    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:433(spec_from_loader)
+        3    0.000    0.000    0.000    0.000 datetime.py:1496(__new__)
+        7    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:151(__exit__)
+        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1351(_get_spec)
+        2    0.000    0.000    0.000    0.000 {built-in method now}
+        6    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:62(_path_split)
+       82    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:222(_verbose_message)
+        7    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:78(acquire)
+       44    0.000    0.000    0.000    0.000 {built-in method builtins.hasattr}
+       18    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1203(_path_importer_cache)
+
+      180    0.000    0.000    0.000    0.000 {built-in method builtins.isinstance}
+        7    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:103(release)
+       34    0.000    0.000    0.000    0.000 {built-in method builtins.getattr}
+        5    0.000    0.000    0.000    0.000 datetime.py:395(_check_date_fields)
+        3    0.000    0.000    0.000    0.000 {built-in method _csv.register_dialect}
+        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:574(spec_from_file_locatio
+n)
+        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:438(_classify_pyc)
+       81    0.000    0.000    0.000    0.000 {method 'join' of 'str' objects}
+       45    0.000    0.000    0.000    0.000 {built-in method builtins.divmod}
+        7    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:176(cb)
+        5    0.000    0.000    0.000    0.000 datetime.py:408(_check_time_fields)
+        7    0.000    0.000    0.000    0.000 {built-in method builtins.any}
+        9    0.000    0.000    0.000    0.000 {built-in method builtins.round}
+        9    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:51(_r_long)
+      156    0.000    0.000    0.000    0.000 {method 'rstrip' of 'str' objects}
+        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:471(_validate_timestamp_py
+c)
+        2    0.000    0.000    0.000    0.000 datetime.py:1176(__new__)
+        1    0.000    0.000    0.000    0.000 datetime.py:645(__neg__)
+        2    0.000    0.000    0.000    0.000 datetime.py:803(__new__)
+        1    0.000    0.000    0.000    0.000 datetime.py:1488(datetime)
+       35    0.000    0.000    0.000    0.000 datetime.py:378(_check_int_field)
+        6    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1009(_handle_fromlist)
+       72    0.000    0.000    0.000    0.000 {built-in method builtins.abs}
+        7    0.000    0.000    0.000    0.000 {built-in method _imp.is_builtin}
+        1    0.000    0.000    0.000    0.000 _bootlocale.py:11(getpreferredencoding)
+        4    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:748(exec_module)
+        4    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:232(_requires_builtin_wrapper)
+       13    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:859(__exit__)
+       15    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:36(_relax_case)
+       28    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:321(<genexpr>)
+        7    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:416(parent)
+        1    0.000    0.000    0.000    0.000 datetime.py:773(date)
+       35    0.000    0.000    0.000    0.000 {method 'rpartition' of 'str' objects}
+        7    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:369(__init__)
+       13    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:855(__enter__)
+        7    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:143(__init__)
+        1    0.000    0.000    0.000    0.000 datetime.py:1151(time)
+        7    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:311(__enter__)
+        1    0.000    0.000    0.000    0.000 csv.py:81(DictReader)
+       27    0.000    0.000    0.000    0.000 {built-in method _imp.acquire_lock}
+        7    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:307(__init__)
+       19    0.000    0.000    0.000    0.000 {built-in method __new__ of type object at 0x00007FFC4EB78D30}
+        1    0.000    0.000    0.000    0.000 {built-in method _locale._getdefaultlocale}
+        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:792(find_spec)
+        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:401(_check_name_wrapper)
+        3    0.000    0.000    0.000    0.000 {built-in method nt.getcwd}
+        6    0.000    0.000    0.000    0.000 {method 'rsplit' of 'str' objects}
+       27    0.000    0.000    0.000    0.000 {built-in method _imp.release_lock}
+        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:35(_new_module)
+        1    0.000    0.000    0.000    0.000 {built-in method _csv.reader}
+       14    0.000    0.000    0.000    0.000 {built-in method _thread.get_ident}
+       14    0.000    0.000    0.000    0.000 {method 'get' of 'dict' objects}
+        3    0.000    0.000    0.000    0.000 datetime.py:2117(_create)
+        9    0.000    0.000    0.000    0.000 {built-in method from_bytes}
+        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:884(__init__)
+        9    0.000    0.000    0.000    0.000 {built-in method nt.fspath}
+        9    0.000    0.000    0.000    0.000 {built-in method builtins.len}
+        3    0.000    0.000    0.000    0.000 datetime.py:40(_days_before_year)
+        5    0.000    0.000    0.000    0.000 datetime.py:45(_days_in_month)
+        1    0.000    0.000    0.000    0.000 timeit.py:82(Timer)
+       12    0.000    0.000    0.000    0.000 {method 'append' of 'list' objects}
+        3    0.000    0.000    0.000    0.000 {method 'endswith' of 'str' objects}
+        3    0.000    0.000    0.000    0.000 {built-in method _imp._fix_co_filename}
+        1    0.000    0.000    0.000    0.000 csv.py:24(Dialect)
+        1    0.000    0.000    0.000    0.000 csv.py:131(DictWriter)
+        3    0.000    0.000    0.000    0.000 {built-in method _imp.is_frozen}
+        4    0.000    0.000    0.000    0.000 {built-in method _imp.exec_builtin}
+        7    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:424(has_location)
+        1    0.000    0.000    0.000    0.000 datetime.py:1081(tzinfo)
+        1    0.000    0.000    0.000    0.000 csv.py:55(excel)
+        1    0.000    0.000    0.000    0.000 csv.py:166(Sniffer)
+        4    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:765(is_package)
+        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:719(create_module)
+        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:909(get_filename)
+        1    0.000    0.000    0.000    0.000 codecs.py:260(__init__)
+        5    0.000    0.000    0.000    0.000 datetime.py:425(_check_tzinfo_arg)
+        1    0.000    0.000    0.000    0.000 csv.py:70(unix_dialect)
+        1    0.000    0.000    0.000    0.000 {method 'setter' of 'property' objects}
+        1    0.000    0.000    0.000    0.000 csv.py:65(excel_tab)
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+
+
+
+Arun@LAPTOP-LV6ICMG8 MINGW64 ~/py220BV201901/students/ArunNalla/lessons/lesson06/assignment (master)
+$
+		
