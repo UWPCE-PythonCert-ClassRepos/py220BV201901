@@ -20,7 +20,7 @@ def create_list_generator(filename):
             line += 1
             if line == 1:
                 continue
-            yield list(row)
+            yield row
 
 def analyze(lst_of_lsts):
     start = datetime.datetime.now()
