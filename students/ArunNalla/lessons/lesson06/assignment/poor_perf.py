@@ -58,7 +58,7 @@ def analyze(filename):
 
         print(f"'ao' was found {found} times")
         end = datetime.datetime.now()
-    print(end-start, "Time taken to complete") # checking run time
+    print(end-start, "Time taken to complete") # Checking run time
     return (start, end, year_count, found)
 
 def main():
