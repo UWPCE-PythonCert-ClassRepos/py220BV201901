@@ -7,7 +7,6 @@ and implemented improvements.
 
 import datetime
 import csv
-from timeit import timeit as timer
 
 def create_list_generator(filename):
     """
