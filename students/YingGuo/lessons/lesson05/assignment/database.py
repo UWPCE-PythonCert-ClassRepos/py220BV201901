@@ -137,6 +137,7 @@ def show_available_products():
     with mongo:
         db = mongo.connection.inventory
         products = db["products"]
+        op_dict = {}
         for quantity in products.find():
             try:
                 if int(quantity["quantity_available"]) > 0:
@@ -145,11 +146,12 @@ def show_available_products():
                     "product_type": quantity["product_type"],
                     "quantity_available": quantity["quantity_available"],
                     }
-                    op_dict = {op_key:op_value}
-                    print(op_dict)
+                    op_dict[op_key]= op_value
             except Exception as e:
                 logging.info(e)
                 logging.info(f"{quantity}is not valid data entry")
+    print(op_dict)
+    return op_dict
 
 
 def show_rentals():
@@ -166,6 +168,7 @@ def show_rentals():
         db = mongo.connection.inventory
         rentals = db["rentals"]
         customers = db["customers"]
+        op_dict = {}
         for user in rentals.find():
             query = {"user_id": user["user_id"]}
             for customer in customers.find(query):
@@ -175,14 +178,18 @@ def show_rentals():
                 "address": customer["address"],
                 "phone_number": customer["phone_number"],
                 "email": customer["email"]}
-                op_dict = {op_key:op_value}
+                op_dict[op_key] = op_value
+    print(op_dict)
+    return op_dict
 
 
 if __name__ == "__main__":
     mongo = MongoDBConnection()
     import_data("customers", "products", "rentals")
     print_mdb_collection('customers')
+    print("show available products")
     show_available_products()
+    print("show rentals")
     show_rentals()
 
     #clean database

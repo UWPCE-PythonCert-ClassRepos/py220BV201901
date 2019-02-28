@@ -10,11 +10,11 @@ from database_v2 import *
 @pytest.fixture
 def _show_available_products():
     return {
-        'P000001': {'description': 'Chair Red leather', 'product_type': 'Livingroom',
+        'P000001': {'description': 'Chair Red leather', 'product_type': 'livingroom',
                     'quantity_available': '21'},
-        'P000002': {'description': 'Table Oak', 'product_type': 'Livingroom',
+        'P000002': {'description': 'Table Oak', 'product_type': 'livingroom',
                     'quantity_available': '4'},
-        'P000003': {'description': 'Couch Green cloth', 'product_type': 'Livingroom',
+        'P000003': {'description': 'Couch Green cloth', 'product_type': 'livingroom',
                     'quantity_available': '10'},
         'P000004': {'description': 'Dining table Plastic', 'product_type': 'Kitchen',
                     'quantity_available': '23'},
@@ -34,7 +34,7 @@ def _show_rentals():
 def test_import_data():
     """ import """
     data_dir = os.path.dirname(os.path.abspath(__file__))
-    added, errors = import_data(data_dir, "customer.csv", "product.csv", "rental.csv")
+    added, errors = import_data(data_dir, "product.csv", "customer.csv", "rental.csv")
 
     for add in added:
         assert isinstance(add, int)
