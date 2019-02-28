@@ -1,0 +1,77 @@
+Demonstrating two different versions of MongoDB database loader:  linear and parallel
+
+Lesson packaging submitted:
+Programs:
+database.py - Linear database loading (one collection after the other of 3).  
+              All processing internal to the program (see main())
+
+database_async.py - Parallel database loading (all 3 collections at once in a processor timeshare/slice fashion)
+                    All processing external, see 'async def' functions.  Using imported 'asyncio' functionality.
+
+products.csv  - 9999 Products records
+customers.csv - 9998 Customers records
+rentals.csv   - 9997 Rentals records
+
+Notes:
+- There is extra functionality in database.py to gather stats and to have option to drop the collections after processing.
+- The database_async.py functions are copies of their linear counterparts.  Some of the functionality is not used (ex: returns), however this keeps
+  'all else equal' on both sides so their performance is similar.
+
+
+Transcript of runs with annotations follows:
+
+$ python database.py			<--- Run linear version
+Products count: 0			<--- Shows database collections are empty
+Customers count: 0
+Rentals count: 0
+
+Added Products records: 9999		<--- Products load stats
+Error Products records: 0
+Elapsed Products time: 8.268331
+
+Added Customers records: 9998		<--- Customers load stats
+Error Customers records: 0
+Elapsed Customers time: 6.528319
+
+Added Rentals records: 9997		<--- Rentals load stats
+Error Rentals records: 0
+Elapsed Rentals time: 8.452901
+
+Products count: 9999			<--- Counts on all collections
+Customers count: 9998
+Rentals count: 9997
+
+Elapsed program time: 23.723512
+Elapsed import time: 23.249551		<--- Compare 'Elapsed import time' to parallel version
+Elapsed overhead time: 0.4739609999999992
+
+Drop data?y				<--- This drops data in all 3 collections 
+
+
+$ python database_async.py		<--- Run parallel version (database collections are empty from being cleared above)
+inside import_products_async		<--- All 3 collections started
+
+inside import_customers_async
+
+inside import_rentals_async
+
+done with import_products_async		<--- All 3 collections finished
+
+done with import_customers_async
+
+done with import_rentals_async
+
+Elapsed program time: 20.745393		<--- Compare 'Elapsed program time' to linear version (11% time savings)
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+Reran both programs with a million records for each collection.
+This only allowed a 6% time savings  (2834 seconds linear vs. 2666 seconds parallel).
+
+Conclusion:
+This is signifant enough time savings to warrant running database loads in parallel.  Performance may improve for
+different types of functions where latencies are more pronounced; and/or number of parallel processes is increased.
+
+Possible contention issues:
+Care would need to be taken to not have two different processes handling updates to the same collection document at the same time.
+In this example, the collections are mutually exclusive.  However, other parallel process models might need contention control.  
