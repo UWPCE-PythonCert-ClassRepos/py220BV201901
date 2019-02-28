@@ -49,7 +49,7 @@ def _add_customers_negative_data():
 
 def test_add_customer_a_model(_add_customers_positive_data):
     """ Test additions for model customer A """
-    
+
     DB.connect(reuse_if_open=True)
     DB.execute_sql('PRAGMA foreign_keys = ON;')  # needed for sqlite only
     for customer in _add_customers_positive_data:
@@ -81,7 +81,7 @@ def test_add_customer_a_model(_add_customers_positive_data):
     assert search_returned == 0  # make sure there is no longer a record
 
     DB.close()
-
+    
 
 # def test_add_customer_a_model_fail(_add_customers_negative_data):
 #     """ Test additions for model customer A """
@@ -119,9 +119,25 @@ def test_add_customer_a_model(_add_customers_positive_data):
 #     DB.close()
 
 def test_add_customers_with_csv():
+    """This is to test the new add_customers function"""
     list_data = bo.process_csv("customer2.csv")
     bo.add_customers(list_data)
     # C000386 Kamryn
-    search = bo.search_customer('C000386')
-    LOGGER.warning(f'TEST: {search["name"]}')
-    assert search["name"] == "Kamryn"
+    search = bo.search_customer('C000016')
+    # LOGGER.info(f'TESTADDcsv: we found {search["name"]} in test.')
+
+    assert search["name"] == "Ashtyn"
+
+
+def test_delete_all():
+    """ This is to test if we can delete all records """
+    # Clean up
+    bo.delete_all_customers(Customer)
+
+    DB.connect(reuse_if_open=True)
+    DB.execute_sql('PRAGMA foreign_keys = ON;')  # needed for sqlite only
+    search_returned = Customer.select().where(Customer.status == 'active' or
+                                              Customer.status == 'inactive').count()
+    assert search_returned == 0  # make sure there is no longer a record
+
+    DB.close()
