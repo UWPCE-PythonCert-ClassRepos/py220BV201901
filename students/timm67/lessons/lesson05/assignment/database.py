@@ -1,35 +1,9 @@
-
-
 import sys
 from loguru import logger
-
-from mongoengine import *
 
 from models import Customer
 from models import Product
 from models import Rental
-
-
-logger.add(sys.stdout, level='WARNING')
-logger.add("logfile_{time}.txt", level='INFO')
-logger.enable(__name__)
-
-
-class MongoDBConnection():
-    """MongoDB Connection"""
-
-    def __init__(self, host='localhost', port=27017, dbname='mongoengine_test'):
-        self.host = host
-        self.port = port
-        self.connection = None
-        self.dbname = dbname
-
-    def __enter__(self):
-        connect(self.dbname, host=self.host, port=self.port)
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        pass
 
 
 def show_available_products():
@@ -50,10 +24,10 @@ def show_available_products():
     ret_dict = {}
 
     for prod_info in Product.objects:
-        prod = {prod_info.prod_id : {'description' : prod_info.description,
-                                    'product_type' : prod_info.prod_type,
-                                    'quantity_available' : prod_info.quantity}}
-        ret_dict += prod
+        prod = {prod_info.product_id : {'description' : prod_info.description,
+                                        'product_type' : prod_info.product_type,
+                                        'quantity_available' : prod_info.quantity_available}}
+        ret_dict.update(prod)
 
     return ret_dict
 
@@ -76,9 +50,10 @@ def show_rentals(product_id):
     ’user002’:{‘name’:’Maya Data’,’address’:‘4936 Elliot Avenue’,
     ’phone_number’:‘206-777-1927’,’email’:’mdata@uw.edu’}}
     """
-    renters = Rental.objects(__raw__={'prod_id' : product_id})
-    for renter in renters.objects:
-        user = Customer.objects(__raw__)
+    #renters = Rental.objects(__raw__={'product_id' : product_id})
+    #for renter in renters.objects:
+    #    user = Customer.objects(__raw__)
+    pass
         
 
 

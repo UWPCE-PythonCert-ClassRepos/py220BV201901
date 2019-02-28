@@ -61,7 +61,7 @@ def ingest_customer_csv(csv_path):
     while True:
         try:
             data = next(import_generator)
-            if len(data) != 8:
+            if len(data) != 6:
                 logger.error(f'Data with incorrect item count: {len(data)}')
                 continue
             # extract items from list and add record to database
@@ -123,7 +123,7 @@ def ingest_rental_csv(csv_path):
                 continue
             # extract items from list and add record to database
             rental = Rental(
-                prod_id=data[RENTAL_PROD_ID],
+                product_id=data[RENTAL_PROD_ID],
                 user_id=data[RENTAL_USER_ID]
             )
             rental.save()       # This will perform an insert
