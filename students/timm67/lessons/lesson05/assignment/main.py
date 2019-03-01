@@ -1,8 +1,6 @@
 from loguru import logger
 from sys import stdout
 
-from mongoengine import connect
-
 from ingest_csv import ingest_customer_csv
 from ingest_csv import ingest_product_csv
 from ingest_csv import ingest_rental_csv
@@ -15,6 +13,7 @@ RNTL_CSV_FILENAME = 'rentals.csv'
 #CSV_PATH_DBG = './lessons/lesson05/assignment/'
 CSV_PATH_DBG = ''
 
+
 def main():
     """
     Ensure you application will create an empty database if one doesn’t exist
@@ -25,9 +24,6 @@ def main():
     logger.add(stdout, level='WARNING')
     logger.add("logfile_{time}.txt", level='INFO')
     logger.enable(__name__)
-
-    " connect to the mongo db using mongoengine "
-    connect('mongoengine_test', host='localhost', port=27017)
 
     ingest_customer_csv(CSV_PATH_DBG + CUST_CSV_FILENAME)
     ingest_product_csv(CSV_PATH_DBG + PROD_CSV_FILENAME)

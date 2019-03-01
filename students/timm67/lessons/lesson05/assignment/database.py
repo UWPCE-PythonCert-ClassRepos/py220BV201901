@@ -1,9 +1,20 @@
 import sys
 from loguru import logger
 
+from mongoengine import connect
+
 from models import Customer
 from models import Product
 from models import Rental
+
+
+class Connection:
+    def __enter__(self):
+        self.conn = connect('mongoengine_test', host='localhost', port=27017)
+        return self.conn
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.conn.close()
 
 
 def show_available_products():
@@ -23,11 +34,12 @@ def show_available_products():
     """
     ret_dict = {}
 
-    for prod_info in Product.objects:
-        prod = {prod_info.product_id : {'description' : prod_info.description,
-                                        'product_type' : prod_info.product_type,
-                                        'quantity_available' : prod_info.quantity_available}}
-        ret_dict.update(prod)
+    with Connection():
+        for prod_info in Product.objects:
+            prod = {prod_info.product_id : {'description' : prod_info.description,
+                                            'product_type' : prod_info.product_type,
+                                            'quantity_available' : prod_info.quantity_available}}
+            ret_dict.update(prod)
 
     return ret_dict
 
@@ -50,11 +62,19 @@ def show_rentals(product_id):
     ’user002’:{‘name’:’Maya Data’,’address’:‘4936 Elliot Avenue’,
     ’phone_number’:‘206-777-1927’,’email’:’mdata@uw.edu’}}
     """
-    #renters = Rental.objects(__raw__={'product_id' : product_id})
-    #for renter in renters.objects:
-    #    user = Customer.objects(__raw__)
-    pass
-        
+    ret_dict = {}
 
-
-
+    with Connection():
+        renters = Rental.objects(__raw__={'product_id' : product_id})
+        for renter in renters.objects:
+            users = Customer.objects(__raw__={'user_id' : renter.user_id})
+            for user_info in users.objects:
+                user = {user_info.user_id : {'name' : user_info.name,
+                    'address' : user_info.address,
+                    'phone_number' : user_info.phone_number,
+                    'email' : user_info.email
+                    }
+                }
+                ret_dict.update(user)
+    
+    return ret_dict
