@@ -55,7 +55,9 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
     """
 
     async def processproductfile(directory_name, product_file):
-        productsuccesscount, productfailurecount = 0, 0
+
+        processproductcount = 0
+        startingdbcount = MYDB.PRODUCTCOLLECTION.count_documents({})
         starttime = time.time()
 
         # Process product file and add to mongoDB
@@ -67,7 +69,8 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
                     linelist = [x.strip() for x in line.split(',')]
 
                     try:
-                        result = MYDB.PRODUCTCOLLECTION.insert_one(
+                        processproductcount += 1
+                        MYDB.PRODUCTCOLLECTION.insert_one(
                             {
                                 'product_id' : linelist[0],
                                 'description' : linelist[1],
@@ -75,13 +78,8 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
                                 'quantity_available' : linelist[3]
                             })
 
-                        if result.acknowledged:
-                            productsuccesscount += 1
-                        else:
-                            productfailurecount += 1
 
                     except pymongo.errors.DuplicateKeyError:
-                        productfailurecount += 1
                         continue
 
                     DBLOG.info(f'Added product DB entry: {linelist[0]}')
@@ -94,9 +92,14 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
         endtime = time.time()
         SYSTEMLOG.info(f'Add product operation time: {endtime - starttime}')
 
+        endingdbcount = MYDB.PRODUCTCOLLECTION.count_documents({})
+
+        return (processproductcount, startingdbcount, endingdbcount, endtime - starttime)
+
     async def processcustomerfile(directory_name, customer_file):
 
-        customersuccesscount, customerfailurecount = 0, 0
+        processcustomercount = 0
+        startingdbcount = MYDB.CUSTOMERCOLLECTION.count_documents({})
         starttime = time.time()
 
         # Process customer file and add to mongoDB
@@ -108,7 +111,8 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
                     linelist = [x.strip() for x in line.split(',')]
 
                     try:
-                        result = MYDB.CUSTOMERCOLLECTION.insert_one(
+                        processcustomercount += 1
+                        MYDB.CUSTOMERCOLLECTION.insert_one(
                             {
                                 'customer_id': linelist[0],
                                 'name': linelist[1],
@@ -120,13 +124,8 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
                                 'credit_limit': linelist[7]
                             })
 
-                        if result.acknowledged:
-                            customersuccesscount += 1
-                        else:
-                            customerfailurecount += 1
 
                     except pymongo.errors.DuplicateKeyError:
-                        customerfailurecount += 1
                         continue
 
                     DBLOG.info(f'Added customer DB entry: {linelist[0]}')
@@ -139,8 +138,14 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
         endtime = time.time()
         SYSTEMLOG.info(f'Add customer operation time: {endtime - starttime}')
 
+        endingdbcount = MYDB.CUSTOMERCOLLECTION.count_documents({})
+
+        return (processcustomercount, startingdbcount, endingdbcount, endtime - starttime)
+
     async def processrentalfile(directory_name, rentals_file):
-        rentalsuccesscount, rentalfailurecount = 0, 0
+
+        processrentalscount = 0
+        startingdbcount = MYDB.RENTALCOLLECTION.count_documents({})
         starttime = time.time()
 
         # Process rental file and add to mongoDB in customer collection
@@ -152,7 +157,8 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
                     linelist = [x.strip() for x in line.split(',')]
 
                     try:
-                        result = MYDB.RENTALCOLLECTION.insert_one(
+                        processrentalscount += 1
+                        MYDB.RENTALCOLLECTION.insert_one(
                             {
                                 'user_id': linelist[0],
                                 'name': linelist[1],
@@ -162,13 +168,8 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
                                 'product_id': linelist[5]
                             })
 
-                        if result.acknowledged:
-                            rentalsuccesscount += 1
-                        else:
-                            rentalfailurecount += 1
 
                     except pymongo.errors.DuplicateKeyError:
-                        rentalfailurecount += 1
                         continue
 
                     DBLOG.info(f'Added rental DB entry to customer: {linelist[1]}')
@@ -181,6 +182,9 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
         endtime = time.time()
         SYSTEMLOG.info(f'Add rental operation time: {endtime - starttime}')
 
+        endingdbcount = MYDB.RENTALCOLLECTION.count_documents({})
+
+        return (processrentalscount, startingdbcount, endingdbcount, endtime - starttime)
 
     async def loadfiles(directory_name, product_file, customer_file, rentals_file):
         totalstarttime = time.time()
@@ -192,15 +196,12 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
 
         SYSTEMLOG.info(f'Total add file time: {totalendtime - totalstarttime}')
 
-        return {productresult, customerresult, rentalresult}
+        return productresult.result(), customerresult.result(), rentalresult.result()
 
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(loadfiles(directory_name, product_file, customer_file, rentals_file))
+    finallistresult = loop.run_until_complete(asyncio.gather(loadfiles(directory_name, product_file, customer_file, rentals_file)))
 
-
-
-    #return (productsuccesscount, customersuccesscount, rentalsuccesscount), (productfailurecount, customerfailurecount, rentalfailurecount)
-
+    return [x for x in finallistresult[0]]
 
 def show_available_products():
     """ Returns all products with quantity greater than 0 """
@@ -244,7 +245,7 @@ def show_rentals(productid):
 if __name__ == "__main__":
 
     directory = os.path.dirname(os.path.abspath(__file__))
-    #resultgood, resultfail = import_data(directory, 'products.csv', 'customers.csv', 'rentals.csv')
-    import_data(directory, 'products.csv', 'customers.csv', 'rentals.csv')
+    SYSTEMLOG.info(f"{import_data(directory, 'products.csv', 'customers.csv', 'rentals.csv')}")
+    #import_data(directory, 'products.csv', 'customers.csv', 'rentals.csv')
 
     #SYSTEMLOG.info(f"Success counts: {resultgood}  Failed counts: {resultfail}")
