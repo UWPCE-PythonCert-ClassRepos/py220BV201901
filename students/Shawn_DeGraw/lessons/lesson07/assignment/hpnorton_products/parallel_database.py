@@ -7,6 +7,7 @@ import logging
 import time
 from pathlib import Path
 import pymongo
+import asyncio
 
 
 LOG_FORMAT = "%(asctime)s:%(lineno)-3d %(levelname)s %(message)s"
@@ -53,10 +54,7 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
     :param: rentals_file - comma separated file of rentals by customer
     """
 
-
-    rentalsuccesscount, rentalfailurecount = 0, 0
-
-    async def processproductfile(product_file):
+    async def processproductfile(directory_name, product_file):
         productsuccesscount, productfailurecount = 0, 0
         starttime = time.time()
 
@@ -76,6 +74,7 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
                                 'product_type' : linelist[2],
                                 'quantity_available' : linelist[3]
                             })
+
                         if result.acknowledged:
                             productsuccesscount += 1
                         else:
@@ -85,8 +84,9 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
                         productfailurecount += 1
                         continue
 
-
                     DBLOG.info(f'Added product DB entry: {linelist[0]}')
+
+                    await asyncio.sleep(0)
 
         except FileNotFoundError as fileerror:
             SYSTEMLOG.error(f'File not found at {directory_name + product_file}, exception {type(fileerror).__name__}')
@@ -94,7 +94,7 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
         endtime = time.time()
         SYSTEMLOG.info(f'Add product operation time: {endtime - starttime}')
 
-    async def processcustomerfile(customer_file):
+    async def processcustomerfile(directory_name, customer_file):
 
         customersuccesscount, customerfailurecount = 0, 0
         starttime = time.time()
@@ -131,13 +131,15 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
 
                     DBLOG.info(f'Added customer DB entry: {linelist[0]}')
 
+                    await asyncio.sleep(0)
+
         except FileNotFoundError as fileerror:
             SYSTEMLOG.error(f'File not found at {directory_name + product_file}, exception {type(fileerror).__name__}')
 
         endtime = time.time()
         SYSTEMLOG.info(f'Add customer operation time: {endtime - starttime}')
 
-    async def processrentalfile(rental_file):
+    async def processrentalfile(directory_name, rentals_file):
         rentalsuccesscount, rentalfailurecount = 0, 0
         starttime = time.time()
 
@@ -159,6 +161,7 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
                                 'email': linelist[4],
                                 'product_id': linelist[5]
                             })
+
                         if result.acknowledged:
                             rentalsuccesscount += 1
                         else:
@@ -170,6 +173,8 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
 
                     DBLOG.info(f'Added rental DB entry to customer: {linelist[1]}')
 
+                    await asyncio.sleep(0)
+
         except FileNotFoundError as fileerror:
             SYSTEMLOG.error(f'File not found at {directory_name + product_file}, exception {type(fileerror).__name__}')
 
@@ -177,7 +182,24 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
         SYSTEMLOG.info(f'Add rental operation time: {endtime - starttime}')
 
 
-    return (productsuccesscount, customersuccesscount, rentalsuccesscount), (productfailurecount, customerfailurecount, rentalfailurecount)
+    async def loadfiles(directory_name, product_file, customer_file, rentals_file):
+        totalstarttime = time.time()
+        productresult = loop.create_task(processproductfile(directory_name, product_file))
+        customerresult = loop.create_task(processcustomerfile(directory_name, customer_file))
+        rentalresult = loop.create_task((processrentalfile(directory_name, rentals_file)))
+        await asyncio.wait([productresult, customerresult, rentalresult])
+        totalendtime = time.time()
+
+        SYSTEMLOG.info(f'Total add file time: {totalendtime - totalstarttime}')
+
+        return {productresult, customerresult, rentalresult}
+
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(loadfiles(directory_name, product_file, customer_file, rentals_file))
+
+
+
+    #return (productsuccesscount, customersuccesscount, rentalsuccesscount), (productfailurecount, customerfailurecount, rentalfailurecount)
 
 
 def show_available_products():
@@ -222,6 +244,7 @@ def show_rentals(productid):
 if __name__ == "__main__":
 
     directory = os.path.dirname(os.path.abspath(__file__))
-    resultgood, resultfail = import_data(directory, 'products.csv', 'customers.csv', 'rentals.csv')
+    #resultgood, resultfail = import_data(directory, 'products.csv', 'customers.csv', 'rentals.csv')
+    import_data(directory, 'products.csv', 'customers.csv', 'rentals.csv')
 
-    SYSTEMLOG.info(f"Success counts: {resultgood}  Failed counts: {resultfail}")
+    #SYSTEMLOG.info(f"Success counts: {resultgood}  Failed counts: {resultfail}")
