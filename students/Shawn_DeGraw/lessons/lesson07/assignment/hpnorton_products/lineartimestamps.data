@@ -1,5 +1,5 @@
-2019-02-27 20:38:18,513:95  INFO Add product operation time: 6.691054582595825
-2019-02-27 20:38:25,029:135 INFO Add customer operation time: 6.513262510299683
-2019-02-27 20:38:31,409:168 INFO Add rental operation time: 6.380226373672485
-2019-02-27 20:38:31,409:171 INFO Full add and update time: 19.584543466567993
-2019-02-27 20:38:31,409:221 INFO Success counts: (9999, 9999, 9999)  Failed counts: (0, 0, 0)
+2019-03-02 12:52:19,174:95  INFO Add product operation time: 8.107126712799072
+2019-03-02 12:52:27,382:136 INFO Add customer operation time: 8.20807695388794
+2019-03-02 12:52:35,463:173 INFO Add rental operation time: 8.08068561553955
+2019-03-02 12:52:35,463:176 INFO Full add and update time: 24.395889282226562
+2019-03-02 12:52:35,463:225 INFO Success counts: (9999, 9999, 9999)  Failed counts: (0, 0, 0)
