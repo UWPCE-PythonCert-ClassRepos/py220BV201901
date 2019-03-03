@@ -4,12 +4,16 @@ I reworked the original lesson05 database.py to better match the data files cont
 
 I put the cProfile data in linearcprofile.data and the timestamps for each file execution and the total time for all three execution in lineartimestamps.data.
 
+The tests used for the linear module are in file test_database2.py.
+
 Parallel:
 
 I then modified the module to make each file execution into an async task. This new module is called parallel_database.py. 
 I included the db.log which appears to show that each file data entry is being executed in parallel.
 
-Each of the tasks reads a line of the input file, writes the data to the MongoDB collection and logs an entry in the db.log. An asyncio sleep of 0 seconds allows another task to start. 
+Each of the tasks reads a line of the input file, writes the data to the MongoDB collection and logs an entry in the db.log. An asyncio sleep of 0 seconds allows another task to start.
+
+The tests used for the parallel module are in file test_database_parallel.py.
 
 
 Analysis of linear vs parallel:
