@@ -1,0 +1,21 @@
+Linear:
+
+I reworked the original lesson05 database.py to better match the data files containing 9999 records each. The new linear file is called linear_database.py. I also added execution time stamps to the new file.
+
+I put the cProfile data in linearcprofile.data and the timestamps for each file execution and the total time for all three execution in lineartimestamps.data.
+
+The tests used for the linear module are in file test_database2.py.
+
+Parallel:
+
+I then modified the module to make each file execution into an async task. This new module is called parallel_database.py. 
+I included the db.log which appears to show that each file data entry is being executed in parallel.
+
+Each of the tasks reads a line of the input file, writes the data to the MongoDB collection and logs an entry in the db.log. An asyncio sleep of 0 seconds allows another task to start.
+
+The tests used for the parallel module are in file test_database_parallel.py.
+
+
+Analysis of linear vs parallel:
+
+In this implementation the MongoDB and logging are on the same machine. These are the two actions that may consume time if it took awhile for the actions to complete. Since they are on the same machine and the DB and logging access are a direct connection from the module there is really no delay in response time. The DB and log would also control access allowing only one input to truly occur at the same time so we are not submitting a request and taking other actions while waiting for a response. Due to this design the addition of the async mechanism is simply additional overhead. The results from the cProfile and timestamps show that the parallel implementation takes longer to execute than the linear. Because of this I would suggest not to bother with the parallel implementation.
