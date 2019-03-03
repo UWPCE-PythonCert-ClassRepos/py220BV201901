@@ -7,6 +7,7 @@ import pytest
 
 from lesson05.assignment import database as l
 
+
 # Original test has lower case in prouct_type's value - corrected.
 @pytest.fixture
 def _show_available_products():
@@ -33,6 +34,7 @@ def _show_rentals():
                     'phone_number': '(839)825-0058', 'email': 'Mylene_Smitham@hannah.co.uk'
                     }
         }
+
 
 @pytest.fixture
 def _show_rentals_p():
@@ -83,10 +85,12 @@ def test_import_data():
     assert added == (5, 11, 9)
     assert errors == (0, 0, 0)
 
+
 def test_show_available_products(_show_available_products):
     """ available products """
     students_response = l.show_available_products()
     assert students_response == _show_available_products
+
 
 def test_show_rentals(_show_rentals):
     """ rentals """

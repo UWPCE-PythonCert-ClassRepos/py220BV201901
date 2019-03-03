@@ -1,7 +1,9 @@
 # Student: Bradnon Nguyen
 # Class:   Advance Python 220 - Jan2019
 # Lesson05 - mongodb database.py.
-
+"""
+This module is used for creating collection for mongoDB.
+"""
 import logging
 import datetime
 import csv
@@ -33,13 +35,13 @@ LOGGER.addHandler(CONSOLE_HANDLER)
 # ALL dblog is writing into file via WARNING level change it to turn off.
 
 
-class MongoDBConnection(object):
+class MongoDBConnection():
     """
     This is a context manager for MongoDB.  It has methods to connect and disconnect to db.
     """
     def __init__(self, host='127.0.0.1', port=27017):
         """This is a connection string.  CAUTION: not for production"""
-        # TODO look into production connection string
+        # look into production connection string
         self.host = host
         self.port = port
         self.connection = None
@@ -53,13 +55,16 @@ class MongoDBConnection(object):
         """This is used to close out the context manager by closing connection to db."""
         self.connection.close()
 
-    def print_mdb_collection(collection_name):
-        """ 
-        This bare bone function should be used within a context conn manager.
-        Purpose: to print out row in a table.
-        """
-        for doc in collection_name.find():
-            print(doc)
+
+def print_mdb_collection(collection_name):
+    """
+    This bare bone function should be used within a context conn manager.
+    Purpose: to print out row in a table.
+    """
+    pp = pprint.PrettyPrinter(indent=4, width=100)
+
+    for doc in collection_name.find({}):
+        pp.pprint(doc)
 
 
 def process_csv(csv_file_in, key_name):
@@ -98,6 +103,9 @@ def process_csv(csv_file_in, key_name):
 
 
 def process_csv_basic(csv_file_in):
+    """
+    This function is to read in csv data and return a list of dictionaries.
+    """
     data = []
 
     with open(csv_file_in, 'r', encoding='utf-8-sig', newline='') as csvfile:
@@ -115,13 +123,18 @@ def process_csv_basic(csv_file_in):
     return data
 
 
-def update_db(collection_name, dir_name, file_name, key_name=None, key_name_1 = None ):
-    """This function is to update mongodb."""
+def update_db(collection_name, dir_name, file_name, key_name=None, key_name_1=None):
+    """
+    This function is to update mongodb.
+    Params: collection_name, dir_name, file_name, key_name=None, key_name_1=None.
+    All params are string.  the key_names are for us to set the Index.
+    Returns the adds and errors value for the collection passed in.
+    """
 
     file_path_name = os.path.join(dir_name, file_name)
     csv_list = process_csv_basic(file_path_name)
 
-    adds, errs = 0, 0
+    adds, errors = 0, 0
 
     mongo = MongoDBConnection()
 
@@ -138,22 +151,22 @@ def update_db(collection_name, dir_name, file_name, key_name=None, key_name_1 = 
                 result = table_name.insert_one(row)
                 LOGGER.warning(f'{collection_name.upper()}: insert is ok. {result}:{row}')
                 adds += 1
-        except Exception as e:
-            LOGGER.error(f'{collection_name.upper()}_FAIL: Something wrong. {e}')
-            errs += 1
+        except Exception as errs:
+            LOGGER.error(f'{collection_name.upper()}_FAIL: Something wrong. {errs}')
+            errors += 1
 
-    return adds, errs
+    return adds, errors
 
 
-def import_data(directory_name, product_file, customer_file, rentals_file): 
+def import_data(directory_name, product_file, customer_file, rentals_file):
     """
     This function takes a directory name three csv files as input:
     one with product data, one with customer data and the third one with rentals data
-    and creates and populates a new MongoDB database with the these data. 
+    and creates and populates a new MongoDB database with the these data.
     params: directory_name, product_file, customer_file, rentals_file.
     returns 2 tuples:
     - The first - with a record count of the number of
-    products, customers and rentals added (in that order). 
+    products, customers and rentals added (in that order).
     - The second with a count of any errors that occurred, in the same order.
     """
 
@@ -172,10 +185,10 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
             (product_errors, customer_errors, rental_errors))
 
 
-def show_available_products(): 
+def show_distinct_products():
     """
-    Returns a Python dictionary of products listed as available with the following fields:
-    product_id. description. product_type. quantity_available.
+    This function is resulted of a misread requirement.  Save for later other refractor need.
+    Currently it returns all distinct documents in collection products.
     """
     data = {}
     mongo_conn = MongoDBConnection()
@@ -185,17 +198,39 @@ def show_available_products():
         db = mongo_conn.connection.hp_inventory
         product_collection = db["products"]
 
-        this_data = product_collection.distinct("product_id")
+        this_data = product_collection.distinct("product_id") # prevents duplication ?
         for val in this_data:
-            for product in product_collection.find({"product_id":val}):
+            for product in product_collection.find({"product_id": val}):
                 data[product["product_id"]] = {"description": product["description"],
                                                "product_type": product["product_type"],
                                                "quantity_available": product["quantity_available"]}
-        
     return data
 
 
-def show_rentals(product_id): 
+def show_available_products():
+    """
+    Returns a Python dictionary of products listed as available with the following fields:
+    product_id. description. product_type. quantity_available.
+    *Criteria: Quanity > 0
+    """
+    # db.inventory.find( { qty: { '$gt': '20' } } )  # The quote is key!
+    data = {}
+    mongo_conn = MongoDBConnection()
+    with mongo_conn:
+        db = mongo_conn.connection.hp_inventory
+        product_collection = db["products"]
+        try:
+            for product in product_collection.find({"quantity_available": {'$gt': '0'}}):
+                data[product["product_id"]] = {"description": product["description"],
+                                               "product_type": product["product_type"],
+                                               "quantity_available": product["quantity_available"]}
+        except Exception as errs:
+            LOGGER.info(f'SHOW_PRODUCT: something wrong : {errs}')
+
+    return data
+
+
+def show_rentals(product_id):
     """
     Returns a Python dictionary with the following user information
     from users that have rented products matching product_id:
@@ -210,17 +245,19 @@ def show_rentals(product_id):
         table_name = db["rentals"]
 
         for rental in table_name.find({"product_id": product_id}):
-                data[rental["user_id"]] = {"name": rental["name"],
-                                           "address": rental["address"],
-                                           "phone_number": rental["phone_number"],
-                                           "email": rental["email"]}
+            data[rental["user_id"]] = {"name": rental["name"],
+                                       "address": rental["address"],
+                                       "phone_number": rental["phone_number"],
+                                       "email": rental["email"]}
 
     return data
 
 
 def drop_db():
-        # start afresh next time?
-    # TODO MORE...
+    """
+    This function is used to drop all the collections.
+    """
+    # start afresh next time?
     mongo_conn = MongoDBConnection()
 
     with mongo_conn:
@@ -253,6 +290,7 @@ def main():
         rental_collection = db["rentals"]
 
     pp = pprint.PrettyPrinter(indent=4, width=100)
+    print("Available products are:\n")
     pp.pprint(show_available_products())
 
     print("\n\n Rental record with P000001 are:")
