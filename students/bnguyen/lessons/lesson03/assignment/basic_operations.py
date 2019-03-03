@@ -28,7 +28,7 @@ def initialize_db(tablename):
     try:
         LOGGER.info('Creating Database..')
         DB.connect()
-        DB.execute_sql('PRAGMA foreign_keys = ON;') # needed for sqlite only
+        DB.execute_sql('PRAGMA foreign_keys = ON;')  # needed for sqlite only
         tablename.create_table()
     except Exception as errs:
         LOGGER.warning(f'Creating DB issue.  {errs}')
