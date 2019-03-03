@@ -55,6 +55,7 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
     """
 
     async def processproductfile(directory_name, product_file):
+        """ Adds product file to mongoDB """
 
         processproductcount = 0
         startingdbcount = MYDB.PRODUCTCOLLECTION.count_documents({})
@@ -97,6 +98,7 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
         return (processproductcount, startingdbcount, endingdbcount, endtime - starttime)
 
     async def processcustomerfile(directory_name, customer_file):
+        """ Adds customer file to mongoDB """
 
         processcustomercount = 0
         startingdbcount = MYDB.CUSTOMERCOLLECTION.count_documents({})
@@ -143,6 +145,7 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
         return (processcustomercount, startingdbcount, endingdbcount, endtime - starttime)
 
     async def processrentalfile(directory_name, rentals_file):
+        """ Adds rental file to mongoDB """
 
         processrentalscount = 0
         startingdbcount = MYDB.RENTALCOLLECTION.count_documents({})
@@ -187,6 +190,8 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
         return (processrentalscount, startingdbcount, endingdbcount, endtime - starttime)
 
     async def loadfiles(directory_name, product_file, customer_file, rentals_file):
+        """ Creates async tasks """
+
         totalstarttime = time.time()
         productresult = loop.create_task(processproductfile(directory_name, product_file))
         customerresult = loop.create_task(processcustomerfile(directory_name, customer_file))
@@ -196,6 +201,7 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
 
         SYSTEMLOG.info(f'Total add file time: {totalendtime - totalstarttime}')
 
+        # returning just the result tuple from each method
         return productresult.result(), customerresult.result(), rentalresult.result()
 
     loop = asyncio.get_event_loop()
@@ -246,6 +252,3 @@ if __name__ == "__main__":
 
     directory = os.path.dirname(os.path.abspath(__file__))
     SYSTEMLOG.info(f"{import_data(directory, 'products.csv', 'customers.csv', 'rentals.csv')}")
-    #import_data(directory, 'products.csv', 'customers.csv', 'rentals.csv')
-
-    #SYSTEMLOG.info(f"Success counts: {resultgood}  Failed counts: {resultfail}")
