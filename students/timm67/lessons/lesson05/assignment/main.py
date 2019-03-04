@@ -14,8 +14,8 @@ from models import util_drop_all
 CUST_CSV_FILENAME = 'customers.csv'
 PROD_CSV_FILENAME = 'products.csv'
 RNTL_CSV_FILENAME = 'rentals.csv'
-CSV_PATH_DBG = './lessons/lesson05/assignment/'
-#CSV_PATH_DBG = ''
+#CSV_PATH_DBG = './lessons/lesson05/assignment/'
+CSV_PATH_DBG = ''
 
 
 def main():
@@ -29,8 +29,8 @@ def main():
     logger.add("logfile_{time}.txt", level='INFO')
     logger.enable(__name__)
 
-    #with Connection():
-    #    util_drop_all()
+    with Connection():
+        util_drop_all()
 
 
     ingest_customer_csv(CSV_PATH_DBG + CUST_CSV_FILENAME)

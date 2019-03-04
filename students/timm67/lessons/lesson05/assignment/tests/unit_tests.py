@@ -8,7 +8,6 @@ db.drop_database('test')
 """
 
 import sys
-from mongoengine import connect
 from loguru import logger
 
 from models import util_drop_all
@@ -29,7 +28,7 @@ CSV_PATH_DBG = ''
 
 
 # Standalone function to initialize logging
-logger.add(stdout, level='WARNING')
+logger.add(sys.stdout, level='WARNING')
 logger.add("test_logfile_{time}.txt", level='INFO')
 logger.enable(__name__)
 
@@ -45,7 +44,32 @@ def test_00setup():
     ingest_rental_csv(CSV_PATH_DBG + RNTL_CSV_FILENAME)
 
 def test_10show_avail_products():
+    db_dict_actual = {
+    'prd001': {'description': '60-inch TV stand', 'product_type': 'livingroom', 'quantity_available': 3},
+    'prd002': {'description': 'L-shaped sofa', 'product_type': 'livingroom', 'quantity_available': 0},
+    'prd003': {'description': 'Acacia kitchen table', 'product_type': 'kitchen', 'quantity_available': 7},
+    'prd004': {'description': 'Queen bed', 'product_type': 'bedroom', 'quantity_available': 10},
+    'prd005': {'description': 'Reading lamp', 'product_type': 'bedroom', 'quantity_available': 20},
+    'prd006': {'description': 'Portable heater', 'product_type': 'bathroom', 'quantity_available': 14},
+    'prd007': {'description': 'Ballerina painting', 'product_type': 'livingroom', 'quantity_available': 0},
+    'prd008': {'description': 'Smart microwave', 'product_type': 'kitchen', 'quantity_available': 30},
+    'prd009': {'description': 'Popcorn machine', 'product_type': 'kitchen', 'quantity_available': 0},
+    'prd010': {'description': '60-inch TV', 'product_type': 'livingroom', 'quantity_available': 3}}
+
     db_dict = show_available_products()
+
+    for item in db_dict_actual.keys():
+        assert db_dict[item] == db_dict_actual[item]
+
+def test_20show_rentals():
+    db_dict_actual = {
+    'user008': {'name': 'Shirlene Harris', 'address': '4329 Honeysuckle Lane', 'phone_number': '206-279-5340', 'email': 'harrisfamily@gmail.com'},
+    'user005': {'name': 'Dan Sounders', 'address': '861 Honeysuckle Lane', 'phone_number': '206-279-1723', 'email': 'soundersoccer@mls.com'}}
+
+    db_dict = show_rentals('prd002')
+
+    for item in db_dict_actual.keys():
+        assert db_dict[item] == db_dict_actual[item]
 
 def test_99teardown():
     # connect and drop the test database
