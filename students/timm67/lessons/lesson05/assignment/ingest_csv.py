@@ -1,7 +1,6 @@
 """
 ingest_csv.py module uses generator to perform per-line import
-from specified CSV file and ingest as record into sqlite3 db
-using basic_operations.py
+from specified CSV file and ingest as document into mongodb
 """
 
 from loguru import logger
@@ -10,7 +9,7 @@ from models import Customer
 from models import Product
 from models import Rental
 
-
+from database import Connection
 
 # indexes into array returned by CSV reader
 CUST_USERID = 0
@@ -64,16 +63,17 @@ def ingest_customer_csv(csv_path):
             if len(data) != 6:
                 logger.error(f'Data with incorrect item count: {len(data)}')
                 continue
-            # extract items from list and add record to database
-            customer = Customer(
-                user_id = data[CUST_USERID],
-                name = data[CUST_NAME],
-                address = data[CUST_ADDRESS],
-                zip_code = int(data[CUST_ZIPCODE]),
-                phone_number = data[CUST_PHONE],
-                email = data[CUST_EMAIL]
-            )
-            customer.save()
+            # extract items from list and add document to database
+            with Connection():
+                customer = Customer(
+                    user_id=data[CUST_USERID],
+                    name=data[CUST_NAME],
+                    address=data[CUST_ADDRESS],
+                    zip_code=int(data[CUST_ZIPCODE]),
+                    phone_number=data[CUST_PHONE],
+                    email=data[CUST_EMAIL]
+                )
+                customer.save()       # This will perform an insert
         except StopIteration:
             break
 
@@ -94,13 +94,15 @@ def ingest_product_csv(csv_path):
             if len(data) != 4:
                 logger.error(f'Data with incorrect item count: {len(data)}')
                 continue
-            product = Product(
-                product_id=data[PROD_ID],
-                description=data[PROD_DESC],
-                product_type=data[PROD_TYPE],
-                quantity_available=data[PROD_QTY]
-            )
-            product.save()
+            # extract items from list and add document to database
+            with Connection():
+                product = Product(
+                    product_id=data[PROD_ID],
+                    description=data[PROD_DESC],
+                    product_type=data[PROD_TYPE],
+                    quantity_available=data[PROD_QTY]
+                )
+                product.save()       # This will perform an insert
         except StopIteration:
             break
 
@@ -121,11 +123,12 @@ def ingest_rental_csv(csv_path):
             if len(data) != 2:
                 logger.error(f'Data with incorrect item count: {len(data)}')
                 continue
-            # extract items from list and add record to database
-            rental = Rental(
-                product_id=data[RENTAL_PROD_ID],
-                user_id=data[RENTAL_USER_ID]
-            )
-            rental.save()       # This will perform an insert
+            # extract items from list and add document to database
+            with Connection():
+                rental = Rental(
+                    product_id=data[RENTAL_PROD_ID],
+                    user_id=data[RENTAL_USER_ID]
+                )
+                rental.save()       # This will perform an insert
         except StopIteration:
             break
