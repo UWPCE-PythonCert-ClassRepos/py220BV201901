@@ -7,9 +7,13 @@ db.drop_database('test')
 
 """
 
+import sys
 from mongoengine import connect
 from loguru import logger
 
+from models import util_drop_all
+
+from database import Connection
 from database import show_available_products
 from database import show_rentals
 
@@ -32,8 +36,8 @@ logger.enable(__name__)
 
 def test_00setup():
     # connect and drop the current database
-    db = connect('mongoengine_test', host='localhost', port=27017)
-    db.drop_database('mongoengine_test')
+    with Connection():
+        util_drop_all()
 
     # create the test database
     ingest_customer_csv(CSV_PATH_DBG + CUST_CSV_FILENAME)
@@ -45,5 +49,5 @@ def test_10show_avail_products():
 
 def test_99teardown():
     # connect and drop the test database
-    db = connect('mongoengine_test', host='localhost', port=27017)
-    db.drop_database('mongoengine_test')   
+    with Connection():
+        util_drop_all()
