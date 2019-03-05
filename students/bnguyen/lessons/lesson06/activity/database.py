@@ -276,12 +276,16 @@ def main():
     dir_a = '/Users/bnguyen/py220BV201901/students/bnguyen/lessons/lesson05/assignment/tests/'
     # data_dir = os.path.dirname(os.path.abspath(dir_a))
     data_dir = os.path.abspath(os.path.dirname(dir_a))
+
     added, errs = import_data(data_dir, 'product.csv', 'customer.csv', 'rental.csv')
+
+    print(dir_a)
+    print(data_dir)
 
     print()
     print(added, errs)
 
-    mongo_conn = MongoDBConnection()S
+    mongo_conn = MongoDBConnection()
 
     with mongo_conn:
         # mongodb database; it all starts here
@@ -303,7 +307,7 @@ def main():
 
     print(f"\nCurrent prod_count: {prod_cnt}| cust_cnt: {cus_cnt}| rent_cnt: {rent_cnt}")
 
-    drop_db()
+    drop_db()  # -for profile testing
 
 if __name__ == "__main__":
     main()
