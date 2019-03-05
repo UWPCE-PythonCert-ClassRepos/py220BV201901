@@ -253,9 +253,10 @@ def show_rentals(product_id):
     return data
 
 
-def drop_db():
+def drop_db(input_val=None):
     """
     This function is used to drop all the collections.
+    Param: input_val is a string "y", or "n"
     """
     # start afresh next time?
     mongo_conn = MongoDBConnection()
@@ -264,7 +265,10 @@ def drop_db():
         # mongodb database; it all starts here
         db = mongo_conn.connection.hp_inventory
 
-        yorn = input("Drop data?")
+        if input_val is None:
+            yorn = input("Drop data?")
+        else:
+            yorn = input_val
         if yorn.upper() == 'Y':
             db.drop_collection("customers")
             db.drop_collection("products")
@@ -281,7 +285,7 @@ def main():
     print()
     print(added, errs)
 
-    mongo_conn = MongoDBConnection()S
+    mongo_conn = MongoDBConnection()
 
     with mongo_conn:
         # mongodb database; it all starts here
