@@ -66,12 +66,12 @@ def ingest_customer_csv(csv_path):
             # extract items from list and add document to database
             with Connection():
                 customer = Customer(
-                    user_id = data[CUST_USERID],
-                    name = data[CUST_NAME],
-                    address = data[CUST_ADDRESS],
-                    zip_code = int(data[CUST_ZIPCODE]),
-                    phone_number = data[CUST_PHONE],
-                    email = data[CUST_EMAIL]
+                    user_id=data[CUST_USERID],
+                    name=data[CUST_NAME],
+                    address=data[CUST_ADDRESS],
+                    zip_code=int(data[CUST_ZIPCODE]),
+                    phone_number=data[CUST_PHONE],
+                    email=data[CUST_EMAIL]
                 )
                 customer.save()       # This will perform an insert
         except StopIteration:

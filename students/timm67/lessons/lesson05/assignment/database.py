@@ -1,5 +1,6 @@
-import sys
-from loguru import logger
+"""
+mongodb database operations using mongoengnine
+"""
 
 from mongoengine import connect
 
@@ -9,6 +10,13 @@ from models import Rental
 
 
 class Connection:
+    """
+    Connection class to use as context manager for db connection
+    """
+    def __init__(self):
+        # to please pylint (ARGH)
+        self.conn = None
+
     def __enter__(self):
         self.conn = connect('mongoengine_test', host='localhost', port=27017)
         return self.conn
@@ -35,16 +43,18 @@ def show_available_products():
     ret_dict = {}
 
     with Connection():
-        for prod_info in Product.objects:
-            prod = {prod_info.product_id : {'description' : prod_info.description,
-                                            'product_type' : prod_info.product_type,
-                                            'quantity_available' : prod_info.quantity_available}}
-            ret_dict.update(prod)
+        for prod in Product.objects:
+            prod_entry = \
+                {prod.product_id : {'description' : prod.description,
+                                    'product_type' : prod.product_type,
+                                    'quantity_available' : \
+                                    prod.quantity_available}}
+            ret_dict.update(prod_entry)
 
     return ret_dict
 
 
-def show_rentals(product_id):
+def show_rentals(prod_id):
     """
     Returns a Python dictionary with the following user information from users
     that have rented products matching product_id:
@@ -65,16 +75,16 @@ def show_rentals(product_id):
     ret_dict = {}
 
     with Connection():
-        renters = Rental.objects(__raw__={'product_id' : product_id})
-        for renter in renters.objects:
-            users = Customer.objects(__raw__={'user_id' : renter.user_id})
-            for user_info in users.objects:
-                user = {user_info.user_id : {'name' : user_info.name,
-                    'address' : user_info.address,
-                    'phone_number' : user_info.phone_number,
-                    'email' : user_info.email
-                    }
-                }
-                ret_dict.update(user)
-    
+        renters = Rental.objects(product_id=prod_id)
+        for renter in renters:
+            users = Customer.objects(user_id=renter.user_id)
+            for user in users:
+                user_info = {user.user_id : {'name' : user.name,
+                                             'address' : user.address,
+                                             'phone_number' : user.phone_number,
+                                             'email' : user.email
+                                             }
+                            }
+                ret_dict.update(user_info)
+
     return ret_dict
