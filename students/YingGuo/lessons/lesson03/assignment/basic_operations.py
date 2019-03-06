@@ -1,46 +1,64 @@
 """hw3, sqlite databass, Peewee"""
 
-from management_database_model import *
+from lesson03.assignment.management_database_model import *
 import logging
+import csv
+from decimal import Decimal
 
 log_format = "%(asctime)s %(filename)s:%(lineno)-3d %(levelname)s %(message)s"
 logging.basicConfig(level=logging.INFO, format=log_format)
 
-def add_customer():
+def add_customer(input_list = []):
     """
     add a new customer record to database Customer table
-    (customer_id, name, lastname, home_address, phone_number, email_address, status, credit_limit)
+    (customer_id, name, lastname, home_address, phone_number,
+    email_address, status, credit_limit.)
     """
     logging.info("connect to data base")
     database = SqliteDatabase('customer.db')
     database.connect()
-    database.create_tables([Customer, Sale])
     database.execute_sql('PRAGMA foreign_keys = ON;')
+    if input_list == []:
+        logging.info("getting user input")
+        user_input_1 = input("What's the ID you would like for the new customer?")
+        user_input_2 = input("What's the customer's name?")
+        user_input_3 = input("What's the last name?")
+        user_input_4 = input("What's the home address?")
+        user_input_5 = input("Phone number?")
+        user_input_6 = input("Email?")
+        user_input_7 = input('Status?')
+        user_input_8 = input("What's the allowed credit limit?")
 
-    logging.info("getting user input")
-    user_input_1 = input("What's the ID you would like for the new customer?")
-    user_input_2 = input("What's the customer's name?")
-    user_input_3 = input("What's the last name?")
-    user_input_4 = input("What's the home address?")
-    user_input_5 = input("phone number")
-    user_input_6 = input("email")
-    user_input_7 = input("What's the allowed credit limit?")
+    else:
+        logging.info("getting data from a list")
+        user_input_1 = input_list[0]
+        user_input_2 = input_list[1]
+        user_input_3 = input_list[2]
+        user_input_4 = input_list[3]
+        user_input_5 = input_list[4]
+        user_input_6 = input_list[5]
+        if input_list[6] == "Active":
+            user_input_7 = True
+        if input_list[6] == "Inactive":
+            user_input_7 = False
+        user_input_8 = input_list[7]
+
     try:
         with database.transaction():
             a_class_instance = Customer.create(customer_id=user_input_1,
-                                customer_name=user_input_2,
+                                name=user_input_2,
                                 last_name=user_input_3,
                                 home_address=user_input_4,
                                 phone_number=user_input_5,
-                                email=user_input_6,
-                                credit_limit=user_input_7)
+                                email_address=user_input_6,
+                                status=user_input_7,
+                                credit_limit=user_input_8)
             a_class_instance.save()
             logging.info(f'a new record is Saved, new saved ID is {user_input_1} and name is {user_input_2}')
     except Exception as e:
         logging.info(e)
         logging.info(f'New record is Not saved, ID is {user_input_1} and name is {user_input_2}')
 
-    database.close()
 
 def add_customers(a_dict):
     """
@@ -56,12 +74,13 @@ def add_customers(a_dict):
         with database.transaction():
             for key, value in a_dict.items():
                 new_record = Customer.create(customer_id=key,
-                                    customer_name=value[0],
+                                    name=value[0],
                                     last_name=value[1],
                                     home_address=value[2],
                                     phone_number=value[3],
-                                    email=value[4],
-                                    credit_limit=value[5])
+                                    email_address=value[4],
+                                    status=value[5],
+                                    credit_limit=value[6])
                 new_record.save()
                 logging.info(f"A new record in the list is saved to database, ID is {key}")
         logging.info("a dictionary of data is saved")
@@ -70,7 +89,16 @@ def add_customers(a_dict):
         logging.info(e)
         logging.info(f'Recored ID:{key} is not saved')
 
-    database.close()
+def add_customer_csv(file_name):
+    """
+    This function write csv file into database
+    """
+    fh = open("{}.csv".format(file_name))
+    reader = csv.reader(fh)
+    for row in reader:
+        add_customer(row)
+    logging.info("csv file is loaded to database")
+    fh.close()
 
 def search_customer(search_input=None):
     """
@@ -88,9 +116,10 @@ def search_customer(search_input=None):
 
     try:
         a_record = Customer.get(Customer.customer_id == search_input)
-        a_dict = {a_record.customer_id: [a_record.customer_name,
+        a_dict = {a_record.customer_id: [a_record.name,
                                         a_record.last_name,
-                                        a_record.email,
+                                        a_record.email_address,
+                                        a_record.status,
                                         a_record.phone_number]}
         logging.info(f'Searched item is found:{a_dict}')
         return a_dict
@@ -100,7 +129,6 @@ def search_customer(search_input=None):
         logging.info(e)
         return {}
 
-    database.close()
 
 
 def delete_customer(delete_input=None):
@@ -131,7 +159,6 @@ def update_customer_credit(update_input=None, update_input_credit=None):
     or raise a ValueError exception if the customer does not exist.
     """
     database = SqliteDatabase('customer.db')
-    database.connect()
     database.execute_sql('PRAGMA foreign_keys = ON;')
     if update_input == None:
         update_input = input("Which ID would you like to update?")
@@ -139,87 +166,30 @@ def update_customer_credit(update_input=None, update_input_credit=None):
         update_input_credit = int(input("What's the new credit limit?"))
     try:
         with database.transaction():
-            a_record = Customer.get(Customer.customer_id == update_input)
-            a_record.credit_limit = update_customer_credit
-            logging.info(f"ID:{update_input}, New credit:{update_input_credit}, is saved")
+            res = (Customer.update({Customer.credit_limit: Decimal(update_input_credit)})
+            .where(Customer.customer_id == update_input)
+            .execute())
+            logging.info(f"ID:{update_input},\
+            New credit:{Customer.select(Customer.credit_limit).where(Customer.customer_id == update_input)},\
+            is saved")
     except Exception as e:
         logging.info(f"{update_input}, {update_input_credit}, is Not saved")
         logging.info(e)
-
-    database.close()
-
-def add_sales(new_sales_dict):
-    """
-    add a dict of new sale records to database Sale table
-    order_number is key,
-    value is a list, which includes following informatio
-    order_date = DateField(formats='YYYY-MM-DD')
-    status = BooleanField(help_text='True means active, False means in-active', null=False)
-    customer_id = ForeignKeyField(Customer, related_name='was filled by', null=False)
-    """
-    logging.info("connect to data base")
-    database = SqliteDatabase('customer.db')
-    database.connect()
-    database.create_tables([Customer, Sale])
-    database.execute_sql('PRAGMA foreign_keys = ON;')
-
-    for key, value in new_sales_dict.items():
-        #try:
-        with database.transaction():
-            a_class_instance = Sale.create(order_number=key,
-                                    order_date=value[0],
-                                    status=value[1],
-                                    customer_id=value[2])
-            a_class_instance.save()
-            logging.info(f'a new record is Saved, new saved order number is {key} and customer status is {value[1]}')
-        """except Exception as e:
-            logging.info(e)
-            logging.info(f'New record is Not saved, order number is {key} and status is {key[1]}')
-"""
-    #logging.info("Dict is saved")
-    database.close()
 
 def list_active_customer():
     """
     list_active_customers():
     This function will return an integer with the number of customers whose status is currently active.
     """
-    query = Customer.select(Customer, Sale).join(Sale, JOIN.INNER).where(Sale.status == True)
+    #query = Customer.select(Customer, Sale).join(Sale, JOIN.INNER).where(Sale.status == True)
+    #for customer in query:
+    #    print (customer.customer_name)
+    #logging.info("print customers whose status is currently active")
+    #number = query.count()
+    query = Customer.select().where(Customer.status == True)
     for customer in query:
-        print (customer.customer_name)
-    logging.info("print customers whose status is currently active")
+        print(customer.name)
     number = query.count()
-    logging.info(f'the number of customers whose status is currently active is {number}')
-    database.close()
+    print(number)
     return number
 
-
-if __name__ == "__main__":
-    #add new customer to database
-    #add_customer()
-
-    #populate database with a group of records
-    dict_example_customers = {'002':["Lily", "Harmon", "Redmond WA", "111-111-1111", "Lily@gmail.com", 5000],
-                    '003':["Jonathan", "Curtis", "Renton WA", "333-333-3333", 'Jon@gmail.com', 8888],
-                    '004':["Tim", "Briest", "Seattle WA", "444-444-8888", 'tim@gmail.com', 6666]}
-    add_customers(dict_example_customers)
-
-    #search
-    search_customer('002')
-
-    #delete
-    delete_customer('001')
-
-    #update
-    update_customer_credit('002', '222222')
-
-    #add new sale, got datatype mismatch error on the foreign key field
-    dict_example_sales = {'CO01':['2019-01-01', False, '002'],
-                        'CO02':['2019-02-02', True, '002'],
-                        'CO03':['2019-02-03', True, '003']}
-
-    add_sales(dict_example_sales)
-
-
-    #populate Sale table and count active customers
-    #list_active_customer()

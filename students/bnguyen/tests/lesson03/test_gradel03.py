@@ -8,7 +8,7 @@
 
 import pytest
 
-from lessons.lesson03.assignment import basic_operations as l
+from lesson03.assignment import basic_operations as l
 
 @pytest.fixture
 def _add_customers():
