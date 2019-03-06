@@ -3,9 +3,11 @@ ingest_csv.py module uses generator to perform per-line import
 from specified CSV file and ingest as document into mongodb
 """
 
-from loguru import logger
+import threading
 
 from zipfile import ZipFile
+
+from loguru import logger
 
 from models import Customer
 from models import Product
@@ -13,22 +15,11 @@ from models import Rental
 
 from database import Connection
 
-ZIP_FILENAME_DBG = './lessons/lesson04/assignment/customer.zip'
-ZIP_FILENAME = './customer.zip'
-CSV_FILENAME = 'customer.csv'
-EXTRACT_PATH_DBG = './lessons/lesson04/assignment/'
+ZIP_FILENAME_DBG = './lessons/lesson07/assignment/data.zip'
+CUST_ZIP_FILENAME = './data.zip'
+CUST_CSV_FILENAME = 'customer.csv'
+EXTRACT_PATH_DBG = './lessons/lesson07/assignment/'
 EXTRACT_PATH = './'
-
-# indexes into array returned by CSV reader
-CUST_ID = 0
-CUST_NAME = 1
-CUST_LASTNAME = 2
-CUST_ADDRESS = 3
-CUST_PHONE = 4
-CUST_EMAIL = 5
-CUST_STATUS = 6
-CUST_CREDIT_LIMIT = 7
-
 
 # indexes into array returned by CSV reader
 CUST_USERID = 0
@@ -46,14 +37,21 @@ PROD_QTY = 3
 RENTAL_PROD_ID = 0
 RENTAL_USER_ID = 1
 
+extract_lock = threading.Lock()
 
-def extract_csv(zip_filename, csv_filename, extract_path):
+def extract_csv(zip_filename, csv_filename, extract_path, with_lock):
     """
     Extract .csv file from .zip file (req'd for github file size limits)
     """
-    with ZipFile(zip_filename, 'r') as ziparchive:
-        # extract csv file using EXTRACT_PATH
-        ziparchive.extract(csv_filename, path=extract_path)
+    if with_lock is True:
+        with extract_lock:
+            with ZipFile(zip_filename, 'r') as ziparchive:
+                # extract csv file using EXTRACT_PATH
+                ziparchive.extract(csv_filename, path=extract_path)
+    else:
+        with ZipFile(zip_filename, 'r') as ziparchive:
+            # extract csv file using EXTRACT_PATH
+            ziparchive.extract(csv_filename, path=extract_path)
 
 
 def import_csv_gen(csv_filename):
@@ -75,13 +73,13 @@ def import_csv_gen(csv_filename):
                 return
 
 
-def ingest_customer_csv(csv_path):
+def ingest_customer_csv(csv_path, with_lock):
     """
     Ingest csv function to combine extract and import gen functions,
     and populate data from generator in database
     """
     # Extract the CSV file from the zip archive
-    extract_csv(CUST_ZIP_FILENAME, CUST_CSV_FILENAME, EXTRACT_PATH)
+    extract_csv(CUST_ZIP_FILENAME, CUST_CSV_FILENAME, EXTRACT_PATH, with_lock)
     # Create a CSV import generator (next yields one db row)
     import_generator = import_csv_gen(csv_path)
     # Skip over the title row
@@ -108,11 +106,13 @@ def ingest_customer_csv(csv_path):
             break
 
 
-def ingest_product_csv(csv_path):
+def ingest_product_csv(csv_path, with_lock):
     """
     Ingest csv function to combine extract and import gen functions,
     and populate data from generator in database
     """
+    # Extract the CSV file from the zip archive
+    extract_csv(CUST_ZIP_FILENAME, CUST_CSV_FILENAME, EXTRACT_PATH, with_lock)
     # Create a CSV import generator (next yields one db row)
     import_generator = import_csv_gen(csv_path)
     # Skip over the title row
@@ -137,11 +137,13 @@ def ingest_product_csv(csv_path):
             break
 
 
-def ingest_rental_csv(csv_path):
+def ingest_rental_csv(csv_path, with_lock):
     """
     Ingest csv function to combine extract and import gen functions,
     and populate data from generator in database
     """
+    # Extract the CSV file from the zip archive
+    extract_csv(CUST_ZIP_FILENAME, CUST_CSV_FILENAME, EXTRACT_PATH, with_lock)
     # Create a CSV import generator (next yields one db row)
     import_generator = import_csv_gen(csv_path)
     # Skip over the title row
