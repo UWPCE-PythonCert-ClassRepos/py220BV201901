@@ -33,13 +33,14 @@ def linear():
     with Connection():
         util_drop_all()
 
-    s = time.perf_counter()
+    start = time.perf_counter()
 
     ingest_customer_csv(CSV_PATH_DBG + CUST_CSV_FILENAME, False)
     ingest_product_csv(CSV_PATH_DBG + PROD_CSV_FILENAME, False)
     ingest_rental_csv(CSV_PATH_DBG + RNTL_CSV_FILENAME, False)
 
-    elapsed = time.perf_counter() - s
+    elapsed = time.perf_counter() - start
+    print(f"{__file__} db ingest executed in {elapsed:0.2f}")
 
     db_dict = show_available_products()
 
