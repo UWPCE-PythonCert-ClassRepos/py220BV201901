@@ -1,0 +1,43 @@
+Note: 
+1) removed if logic for year count
+2) create a list of years and used collections.Counter to group
+
+
+$ python good_perf.py
+Counter({'2015': 5994, '2013': 5911, '2014': 5854, '2018': 5811, '2017': 5789, '2016': 5762})
+'ao' was found 63395 times
+Total year run time: 0:00:03.183533
+Total module run time: 0:00:03.184536
+         78218 function calls (78210 primitive calls) in 3.185 seconds
+
+   Ordered by: standard name
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000    0.003    0.003 __init__.py:548(__init__)
+        1    0.000    0.000    0.000    0.000 __init__.py:573(most_common)
+        1    0.000    0.000    0.003    0.003 __init__.py:617(update)
+        1    0.000    0.000    0.000    0.000 __init__.py:703(__repr__)
+        1    0.000    0.000    0.000    0.000 _bootlocale.py:11(getpreferredencoding)
+        5    0.000    0.000    0.000    0.000 _collections_abc.py:392(__subclasshook__)
+        1    0.000    0.000    0.000    0.000 abc.py:137(__instancecheck__)
+      5/1    0.000    0.000    0.000    0.000 abc.py:141(__subclasscheck__)
+        1    0.000    0.000    0.000    0.000 codecs.py:260(__init__)
+    21525    0.012    0.000    0.287    0.000 cp1252.py:22(decode)
+        1    2.891    2.891    3.184    3.184 good_perf.py:11(analyze)
+        1    0.001    0.001    3.185    3.185 good_perf.py:39(main)
+        1    0.000    0.000    0.000    0.000 {built-in method _abc._abc_instancecheck}
+      5/1    0.000    0.000    0.000    0.000 {built-in method _abc._abc_subclasscheck}
+    21525    0.275    0.000    0.275    0.000 {built-in method _codecs.charmap_decode}
+        1    0.003    0.003    0.003    0.003 {built-in method _collections._count_elements}
+        1    0.000    0.000    0.000    0.000 {built-in method _csv.reader}
+        1    0.000    0.000    0.000    0.000 {built-in method _locale._getdefaultlocale}
+        1    0.000    0.000    0.000    0.000 {built-in method builtins.isinstance}
+        2    0.000    0.000    0.000    0.000 {built-in method builtins.len}
+        4    0.001    0.000    0.001    0.000 {built-in method builtins.print}
+        2    0.000    0.000    0.000    0.000 {built-in method builtins.sorted}
+        1    0.000    0.000    0.000    0.000 {built-in method io.open}
+        6    0.000    0.000    0.000    0.000 {built-in method now}
+    35121    0.003    0.000    0.003    0.000 {method 'append' of 'list' objects}
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+        1    0.000    0.000    0.000    0.000 {method 'items' of 'dict' objects}
+        1    0.000    0.000    0.000    0.000 {method 'join' of 'str' objects}
