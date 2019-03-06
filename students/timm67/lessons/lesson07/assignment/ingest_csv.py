@@ -44,10 +44,11 @@ def extract_csv(zip_filename, csv_filename, extract_path, with_lock):
     Extract .csv file from .zip file (req'd for github file size limits)
     """
     if with_lock is True:
-        with extract_lock:
-            with ZipFile(zip_filename, 'r') as ziparchive:
-                # extract csv file using EXTRACT_PATH
-                ziparchive.extract(csv_filename, path=extract_path)
+        extract_lock.acquire()
+        with ZipFile(zip_filename, 'r') as ziparchive:
+            # extract csv file using EXTRACT_PATH
+            ziparchive.extract(csv_filename, path=extract_path)
+        extract_lock.release()
     else:
         with ZipFile(zip_filename, 'r') as ziparchive:
             # extract csv file using EXTRACT_PATH
