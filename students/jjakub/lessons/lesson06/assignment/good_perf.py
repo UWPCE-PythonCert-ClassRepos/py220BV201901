@@ -5,7 +5,7 @@ well performing, efficiently written module
 import csv
 import cProfile
 import datetime
-from collections import Counter, OrderedDict
+from collections import Counter
 
 
 def analyze(filename):
