@@ -3,6 +3,7 @@
 This is the main program/module for the inventory managment system.
 """
 import sys
+<<<<<<< HEAD
 # from inventory_class import Inventory
 # from furniture_class import Furniture
 # from market_prices import get_latest_price
@@ -14,15 +15,20 @@ from inventory_management import market_prices
 from .inventory_class import Inventory
 from .furniture_class import Furniture
 from .electric_appliances_class import ElectricAppliances
+=======
+from inventory_management.inventory_class import Inventory
+from inventory_management.furniture_class import Furniture
+from inventory_management.electric_appliances_class import ElectricAppliances
+from inventory_management.market_prices import get_latest_price
+>>>>>>> a6be37e76f6d52f4a0973173376216fcb3dcaa63
 
 from inventory_management import *
 
 FULL_INVENTORY = {}
 
+
 def main_menu(user_prompt=None):
-    """
-    This is the main menu.
-    """
+    """ This is the main menu. """
     valid_prompts = {"1": add_new_item,
                      "2": item_info,
                      "q": exit_program}
@@ -38,20 +44,26 @@ def main_menu(user_prompt=None):
         user_prompt = input(">")
     return valid_prompts.get(user_prompt)
 
+
 def get_price(item_code):
     """
     What does this do?
     """
     print("Get price {}".format(item_code))
 
+
 def add_new_item():
     """
     What does this do?
+    Adding new item into inventory system by 3 types.
+    1) Base inventory
+    2) Furniture.
+    3) Electric.
     """
-    #global FULL_INVENTORY
+    # global FULL_INVENTORY
     item_code = input("Enter item code: ")
     item_description = input("Enter item description: ")
-    item_rent_price = input("Enter item rental price: ")
+    item_rent_price = int(input("Enter item rental price: "))
 
     # Get price from the market prices module
     item_price = get_latest_price(item_code)
@@ -77,6 +89,8 @@ def add_new_item():
                                  item_price, item_rent_price)
 
     FULL_INVENTORY[item_code] = new_item.return_as_dictionary()
+
+    print(FULL_INVENTORY)  # for testing only to be deleted.
     print("New inventory item added")
 
 
@@ -92,11 +106,13 @@ def item_info():
     else:
         print("Item not found in inventory")
 
+
 def exit_program():
     """
     What does this do?
     """
     sys.exit()
+
 
 if __name__ == '__main__':
     FULL_INVENTORY = {}

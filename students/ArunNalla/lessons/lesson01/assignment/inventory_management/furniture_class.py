@@ -1,12 +1,12 @@
 # furniture_class
 """ Create a subclass to get
 an dict containing furniture items by getting basic info from inventory class"""
-from inventory_class import Inventory
+from inventory_management.inventory_class import Inventory
 
-
-class Furniture(Inventory):
+class Furniture(Inventory): # pylint: disable=too-few-public-methods
     """ Subclass of Inventory class to added more parameters"""
 
+    # pylint: disable=too-many-arguments
     def __init__(self, product_code, description, market_price,
                  rental_price, material, size):
         Inventory.__init__(self, product_code, description,

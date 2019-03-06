@@ -52,12 +52,50 @@ print(f"My name is {first} {last}")
 
 Try loguru for logging in python for easier logging.
 
-
 Add password info. files to .gitignore entry, so they won't be propagated into the repository.
 
+--------------------------------------------------------------------------------------------------
 
+/c/gitroot/py220BV201901/students/dave_arasim/lesson02/assignment/code
 
+--------------------------------------------------------------------------------------------------
 
+python -c "import sys; print(sys.path)"
+
+set PYTHONPATH=.
+
+python -m pytest -v test_unit.py
+
+------------------------------------------------------------
+Lesson 3
+SQL stuff:
+
+pip install peewee then...
+
+python class is like a table and peewee maps classes to tables:
+from peewee import *
+
+class BaseModel(Model):  <--- inherits Model from peewee
+    class Meta:
+        database = SqliteDatabase('personjob.db')  <-- knows how to talk to sqlite database
+                                                       on disk called 'personjob.db'
+
+class Person(BaseModel):
+    person_name = CharField(primary_key = True, max_length = 30)
+    town...
+    nickname...
+
+    def show(this):
+        print(this.person_name, ....)
+
+class Job(BaseModel):
+    ...
+
+use sqlitetutorial.net to install sqlite!!
+
+============================================================================================
+1/30/19:
+MongoDB - new database to be used in this class (noSQL database: 'schema-less')
 
 
 
