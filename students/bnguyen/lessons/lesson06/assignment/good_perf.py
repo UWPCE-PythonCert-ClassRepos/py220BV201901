@@ -1,21 +1,35 @@
-"""
-poorly performing, poorly written module
+# Student: Bradnon Nguyen
+# Class:   Advance Python 220 - Jan2019
+# Lesson06 - Profiling/Optimization.
 
+"""
+This module is used to show the improvement from poor_perf.py.
 """
 
 import datetime
 import csv
 
+
+# @profile
 def analyze(filename):
+    """
+    This function annalyze the data in a csv add update the count in each year.
+    """
     start = datetime.datetime.now()
+
     with open(filename) as csvfile:
         reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+        # In the line_profiler we can see big hit and % time in this loop
         new_ones = []
+        # new_ones = [(row[5], row[0]) for row in reader if row[5] > '00/00/2012']
+        found = 0
+
         for row in reader:
-            lrow = list(row)
-            if lrow[5] > '00/00/2012':
-                # new_ones.append((lrow[5], lrow[0]))
-                new_ones.extend((lrow[5], lrow[0]))
+            # lrow = list(line) # added time for nothing
+            if row[5] > '00/00/2012':
+                new_ones.append((row[5], row[0]))
+            if "ao" in row[6]:
+                found += 1
 
         year_count = {
             "2013": 0,
@@ -41,27 +55,17 @@ def analyze(filename):
                 year_count["2017"] += 1
 
         print(year_count)
-
-    with open(filename) as csvfile:
-        reader = csv.reader(csvfile, delimiter=',', quotechar='"')
-
-        found = 0
-
-        for line in reader:
-            lrow = list(line)
-            if "ao" in line[6]:
-                found += 1
-
         print(f"'ao' was found {found} times")
         end = datetime.datetime.now()
 
     return (start, end, year_count, found)
 
+
 def main():
+    """This is main."""
     filename = "data/exercise.csv"
     analyze(filename)
 
 
 if __name__ == "__main__":
     main()
-
