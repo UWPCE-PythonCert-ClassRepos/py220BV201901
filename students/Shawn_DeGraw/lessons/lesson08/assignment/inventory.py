@@ -28,6 +28,8 @@ def add_furniture(invoice_file, customer_name, item_code, item_description, item
         with open(Path(directory_name, invoice_file), 'a') as furniture_invoice:
             furniture_invoice.write(f'{customer_name}, {item_code}, {item_description}, {item_monthly_price}\n')
 
+            SYSTEMLOG.info(f'Data added to invoice file: {customer_name}, {item_code}, {item_description}, {item_monthly_price}')
+
     except IOError as fileerror:
         SYSTEMLOG.error(f'File error {directory_name + invoice_file}, exception {type(fileerror).__name__}')
 
@@ -35,9 +37,24 @@ def add_furniture(invoice_file, customer_name, item_code, item_description, item
 def single_customer(customer_name, invoice_file):
     """ Provides a function """
 
-    pass
+    def consumerentalitems(rental_items):
+        """ Add rental times to file """
 
+        directory_name = os.path.dirname(os.path.abspath(__file__))
+        try:
+            with open(Path(directory_name,invoice_file), 'a') as output_file:
+                with open(Path(directory_name,rental_items), 'r') as input_file:
+
+                    for line in input_file:
+                        fields = line.split(',')
+                        output_file.write(f'{customer_name}, {fields[0]}, {fields[1]}, {fields[2]}\n')
+                        SYSTEMLOG.info(f'Data added to invoice file: {customer_name}, {fields[0]}, {fields[1]}, {fields[2]}')
+
+        except IOError as fileerror:
+            SYSTEMLOG.error(f'File error {directory_name + invoice_file}, exception {type(fileerror).__name__}')
+
+    return consumerentalitems
 
 if __name__ == "__main__":
 
-    add_furniture('testfile', 'Elisa Miles','LR04','Leather Sofa','25.00')
+    add_furniture('testfile', 'Elisa Miles','LR04','Leather Sofa', 25.00)
