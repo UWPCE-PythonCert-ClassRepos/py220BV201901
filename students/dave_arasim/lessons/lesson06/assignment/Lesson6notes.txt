@@ -1,0 +1,32 @@
+Analysis for Lesson 6 by David Arasim:
+
+One very obvious improvement was made before any profiling took place.  That is:  The program was opening and
+spinning through the file twice.  I consolidated the file opens and file line-reading 'for' loops into one.
+
+Profiling:
+I noticed there was a list being constructed from each data row being read.  However, it seems there was no
+need to convert the row to a list at all, since the indexing worked on the raw data row from csv reader as is.
+
+Not really a performance gain but... the 2018 year counts were being incremented in the 2017 bucket.
+I changed this on all copies of the program, including my copy of the base 'poor_perf.py' program.
+
+Worked on years being stored.  No need to store years above 2018.  Only need to store years themselves and
+not the sequence numbers--since they aren't used by the year counter.  Years can be parsed as they are
+tested to avoid parsing later.  Cast year to 'int' although not sure this is a performance gain.
+
+Better yet, no need to store the years in a list at all!  Decided to do away with the 'new_ones' list and fill the
+year buckets as the years are being analyzed for the year range.  The regular row reads already provide for year analysis.
+
+Tried to emulate a 'switch' statement for incrementing the year buckets instead of multiple 'if' statements
+to see if this would help performance.  It did not.  Abandoned the idea of using this technique.  See 'abandoned_perf.py'.
+
+Changed 'if' statements to 'elif' but not convinced this helped performance.  Seems more readable this way at least.
+
+Tried comparing as strings instead of ints for the years.  This includes not converting year strings to ints.
+This seemed to improve performance.  It is likely the int() function call was causing the performance hit.
+
+Decided the biggest bottle neck is always going to be the file reading tasks.  It seems reasonable to assume the csv module
+is already well tuned to best performance.
+
+My submitted program for this assignment runs consistently in less than half the time its 'poor' counterpart does.
+

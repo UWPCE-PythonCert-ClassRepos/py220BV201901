@@ -126,3 +126,8 @@ Note:  Included non '.py' items in the zip file
 cd to C:\Program Files\MongoDB\Server\4.0\bin> 
 enter command mongod
 leave open and running!
+
+============================================================================================
+2/20/19:
+
+
