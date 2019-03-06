@@ -86,14 +86,14 @@ def ingest_customer_csv(csv_path, with_lock):
     # Skip over the title row
     next(import_generator)
     # Iterate over all other rows
-    while True:
-        try:
-            data = next(import_generator)
-            if len(data) != 6:
-                logger.error(f'Data with incorrect item count: {len(data)}')
-                continue
-            # extract items from list and add document to database
-            with Connection():
+    with Connection():
+        while True:
+            try:
+                data = next(import_generator)
+                if len(data) != 6:
+                    logger.error(f'Data item count: {len(data)}')
+                    continue
+                # extract items from list and add document to database
                 customer = Customer(
                     user_id=data[CUST_USERID],
                     name=data[CUST_NAME],
@@ -103,8 +103,8 @@ def ingest_customer_csv(csv_path, with_lock):
                     email=data[CUST_EMAIL]
                 )
                 customer.save()       # This will perform an insert
-        except StopIteration:
-            break
+            except StopIteration:
+                break
 
 
 def ingest_product_csv(csv_path, with_lock):
@@ -119,14 +119,14 @@ def ingest_product_csv(csv_path, with_lock):
     # Skip over the title row
     next(import_generator)
     # Iterate over all other rows
-    while True:
-        try:
-            data = next(import_generator)
-            if len(data) != 4:
-                logger.error(f'Data with incorrect item count: {len(data)}')
-                continue
-            # extract items from list and add document to database
-            with Connection():
+    with Connection():
+        while True:
+            try:
+                data = next(import_generator)
+                if len(data) != 4:
+                    logger.error(f'Data item count: {len(data)}')
+                    continue
+                # extract items from list and add document to database
                 product = Product(
                     product_id=data[PROD_ID],
                     description=data[PROD_DESC],
@@ -134,8 +134,8 @@ def ingest_product_csv(csv_path, with_lock):
                     quantity_available=data[PROD_QTY]
                 )
                 product.save()       # This will perform an insert
-        except StopIteration:
-            break
+            except StopIteration:
+                break
 
 
 def ingest_rental_csv(csv_path, with_lock):
@@ -150,18 +150,18 @@ def ingest_rental_csv(csv_path, with_lock):
     # Skip over the title row
     next(import_generator)
     # Iterate over all other rows
-    while True:
-        try:
-            data = next(import_generator)
-            if len(data) != 2:
-                logger.error(f'Data with incorrect item count: {len(data)}')
-                continue
-            # extract items from list and add document to database
-            with Connection():
+    with Connection():
+        while True:
+            try:
+                data = next(import_generator)
+                if len(data) != 2:
+                    logger.error(f'Data item count: {len(data)}')
+                    continue
+                # extract items from list and add document to database
                 rental = Rental(
                     product_id=data[RENTAL_PROD_ID],
                     user_id=data[RENTAL_USER_ID]
                 )
                 rental.save()       # This will perform an insert
-        except StopIteration:
-            break
+            except StopIteration:
+                break
