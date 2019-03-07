@@ -1,0 +1,6 @@
+Started out with start[0.022006481] end[7.506976164]
+Approximately 7.3s
+Change from else to elif didn't make much difference (assuming 
+
+{'2013': 5911, '2014': 5854, '2015': 5994, '2016': 5762, '2017': 11600, '2018': 0}
+start[0.021990618] end[4.516161051]
