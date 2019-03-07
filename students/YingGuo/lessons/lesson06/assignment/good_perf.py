@@ -4,6 +4,8 @@ Used an evidence based approach to find out bottleneck
 and implemented improvements.
 
 """
+#timeit, list comprehension, lambda, map, for short scripts.
+#profile, how to use profile to improve my work?
 
 import datetime
 import csv
@@ -20,7 +22,7 @@ def create_list_generator(filename):
             line += 1
             if line == 1:
                 continue
-            yield list(row)
+            yield row
 
 def analyze(lst_of_lsts):
     start = datetime.datetime.now()
@@ -73,6 +75,33 @@ def main():
     end = datetime.datetime.now()
     print((start, end, (end - start)))
 
+#from types import coroutine
+async def corout_analyze(lst_of_lsts):
+    analyze(lst_of_lsts)
+    return "corout_analyzed is called"
+
+async def corout_search(lst_of_lsts, key_words="ao"):
+    search_words(lst_of_lsts, key_words="ao")
+    await corout_analyze(lst_of_lsts)
+
+def main_2():
+    start = datetime.datetime.now()
+    filename = "exercise.csv"
+    lst_of_lsts = create_list_generator(filename)
+    #cr1 = corout_analyze(lst_of_lsts)
+    cr2 = corout_search(lst_of_lsts, key_words="ao")
+    #cr1.send(None)
+    while True:
+        try:
+            cr2.send(None)
+        except StopIteration:
+            print("StopIteration")
+            break
+    end = datetime.datetime.now()
+    print((start, end, (end - start)))
+
 
 if __name__ == "__main__":
-    main()
+    #main()
+    #main_2 stopped iteration when count year
+    main_2()
