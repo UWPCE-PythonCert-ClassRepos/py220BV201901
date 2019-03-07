@@ -253,10 +253,9 @@ def show_rentals(product_id):
     return data
 
 
-def drop_db(input_val=None):
+def drop_db():
     """
     This function is used to drop all the collections.
-    Param: input_val is a string "y", or "n"
     """
     # start afresh next time?
     mongo_conn = MongoDBConnection()
@@ -265,10 +264,7 @@ def drop_db(input_val=None):
         # mongodb database; it all starts here
         db = mongo_conn.connection.hp_inventory
 
-        if input_val is None:
-            yorn = input("Drop data?")
-        else:
-            yorn = input_val
+        yorn = input("Drop data?")
         if yorn.upper() == 'Y':
             db.drop_collection("customers")
             db.drop_collection("products")
@@ -280,7 +276,11 @@ def main():
     dir_a = '/Users/bnguyen/py220BV201901/students/bnguyen/lessons/lesson05/assignment/tests/'
     # data_dir = os.path.dirname(os.path.abspath(dir_a))
     data_dir = os.path.abspath(os.path.dirname(dir_a))
+
     added, errs = import_data(data_dir, 'product.csv', 'customer.csv', 'rental.csv')
+
+    print(dir_a)
+    print(data_dir)
 
     print()
     print(added, errs)
@@ -307,7 +307,7 @@ def main():
 
     print(f"\nCurrent prod_count: {prod_cnt}| cust_cnt: {cus_cnt}| rent_cnt: {rent_cnt}")
 
-    drop_db()
+    drop_db()  # -for profile testing
 
 if __name__ == "__main__":
     main()
