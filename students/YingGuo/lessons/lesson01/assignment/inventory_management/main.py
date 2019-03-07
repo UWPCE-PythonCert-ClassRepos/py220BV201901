@@ -1,10 +1,17 @@
 """This is the main menu script for inventory management"""
 # Launches the user interface for the inventory management system
 import sys
+<<<<<<< HEAD
+from inventory_management import market_prices
+from inventory_management import inventory_class
+from .furniture_class import *
+from .electric_appliances_class import *
+=======
 from inventory_management.market_prices import get_latest_price
 from inventory_management.inventory_class import Inventory
 from inventory_management.furniture_class import Furniture
 from inventory_management.electric_appliances_class import ElectricAppliances
+>>>>>>> a6be37e76f6d52f4a0973173376216fcb3dcaa63
 
 FULL_INVENTORY = {}
 
