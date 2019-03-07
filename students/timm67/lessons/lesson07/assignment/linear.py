@@ -1,6 +1,6 @@
 import time
-from loguru import logger
 from sys import stdout
+from loguru import logger
 
 from ingest_csv import ingest_customer_csv
 from ingest_csv import ingest_product_csv
@@ -15,7 +15,7 @@ from models import util_drop_all
 CUST_CSV_FILENAME = 'customers.csv'
 PROD_CSV_FILENAME = 'products.csv'
 RNTL_CSV_FILENAME = 'rentals.csv'
-#CSV_PATH_DBG = './lessons/lesson05/assignment/'
+#CSV_PATH_DBG = './lessons/lesson07/assignment/'
 CSV_PATH_DBG = ''
 
 

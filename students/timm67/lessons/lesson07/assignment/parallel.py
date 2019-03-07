@@ -1,8 +1,9 @@
 import threading
 import time
+from sys import stdout
 
 from loguru import logger
-from sys import stdout
+
 
 from ingest_csv import ingest_customer_csv
 from ingest_csv import ingest_product_csv
@@ -17,7 +18,7 @@ from models import util_drop_all
 CUST_CSV_FILENAME = 'customers.csv'
 PROD_CSV_FILENAME = 'products.csv'
 RNTL_CSV_FILENAME = 'rentals.csv'
-#CSV_PATH_DBG = './lessons/lesson05/assignment/'
+#CSV_PATH_DBG = './lessons/lesson07/assignment/'
 CSV_PATH_DBG = ''
 
 
@@ -37,7 +38,7 @@ def parallel():
 
     cust_thread = threading.Thread(target=ingest_customer_csv,
                                    args=(CSV_PATH_DBG + CUST_CSV_FILENAME, True))
-    prod_thread = threading.Thread(target=ingest_product_csv, 
+    prod_thread = threading.Thread(target=ingest_product_csv,
                                    args=(CSV_PATH_DBG + PROD_CSV_FILENAME, True))
     rent_thread = threading.Thread(target=ingest_rental_csv,
                                    args=(CSV_PATH_DBG + RNTL_CSV_FILENAME, True))

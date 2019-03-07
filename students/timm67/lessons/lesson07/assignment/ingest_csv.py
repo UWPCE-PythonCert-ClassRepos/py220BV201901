@@ -42,6 +42,8 @@ extract_lock = threading.Lock()
 def extract_csv(zip_filename, csv_filename, extract_path, with_lock):
     """
     Extract .csv file from .zip file (req'd for github file size limits)
+    Use the _with_lock_ argument to specify whether a lock is held during
+    the extraction for multithreaded operation
     """
     if with_lock is True:
         extract_lock.acquire()
