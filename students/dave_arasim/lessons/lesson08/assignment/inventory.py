@@ -58,7 +58,7 @@ def main():
             print('Quitting process...')
         else:
             print('<cr> to continue... ', end='')
-            input()  # input() for pause
+            input() # input() for pause
 
 
 def clear_screen():
@@ -111,6 +111,7 @@ def add_furniture(inv_file, cust_name, *args):
     build_furniture_dict(furniture_dict, inv_file)
 
     if args1_blank:
+        # Must be a call from single_cust() using currying method
         try:
             with open(args[0], 'r') as input_file:
                 while True:
@@ -119,12 +120,7 @@ def add_furniture(inv_file, cust_name, *args):
 
                     item_code, item_desc, item_price = input_line.strip().split(',')
 
-                    try:
-                        next_seq = int(max(furniture_dict.keys()) + 1)
-                    except ValueError:
-                        next_seq = 1
-
-                    furniture_dict[next_seq] = cust_name, item_code, item_desc, float(item_price)
+                    add_record(furniture_dict, cust_name, item_code, item_desc, item_price)
 
             input_file.close()
         except FileNotFoundError:
@@ -133,16 +129,25 @@ def add_furniture(inv_file, cust_name, *args):
             print('<cr> to continue...')
             input() # input() for pause
     else:
+        # Must be a call from add_furn() using standard parameter method
         item_code = args[0]
         item_desc = args[1]
         item_price = args[2]
 
-        try:
-            next_seq = int(max(furniture_dict.keys()) + 1)
-        except ValueError:
-            next_seq = 1
+        add_record(furniture_dict, cust_name, item_code, item_desc, item_price)
 
-        furniture_dict[next_seq] = cust_name, item_code, item_desc, float(item_price)
+    return furniture_dict
+
+
+def add_record(furniture_dict, cust_name, item_code, item_desc, item_price):
+    ''' Add a record to furniture_dict with unique sequence number (key) '''
+
+    try:
+        next_seq = int(max(furniture_dict.keys()) + 1)
+    except ValueError:
+        next_seq = 1
+
+    furniture_dict[next_seq] = cust_name, item_code, item_desc, float(item_price)
 
     return furniture_dict
 
@@ -215,7 +220,7 @@ def create_report():
         print()
         print(f'Furniture database "{inv_file}" not found.')
         print()
-        input()  # input() for pause
+        input() # input() for pause
         clear_screen()
 
 
