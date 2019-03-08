@@ -2,8 +2,7 @@
 
 """
 based on lesson05 MongoDB assignment.
-This assignment Amend the add and update logic for both customers and products.
-so that it can process these in parallel.
+This is linear version compared to parallel version.
 
 This module will return a list of tuples, one tuple for customer and one for products.
 Each tuple will contain 4 values: 
@@ -11,14 +10,11 @@ the number of records processed (int),
 the record count in the database prior to running (int),
 the record count after running (int),
 and the time taken to run the module (float).
-
-a text file containing findings is also submitted.
 """
 
 from pymongo import MongoClient
 import csv
 import logging
-import asyncio
 import datetime
 
 log_format = "%(asctime)s %(filename)s:%(lineno)-3d %(levelname)s %(message)s"
@@ -41,7 +37,7 @@ class MongoDBConnection():
         self.connection.close()
 
 
-async def customer_to_db(file_name, db_collection, when=0.0):
+def customer_to_db(file_name, db_collection):
     """
     This function write csv file into database
     example at customers.csv
@@ -67,11 +63,9 @@ async def customer_to_db(file_name, db_collection, when=0.0):
                         "email":row[5]}
             result = db_collection.insert_one(row_ip)
             logging.info(f"{row} is imported to database collection customers")
-            await asyncio.sleep(when)
-            #where to put this await?
         fh.close()
 
-async def products_to_db(file_name, db_collection, when=0.0):
+def products_to_db(file_name, db_collection):
     """
     This function write csv file into database
     example at products.csv
@@ -96,7 +90,6 @@ async def products_to_db(file_name, db_collection, when=0.0):
                         }
             result = db_collection.insert_one(row_ip)
             logging.info(f"{row} is imported to database collection products")
-            await asyncio.sleep(when)
         fh.close()
 
 def count_records_csv(file_name):
@@ -117,8 +110,6 @@ def count_records_db(collection_name):
             count += 1
     return count
 
-async def upload_data():
-    await asyncio.gather(customer_to_db("customers","customers"), products_to_db("products", "products"))
 
 if __name__ == "__main__":
     customer_csv_count = count_records_csv("customers")
@@ -129,7 +120,8 @@ if __name__ == "__main__":
 
     start = datetime.datetime.now()
     mongo = MongoDBConnection()
-    asyncio.run(upload_data())
+    customer_to_db("customers", "customers")
+    products_to_db("products", "products")
     end = datetime.datetime.now()
     d = end - start
     duration = d.total_seconds()
