@@ -4,11 +4,10 @@ Used an evidence based approach to find out bottleneck
 and implemented improvements.
 
 """
-#timeit, list comprehension, lambda, map, for short scripts.
-#profile, how to use profile to improve my work?
 
 import datetime
 import csv
+import asyncio
 
 def create_list_generator(filename):
     """
@@ -51,7 +50,7 @@ def analyze(lst_of_lsts):
 
     print(year_count)
     end = datetime.datetime.now()
-    print((start, end, (end - start)))
+    print("Time for counting years is {}".format(end-start))
     return (start, end, year_count)
 
 def search_words(lst_of_lsts, key_words="ao"):
@@ -62,7 +61,7 @@ def search_words(lst_of_lsts, key_words="ao"):
             found += 1
     print(f"{key_words} was found {found} times")
     end = datetime.datetime.now()
-    print((start, end, (end - start)))
+    print("Time for searching words is {}".format(end-start))
     return (start, end, found)
 
 def main():
@@ -73,35 +72,33 @@ def main():
     lst_of_lsts = create_list_generator(filename)
     search_words(lst_of_lsts)
     end = datetime.datetime.now()
-    print((start, end, (end - start)))
+    d = end - start
+    duration = d.total_seconds()
+    print(f"I revised scrip by using generator, after revised, it took {duration} second")
 
 #from types import coroutine
 async def corout_analyze(lst_of_lsts):
     analyze(lst_of_lsts)
-    return "corout_analyzed is called"
+    await asyncio.sleep(0.0)
 
 async def corout_search(lst_of_lsts, key_words="ao"):
     search_words(lst_of_lsts, key_words="ao")
-    await corout_analyze(lst_of_lsts)
+    await asyncio.sleep(0.0)
 
-def main_2():
+async def main_2(lst_of_lsts):
+    await asyncio.gather(corout_analyze(lst_of_lsts), corout_search(lst_of_lsts, key_words="ao"))
+
+def run_main_2():
     start = datetime.datetime.now()
     filename = "exercise.csv"
     lst_of_lsts = create_list_generator(filename)
-    #cr1 = corout_analyze(lst_of_lsts)
-    cr2 = corout_search(lst_of_lsts, key_words="ao")
-    #cr1.send(None)
-    while True:
-        try:
-            cr2.send(None)
-        except StopIteration:
-            print("StopIteration")
-            break
+    asyncio.run(main_2(lst_of_lsts))
     end = datetime.datetime.now()
-    print((start, end, (end - start)))
+    d = end - start
+    duration = d.total_second()
+    print(f"I revised scrip by using Async. After using Async, it took {duration} second")
 
 
 if __name__ == "__main__":
-    #main()
-    #main_2 stopped iteration when count year
-    main_2()
+    main()
+    run_main_2()
