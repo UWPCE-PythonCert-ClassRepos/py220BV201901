@@ -9,7 +9,8 @@ This module will return a list of tuples, one tuple for customer and one for pro
 Each tuple will contain 4 values: 
 the number of records processed (int), 
 the record count in the database prior to running (int),
-the record count after running (int),and the time taken to run the module (float).
+the record count after running (int),
+and the time taken to run the module (float).
 
 a text file containing findings is also submitted.
 """
@@ -98,6 +99,24 @@ async def products_to_db(file_name, db_collection, when=0.0):
             await asyncio.sleep(when)
         fh.close()
 
+def count_records_csv(file_name):
+    fh = open("{}.csv".format(file_name))
+    reader = csv.reader(fh)
+    count = -1
+    for row in reader:
+        count += 1
+    return count
+
+def count_records_db(collection_name):
+    mongo = MongoDBConnection()
+    with mongo:
+        db = mongo.connection.inventory
+        collect = db[collection_name]
+        count = 0
+        for record in collect.find():
+            count += 1
+    return count
+
 
 def show_available_products():
     """
@@ -127,79 +146,33 @@ def show_available_products():
     print(op_dict)
     return op_dict
 
-
-# def show_rentals():
-#     """
-#     Returns a Python dictionary with the following user information from users that have rented products matching product_id:
-#     user_id.
-#     name.
-#     address.
-#     phone_number.
-#     email.
-#     """
-#     mongo = MongoDBConnection()
-#     with mongo:
-#         db = mongo.connection.inventory
-#         rentals = db["rentals"]
-#         customers = db["customers"]
-#         op_dict = {}
-#         for user in rentals.find():
-#             query = {"user_id": user["user_id"]}
-#             for customer in customers.find(query):
-#                 op_key = customer["user_id"]
-#                 op_value = {
-#                 "name": customer["name"],
-#                 "address": customer["address"],
-#                 "phone_number": customer["phone_number"],
-#                 "email": customer["email"]}
-#                 op_dict[op_key] = op_value
-#     print(op_dict)
-#     return op_dict
-
-# async def print_mdb_collection(db_collection_name, when=0.0):
-#     mongo = MongoDBConnection()
-#     with mongo:
-#         db = mongo.connection.inventory
-#         for doc in db[db_collection_name].find():
-#             await asyncio.sleep(when)
-#             print(doc)
 async def upload_data():
     await asyncio.gather(customer_to_db("customers","customers"), products_to_db("products", "products"))
 
 if __name__ == "__main__":
+    customer_csv_count = count_records_csv("customers")
+    product_csv_count = count_records_csv("products")
+
+    beginning_db_customers_count = count_records_db("customers")
+    beginning_db_products_count = count_records_db("products")
+
     start = datetime.datetime.now()
-
     mongo = MongoDBConnection()
-    
-    """
-    async def main():
-    await asyncio.gather(count(), count(), count())
-
-    asyncio.run(main())
-
-    await
-    return?
-    """
     asyncio.run(upload_data())
-
-    """
-    loop = asyncio.get_event_loop()
-    loop.create_task(customer_to_db("customers","customers"))
-    loop.create_task(products_to_db("products", "products"))
-    loop.create_task(stop_after(loop, 3))
-
-    loop.run_forever()
-    loop.close()
-    """
     end = datetime.datetime.now()
-    print((start, end, (end - start)))
-    show_available_products()
-    # import_data("customers", "products", "rentals")
-    # print_mdb_collection('customers')
-    # print("show available products")
-    # show_available_products()
-    # print("show rentals")
-    # show_rentals()
+    duration = float(end - start)
+
+    end_db_customers_count = count_records_db("customers")
+    end_db_products_count = count_records_db("products")
+
+    # the number of records processed (int), 
+    # the record count in the database prior to running (int),
+    # the record count after running (int),
+    # and the time taken to run the module (float)
+    tuple_customers = (customer_csv_count, beginning_db_customers_count, end_db_customers_count, duration)
+    tuple_products = (product_csv_count, beginning_db_products_count, end_db_products_count, duration)
+    print(f"customer collection tuple:{tuple_customers}")
+    print(f"product collection tuple:{tuple_products}")
 
     #clean database
     mongo = MongoDBConnection()
