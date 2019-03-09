@@ -1,0 +1,60 @@
+1) So far this is very interesting topic.  Although I spent much time watching and rewatching the videos I am not sure I get all the technique and tools.
+The cProfiler also has a sort feature so if we use [python -m cProfile -s cumtime good_perf.py]: 
+We would get the longest function calls sort it up.
+
+#Out put from my screen:
+
+(venv) BAC:assignment bnguyen$ python -m cProfile -s cumtime poor_perf.py 
+{'2013': 0, '2014': 0, '2015': 0, '2016': 0, '2017': 0, '2018': 0}
+'ao' was found 63395 times
+         1088219 function calls (1088202 primitive calls) in 10.168 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+      3/1    0.000    0.000   10.168   10.168 {built-in method builtins.exec}
+        1    0.000    0.000   10.168   10.168 good_perf.py:4(<module>)
+        1    0.066    0.066   10.161   10.161 good_perf.py:60(main)
+        1    9.869    9.869   10.095   10.095 good_perf.py:9(analyze)
+    43050    0.053    0.000    0.124    0.000 codecs.py:319(decode)
+  1000000    0.101    0.000    0.101    0.000 {method 'extend' of 'list' objects}
+    43050    0.071    0.000    0.071    0.000 {built-in method _codecs.utf_8_decode}
+
+#----
+
+I then learn about a snakeviz tool which represent the output from cProfiler into a GUI that really awesome.
+
+I also tried interactively in ipython.
+
+In [9]: prun analyze(filename)                                                                                           
+{'2013': 5911, '2014': 5854, '2015': 5994, '2016': 5762, '2017': 11600, '2018': 0}
+'ao' was found 63395 times
+         1086131 function calls in 10.018 seconds
+
+   Ordered by: internal time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    9.686    9.686    9.904    9.904 poor_perf.py:9(analyze)
+        1    0.114    0.114   10.018   10.018 <string>:1(<module>)
+  1000000    0.087    0.000    0.087    0.000 {method 'append' of 'list' objects}
+
+  # gtime output 
+
+  (venv) BAC:assignment bnguyen$ gtime --verbose python poor_perf.py 
+{'2013': 5911, '2014': 5854, '2015': 5994, '2016': 5762, '2017': 11600, '2018': 0}
+'ao' was found 63395 times
+        Command being timed: "python poor_perf.py"
+        User time (seconds): 11.31
+        System time (seconds): 0.83
+        Percent of CPU this job got: 77%
+        Elapsed (wall clock) time (h:mm:ss or m:ss): 0:15.74
+        Average shared text size (kbytes): 0
+        Average unshared data size (kbytes): 0
+        Average stack size (kbytes): 0
+        Average total size (kbytes): 0
+        Maximum resident set size (kbytes): 172748
+        Average resident set size (kbytes): 0
+        Major (requiring I/O) page faults: 7
+        Minor (reclaiming a frame) page faults: 70543
+        Voluntary context switches: 14
+        Involuntary context switches: 99928

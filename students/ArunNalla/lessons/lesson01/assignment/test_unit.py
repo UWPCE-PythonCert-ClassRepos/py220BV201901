@@ -62,6 +62,3 @@ class MainMenu(unittest.TestCase):
         with mock.patch('builtins.input', return_value='1'):
             self.assertEqual(main.main_menu(), main.add_new_item)
 
-
-
-

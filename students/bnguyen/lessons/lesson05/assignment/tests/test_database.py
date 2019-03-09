@@ -73,6 +73,7 @@ def test_process_csv_rental(_show_rentals_p):
 
 def test_import_data():
     """ import """
+
     data_dir = os.path.dirname(os.path.abspath(__file__))
     added, errors = l.import_data(data_dir, "product.csv", "customer.csv", "rental.csv")
 
@@ -96,3 +97,6 @@ def test_show_rentals(_show_rentals):
     """ rentals """
     students_response = l.show_rentals("P000003")
     assert students_response == _show_rentals
+
+    # clean up for all tests.
+    l.drop_db("y")
