@@ -29,15 +29,6 @@ SYSTEMLOG = logging.getLogger('SYSTEMLOG')
 SYSTEMLOG.addHandler(FILE_HANDLER_SYSTEM)
 SYSTEMLOG.setLevel("INFO")
 
-# MongoDB configurations
-# MYCLIENT = pymongo.MongoClient("mongodb://127.0.0.1:27017/")
-# MYDB = MYCLIENT["HPNorton"]
-
-# PRODUCTCOLLECTION = MYDB["products"]
-# CUSTOMERCOLLECTION = MYDB["customers"]
-#
-# MYDB.PRODUCTCOLLECTION.create_index('product_id', unique=True)
-# MYDB.CUSTOMERCOLLECTION.create_index('customer_id', unique=True)
 
 class MongoDBConnection():
     """ MongoDB Connection manager """
@@ -50,10 +41,11 @@ class MongoDBConnection():
 
     def __enter__(self):
         self.connection = MongoClient(self.host, self.port)
-
+        DBLOG.info('Opening connection to MongoDB.')
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
+        DBLOG.info('Closing connection to MongoDB.')
         self.connection.close()
 
 
@@ -116,32 +108,27 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
         with open(Path(directory_name, customer_file), 'r') as custfile:
 
             next(custfile) # skip header line
-            for line in custfile:
-                linelist = [x.strip() for x in line.split(',')]
+            with mongo:
+                db = mongo.connection.HPNorton
+                customercollection = db["customers"]
+                for line in custfile:
+                    linelist = [x.strip() for x in line.split(',')]
 
-                with mongo:
-                    db = mongo.connection.HPNorton
-                    customercollection = db["customers"]
-                    try:
-                        result = customercollection.insert_one(
-                            {
-                                'customer_id' : linelist[0],
-                                'name' : linelist[1],
-                                'address' : linelist[2],
-                                'zip_code' : linelist[3],
-                                'phone_number' : linelist[4],
-                                'email' : linelist[5],
-                                'rentals' : []
-                            })
+                    result = customercollection.insert_one(
+                        {
+                            'customer_id' : linelist[0],
+                            'name' : linelist[1],
+                            'address' : linelist[2],
+                            'zip_code' : linelist[3],
+                            'phone_number' : linelist[4],
+                            'email' : linelist[5],
+                            'rentals' : []
+                        })
 
-                        if result.acknowledged:
-                            customersuccesscount += 1
-                        else:
-                            customerfailurecount += 1
-
-                    except errors.DuplicateKeyError:
+                    if result.acknowledged:
+                        customersuccesscount += 1
+                    else:
                         customerfailurecount += 1
-                        continue
 
                     DBLOG.info(f'Added customer DB entry: {linelist[0]}')
 
