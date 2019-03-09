@@ -3,10 +3,26 @@
 This is the main program/module for the inventory managment system.
 """
 import sys
+<<<<<<< HEAD
+# from inventory_class import Inventory
+# from furniture_class import Furniture
+# from market_prices import get_latest_price
+# from electric_appliances_class import ElectricAppliances
+
+#USING this to see:  NOT working
+#ModuleNotFoundError: __path__ attribute not found on 'inventory_management.main
+from inventory_management import market_prices
+from .inventory_class import Inventory
+from .furniture_class import Furniture
+from .electric_appliances_class import ElectricAppliances
+=======
 from inventory_management.inventory_class import Inventory
 from inventory_management.furniture_class import Furniture
 from inventory_management.electric_appliances_class import ElectricAppliances
 from inventory_management.market_prices import get_latest_price
+>>>>>>> a6be37e76f6d52f4a0973173376216fcb3dcaa63
+
+from inventory_management import *
 
 FULL_INVENTORY = {}
 
