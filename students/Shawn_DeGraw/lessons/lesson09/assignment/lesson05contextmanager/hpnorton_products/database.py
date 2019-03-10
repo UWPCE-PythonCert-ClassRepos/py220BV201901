@@ -30,7 +30,7 @@ SYSTEMLOG.addHandler(FILE_HANDLER_SYSTEM)
 SYSTEMLOG.setLevel("INFO")
 
 
-class MongoDBConnection():
+class MongoDBConnection:
     """ MongoDB Connection manager """
 
     def __init__(self, host='127.0.0.1', port=27017):
@@ -96,12 +96,10 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
                         productfailurecount += 1
                         continue
 
-
                     DBLOG.info(f'Added product DB entry: {linelist[0]}')
 
     except FileNotFoundError as fileerror:
         SYSTEMLOG.error(f'File not found at {directory_name + product_file}, exception {type(fileerror).__name__}')
-
 
     # Process customer file and add to mongoDB
     try:
@@ -134,7 +132,6 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
 
     except FileNotFoundError as fileerror:
         SYSTEMLOG.error(f'File not found at {directory_name + product_file}, exception {type(fileerror).__name__}')
-
 
     # Process rental file and add to mongoDB in customer collection
     try:
