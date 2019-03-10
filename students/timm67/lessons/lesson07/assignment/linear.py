@@ -1,5 +1,4 @@
 import time
-from sys import stdout
 from loguru import logger
 
 from ingest_csv import ingest_customer_csv
@@ -12,40 +11,29 @@ from database import show_rentals
 
 from models import util_drop_all
 
-CUST_CSV_FILENAME = 'customers.csv'
-PROD_CSV_FILENAME = 'products.csv'
-RNTL_CSV_FILENAME = 'rentals.csv'
-#CSV_PATH_DBG = './lessons/lesson07/assignment/'
-CSV_PATH_DBG = ''
-
-
 def linear():
     """
     Ensure you application will create an empty database if one doesn’t exist
     when the app is first run. Call it customers.db
     """
 
-    # Standalone function to initialize logging
-    logger.add(stdout, level='WARNING')
-    logger.add("logfile_{time}.txt", level='INFO')
-    logger.enable(__name__)
-
     with Connection():
         util_drop_all()
 
     start = time.perf_counter()
 
-    ingest_customer_csv(CSV_PATH_DBG + CUST_CSV_FILENAME, False)
-    ingest_product_csv(CSV_PATH_DBG + PROD_CSV_FILENAME, False)
-    ingest_rental_csv(CSV_PATH_DBG + RNTL_CSV_FILENAME, False)
+    ingest_customer_csv(False)
+    ingest_product_csv(False)
+    ingest_rental_csv(False)
 
     elapsed = time.perf_counter() - start
-    print(f"{__file__} db ingest executed in {elapsed:0.2f}")
+    logger.info(f"db ingest executed in {elapsed:0.4f} seconds")
+    print(f"db ingest executed in {elapsed:0.4f} seconds")
 
-    db_dict = show_available_products()
+    # db_dict = show_available_products()
 
-    print(db_dict)
+    # print(db_dict)
 
-    db_dict = show_rentals('prd002')
+    # db_dict = show_rentals('P000002')
 
-    print(db_dict)
+    # print(db_dict)

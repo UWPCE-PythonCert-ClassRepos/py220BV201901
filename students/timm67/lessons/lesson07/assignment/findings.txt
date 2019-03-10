@@ -1,1 +1,30 @@
 placeholder for timing results of single vs. multi-thread operations
+
+2019-03-10 01:02:13.451 | INFO     | __main__:main:22 - Start linear ingest from CSV files
+2019-03-10 01:02:26.787 | ERROR    | ingest_csv:ingest_customer_csv:107 - Data item count: 1
+2019-03-10 01:02:26.787 | ERROR    | ingest_csv:ingest_customer_csv:107 - Data item count: 1
+2019-03-10 01:02:38.371 | ERROR    | ingest_csv:ingest_product_csv:146 - Data item count: 1
+2019-03-10 01:02:38.371 | ERROR    | ingest_csv:ingest_product_csv:146 - Data item count: 1
+2019-03-10 01:02:49.061 | ERROR    | ingest_csv:ingest_rental_csv:179 - Data item count: 1
+2019-03-10 01:02:49.061 | ERROR    | ingest_csv:ingest_rental_csv:179 - Data item count: 1
+2019-03-10 01:02:49.064 | INFO     | linear:linear:30 - db ingest executed in 35.5937
+db ingest executed in 35.5937
+2019-03-10 01:02:49.066 | INFO     | __main__:main:26 - Start parallel ingest from CSV files
+2019-03-10 01:03:03.141 | INFO     | parallel:parallel:23 - Drop all documents
+2019-03-10 01:03:03.187 | INFO     | ingest_csv:extract_csv:53 - Acquiring lock for customers.csv
+2019-03-10 01:03:03.188 | INFO     | ingest_csv:extract_csv:53 - Acquiring lock for products.csv
+2019-03-10 01:03:03.189 | INFO     | ingest_csv:extract_csv:55 - ==> Lock acquired
+2019-03-10 01:03:03.190 | INFO     | ingest_csv:extract_csv:53 - Acquiring lock for rentals.csv
+2019-03-10 01:03:03.199 | INFO     | ingest_csv:extract_csv:59 - Releasing lock for customers.csv
+2019-03-10 01:03:03.200 | INFO     | ingest_csv:extract_csv:55 - ==> Lock acquired
+2019-03-10 01:03:03.205 | INFO     | ingest_csv:extract_csv:59 - Releasing lock for products.csv
+2019-03-10 01:03:03.206 | INFO     | ingest_csv:extract_csv:55 - ==> Lock acquired
+2019-03-10 01:03:03.215 | INFO     | ingest_csv:extract_csv:59 - Releasing lock for rentals.csv
+2019-03-10 01:03:35.547 | ERROR    | ingest_csv:ingest_rental_csv:179 - Data item count: 1
+2019-03-10 01:03:35.547 | ERROR    | ingest_csv:ingest_rental_csv:179 - Data item count: 1
+2019-03-10 01:03:35.853 | ERROR    | ingest_csv:ingest_customer_csv:107 - Data item count: 1
+2019-03-10 01:03:35.853 | ERROR    | ingest_csv:ingest_customer_csv:107 - Data item count: 1
+2019-03-10 01:03:36.607 | ERROR    | ingest_csv:ingest_product_csv:146 - Data item count: 1
+2019-03-10 01:03:36.607 | ERROR    | ingest_csv:ingest_product_csv:146 - Data item count: 1
+db ingest executed in 33.4219
+2019-03-10 01:03:36.610 | INFO     | parallel:parallel:44 - db ingest executed in 33.4219

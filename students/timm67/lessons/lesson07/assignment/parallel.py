@@ -1,25 +1,17 @@
 import threading
 import time
-from sys import stdout
 
 from loguru import logger
 
-
-from ingest_csv import ingest_customer_csv
-from ingest_csv import ingest_product_csv
-from ingest_csv import ingest_rental_csv
+from ingest_csv import ingest_customer_csv_thread
+from ingest_csv import ingest_product_csv_thread
+from ingest_csv import ingest_rental_csv_thread
 
 from database import Connection
 from database import show_available_products
 from database import show_rentals
 
 from models import util_drop_all
-
-CUST_CSV_FILENAME = 'customers.csv'
-PROD_CSV_FILENAME = 'products.csv'
-RNTL_CSV_FILENAME = 'rentals.csv'
-#CSV_PATH_DBG = './lessons/lesson07/assignment/'
-CSV_PATH_DBG = ''
 
 
 def parallel():
@@ -28,20 +20,13 @@ def parallel():
     when the app is first run. Call it customers.db
     """
 
-    # Standalone function to initialize logging
-    logger.add(stdout, level='WARNING')
-    logger.add("logfile_{time}.txt", level='INFO')
-    logger.enable(__name__)
-
+    logger.info("Drop all documents")
     with Connection():
         util_drop_all()
 
-    cust_thread = threading.Thread(target=ingest_customer_csv,
-                                   args=(CSV_PATH_DBG + CUST_CSV_FILENAME, True))
-    prod_thread = threading.Thread(target=ingest_product_csv,
-                                   args=(CSV_PATH_DBG + PROD_CSV_FILENAME, True))
-    rent_thread = threading.Thread(target=ingest_rental_csv,
-                                   args=(CSV_PATH_DBG + RNTL_CSV_FILENAME, True))
+    cust_thread = threading.Thread(target=ingest_customer_csv_thread)
+    prod_thread = threading.Thread(target=ingest_product_csv_thread)
+    rent_thread = threading.Thread(target=ingest_rental_csv_thread)
 
     start = time.perf_counter()
 
@@ -55,12 +40,13 @@ def parallel():
     rent_thread.join()
 
     elapsed = time.perf_counter() - start
-    print(f"{__file__} db ingest executed in {elapsed:0.2f}")
+    print(f"parallel db ingest executed in {elapsed:0.4f} seconds")
+    logger.info(f"parallel db ingest executed in {elapsed:0.4f} seconds")
 
-    db_dict = show_available_products()
+    # db_dict = show_available_products()
 
-    print(db_dict)
+    # print(db_dict)
 
-    db_dict = show_rentals('prd002')
+    # db_dict = show_rentals('P000002')
 
-    print(db_dict)
+    # print(db_dict)
