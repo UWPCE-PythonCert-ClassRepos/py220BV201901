@@ -27,7 +27,7 @@ class DirectoryRecursion:
     """ Class to search for file extension """
 
     def __init__(self, parent_directory):
-        self.parent_directory = parent_directory
+        self.parent_directory = Path(parent_directory)
         self.file_result = []
 
     def list_files(self, path, total_path):
@@ -40,7 +40,7 @@ class DirectoryRecursion:
         for item in os.listdir(path):
             directory_item = os.path.join(path, item)
             if os.path.isfile(directory_item):
-                if item.lower().endswith("jpg"):
+                if item.lower().endswith("png"):
                     LOGGER.debug(f'File: {directory_item}')
                     file_list.append(item)
             elif os.path.isdir(directory_item):
@@ -49,7 +49,7 @@ class DirectoryRecursion:
             else:
                 LOGGER.info(f'Who knows: {item}')
 
-        total_path.append(Path(path))
+        total_path.append(path)
         total_path.append(file_list)
 
         if len(directory_listing):
@@ -79,8 +79,8 @@ if __name__ == "__main__":
 
     total_path = []
     ARGS = parse_cmd_arguments()
-    new_listing = DirectoryRecursion(Path(ARGS.d))
+    new_listing = DirectoryRecursion(ARGS.d)
 
-    total_path = new_listing.list_files(new_listing.parent_directory, total_path)
+    result = new_listing.list_files(new_listing.parent_directory, total_path)
 
-    print(total_path)
+    print(result)
