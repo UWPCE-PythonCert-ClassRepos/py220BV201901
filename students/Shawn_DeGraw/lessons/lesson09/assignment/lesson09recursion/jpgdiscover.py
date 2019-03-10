@@ -33,26 +33,31 @@ class DirectoryRecursion:
     def list_files(self, path, total_path):
         """ recursive search of files """
 
-        LOGGER.info(f'Working directory: {path}')
+        LOGGER.info(f'Working in directory: {path}')
         directory_listing = []
         file_list = []
 
         for item in os.listdir(path):
             directory_item = os.path.join(path, item)
+
             if os.path.isfile(directory_item):
+
                 if item.lower().endswith("png"):
-                    LOGGER.debug(f'File: {directory_item}')
+                    LOGGER.debug(f'File found: {directory_item}')
                     file_list.append(item)
+
             elif os.path.isdir(directory_item):
-                LOGGER.info(f'Directory: {directory_item}')
+                LOGGER.info(f'Directory found: {directory_item}')
                 directory_listing.append(directory_item)
+
             else:
-                LOGGER.info(f'Who knows: {item}')
+                LOGGER.info(f'Who knows what this is: {item}')
 
         total_path.append(path)
         total_path.append(file_list)
 
         if len(directory_listing):
+            # do recursive calls if sub directories found
             for directory in directory_listing:
                 self.list_files(directory, total_path)
 
