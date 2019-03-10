@@ -1,32 +1,32 @@
 This is findings for lesson07.
 
 the linear run result is below:
+
+guogu@DESKTOP-LPE93KK MINGW64 /c/gitroot/py220BV201901/students/YingGuo/lessons/lesson07/assignment (master)
 $ python linear.py
-2019-03-07 22:10:27,411 linear.py:65  INFO ['user001', 'Elisa Miles', '4490 Union Street', '98109', '206-922-0882', 'elisa.miles@yahoo.com'] is imported to database collection customers
-2019-03-07 22:10:27,411 linear.py:65  INFO ['user002', 'Maya Data', '4936 Elliot Avenue', '98115', '206-777-1927', 'mdata@uw.edu'] is imported to database collection customers
-2019-03-07 22:10:27,412 linear.py:65  INFO ['user003', 'Andy Norris', '348 Terra Street', '98501', '206-309-2533', 'andy.norris@gmail.com'] is imported to database collection customers
-2019-03-07 22:10:27,413 linear.py:65  INFO ['user004', 'Flor Matatena', '885 Boone Crockett Lane', '97209', '206-414-2629', 'matseattle@pge.com'] is imported to database collection customers
-2019-03-07 22:10:27,414 linear.py:65  INFO ['user005', 'Dan Sounders', '861 Honeysuckle Lane', '98244', '206-279-1723', 'soundersoccer@mls.com'] is imported to database collection customers
-2019-03-07 22:10:27,414 linear.py:65  INFO ['user006', 'Leo Dembele', '2725 Mutton Town Road', '98368', '206-203-1294', 'leo.dembele@comcast.com'] is imported to database collection customers
-2019-03-07 22:10:27,415 linear.py:65  INFO ['user007', 'Pete Nicholas', '668 Elliot Avenue', '98115', '206-279-8759', 'nicholasp@amazon.com'] is imported to database collection customers
-2019-03-07 22:10:27,416 linear.py:65  INFO ['user008', 'Shirlene Harris', '4329 Honeysuckle Lane', '98055', '206-279-5340', 'harrisfamily@gmail.com'] is imported to database collection customers
-2019-03-07 22:10:27,417 linear.py:65  INFO ['user009', 'Nick Rather', '4679 Goodwin Avenue', '98619', '206-777-1965', 'nick.rather@microsoft.com'] is imported to database collection customers
-2019-03-07 22:10:27,417 linear.py:65  INFO ['user010', 'Jose Garza', '2717 Raccoon Run', '98116', '206-946-8200', 'joegarza@boeing.com'] is imported to database collection customers
-2019-03-07 22:10:27,431 linear.py:92  INFO ['prd001', '60-inch TV stand', 'livingroom', '3'] is imported to database collection products
-2019-03-07 22:10:27,432 linear.py:92  INFO ['prd002', 'L-shaped sofa', 'livingroom', '0'] is imported to database collection products
-2019-03-07 22:10:27,433 linear.py:92  INFO ['prd003', 'Acacia kitchen table', 'kitchen', '7'] is imported to database collection products
-2019-03-07 22:10:27,433 linear.py:92  INFO ['prd004', 'Queen bed', 'bedroom', '10'] is imported to database collection products
-2019-03-07 22:10:27,434 linear.py:92  INFO ['prd005', 'Reading lamp', 'bedroom', '20'] is imported to database collection products
-2019-03-07 22:10:27,435 linear.py:92  INFO ['prd006', 'Portable heater', 'bathroom', '14'] is imported to database collection products
-2019-03-07 22:10:27,435 linear.py:92  INFO ['prd007', 'Ballerina painting', 'livingroom', '0'] is imported to database collection products
-2019-03-07 22:10:27,436 linear.py:92  INFO ['prd008', 'Smart microwave', 'kitchen', '30'] is imported to database collection products
-2019-03-07 22:10:27,437 linear.py:92  INFO ['prd009', 'Popcorn machine', 'kitchen', '0'] is imported to database collection products
-2019-03-07 22:10:27,437 linear.py:92  INFO ['prd010', '60-inch TV', 'livingroom', '3'] is imported to database collection products
-customer collection tuple:(10, 20, 30, 0.051062)
-product collection tuple:(10, 20, 30, 0.051062)
+2019-03-09 21:09:44,769 linear.py:65  INFO ['user001', 'Elisa Miles', '4490 Union Street', '98109', '206-922-0882', 'elisa.miles@yahoo.com'] is imported to database collection customers
+2019-03-09 21:09:44,770 linear.py:65  INFO ['user002', 'Maya Data', '4936 Elliot Avenue', '98115', '206-777-1927', 'mdata@uw.edu'] is imported to database collection customers
+2019-03-09 21:09:44,771 linear.py:65  INFO ['user003', 'Andy Norris', '348 Terra Street', '98501', '206-309-2533', 'andy.norris@gmail.com'] is imported to database collection customers
+2019-03-09 21:09:44,771 linear.py:65  INFO ['user004', 'Flor Matatena', '885 Boone Crockett Lane', '97209', '206-414-2629', 'matseattle@pge.com'] is imported to database collection customers
+2019-03-09 21:09:44,772 linear.py:65  INFO ['user005', 'Dan Sounders', '861 Honeysuckle Lane', '98244', '206-279-1723', 'soundersoccer@mls.com'] is imported to database collection customers
+2019-03-09 21:09:44,773 linear.py:65  INFO ['user006', 'Leo Dembele', '2725 Mutton Town Road', '98368', '206-203-1294', 'leo.dembele@comcast.com'] is imported to database collection customers
+2019-03-09 21:09:44,773 linear.py:65  INFO ['user007', 'Pete Nicholas', '668 Elliot Avenue', '98115', '206-279-8759', 'nicholasp@amazon.com'] is imported to database collection customers
+2019-03-09 21:09:44,774 linear.py:65  INFO ['user008', 'Shirlene Harris', '4329 Honeysuckle Lane', '98055', '206-279-5340', 'harrisfamily@gmail.com'] is imported to database collection customers
+2019-03-09 21:09:44,775 linear.py:65  INFO ['user009', 'Nick Rather', '4679 Goodwin Avenue', '98619', '206-777-1965', 'nick.rather@microsoft.com'] is imported to database collection customers
+2019-03-09 21:09:44,776 linear.py:65  INFO ['user010', 'Jose Garza', '2717 Raccoon Run', '98116', '206-946-8200', 'joegarza@boeing.com'] is imported to database collection customers
+2019-03-09 21:09:44,800 linear.py:92  INFO ['prd001', '60-inch TV stand', 'livingroom', '3'] is imported to database collection products
+2019-03-09 21:09:44,801 linear.py:92  INFO ['prd002', 'L-shaped sofa', 'livingroom', '0'] is imported to database collection products
+2019-03-09 21:09:44,802 linear.py:92  INFO ['prd003', 'Acacia kitchen table', 'kitchen', '7'] is imported to database collection products
+2019-03-09 21:09:44,802 linear.py:92  INFO ['prd004', 'Queen bed', 'bedroom', '10'] is imported to database collection products
+2019-03-09 21:09:44,803 linear.py:92  INFO ['prd005', 'Reading lamp', 'bedroom', '20'] is imported to database collection products
+2019-03-09 21:09:44,804 linear.py:92  INFO ['prd006', 'Portable heater', 'bathroom', '14'] is imported to database collection products
+2019-03-09 21:09:44,804 linear.py:92  INFO ['prd007', 'Ballerina painting', 'livingroom', '0'] is imported to database collection products
+2019-03-09 21:09:44,805 linear.py:92  INFO ['prd008', 'Smart microwave', 'kitchen', '30'] is imported to database collection products
+2019-03-09 21:09:44,805 linear.py:92  INFO ['prd009', 'Popcorn machine', 'kitchen', '0'] is imported to database collection products
+2019-03-09 21:09:44,806 linear.py:92  INFO ['prd010', '60-inch TV', 'livingroom', '3'] is imported to database collection products
+customer collection tuple:(10, 0, 10, 0.074206)
+product collection tuple:(10, 0, 10, 0.074206)
 Drop data?y
 
-So total time that linear took was 0.051062 second.
-
-for now, I don't have python 3.7 yet, will update the parallel part when I got updated python.
+Parallel.py can run in python 3.7
 
