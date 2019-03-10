@@ -30,13 +30,14 @@ LOGGER.addHandler(FILE_HANDLER)
 LOGGER.addHandler(CONSOLE_HANDLER)
 
 
-def decorator(func):
+def decorator(func, logvalue):
 
     @wraps(func)
     def wrapper_decorator(*args, **kwargs):
 
-        LOGGER.disabled = False
-        LOGGER.setLevel("DEBUG")
+        if logvalue:
+            LOGGER.disabled = False
+            LOGGER.setLevel("DEBUG")
 
         try:
             LOGGER.debug(f'Executing {func.__name__} function.')
@@ -71,23 +72,6 @@ def parse_cmd_arguments():
 
     return parser.parse_args()
 
-# old commented out function
-# def load_rentals_file(filename):
-#     """ Read json input file and create data structure """
-#     try:
-#         with open(filename) as file:
-#             logging.debug(f'Reading data from file: {filename}')
-#             try:
-#                 newdata = json.load(file)
-#             except EOFError as eof_error:
-#                 logging.error(f"Input file read error: {type(eof_error).__name__}")
-#                 exit(2)
-#     except FileNotFoundError as file_error:
-#         logging.error(f"Input file not found: {type(file_error).__name__}")
-#         exit(1)
-#     return newdata
-
-# new function with no longing that will be decorated
 def load_rentals_file(filename):
     """ Read json input file and create data structure """
 
@@ -96,7 +80,6 @@ def load_rentals_file(filename):
         newdata = json.load(file)
 
     return newdata
-
 
 def calculate_additional_fields(data):
     """ Calculate data using input data """
@@ -139,20 +122,9 @@ if __name__ == "__main__":
     DATA = {}
     LOGGER.disabled = True
     ARGS = parse_cmd_arguments()
-    input_file = ARGS.input
-    # if LOG_LEVEL.get(ARGS.d) == 'OFF':
-    #     LOGGER.disabled = True
-    # else:
-    #     LOGGER.setLevel(LOG_LEVEL.get(ARGS.d, "WARNING"))
 
-
-    # logging.debug(f"Program arguments: input file = {ARGS.input}, output file = {ARGS.output}, debug level = {ARGS.d}")
-
-    if ARGS.log is True:
-        load_rentals_file = decorator(load_rentals_file)
-        DATA = load_rentals_file(ARGS.input)
-    else:
-        DATA = load_rentals_file(ARGS.input)
+    load_rentals_file = decorator(load_rentals_file, ARGS.log)
+    DATA = load_rentals_file(ARGS.input)
 
     DATA = calculate_additional_fields(DATA)
     save_to_json(ARGS.output, DATA)
