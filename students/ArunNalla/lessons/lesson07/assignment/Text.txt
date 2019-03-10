@@ -1,0 +1,51 @@
+
+1) Linear code executed functions serially: Handled one file at a time: Read and returned data when done (shown as real-time between each function) 
+
+   vs 
+
+   Parallel code executed in a different way: Though read files (START) serially, asyncio returned data ONLY (await till end) at end.
+
+2) No significant execution time difference between approaches (Have not looked into CPU memory usage).
+
+
+REAL TIME
+
+Arun@LAPTOP-LV6ICMG8 MINGW64 ~/py220BV201901/students/ArunNalla/lessons/lesson07/assignment (master)
+$ C:/Users/Arun/AppData/Local/Programs/Python/Python37/python.exe c:/Users/Arun/py220BV201901/students/Arun
+Nalla/lessons/lesson07/assignment/linear.py
+2019-03-06 19:06:32.721214 CODE START TIME
+
+2019-03-06 19:06:32.997308 PRODUCT CSV READING START
+2019-03-06 19:06:38.928968 PRODUCT CSV READING END
+
+2019-03-06 19:06:38.929990 CUSTOMER CSV READING START
+2019-03-06 19:06:45.117667 CUSTOMER CSV READING END
+
+2019-03-06 19:06:45.117667 RENTAL CSV READING START
+2019-03-06 19:06:51.091951 RENTAL CSV READING END
+
+((9999, 0, 9999, 5.931659936904907), (9999, 0, 9999, 12.120359182357788), (9999, 0, 9999, 18.094642400741577))
+2019-03-06 19:06:51.091951 CODE RUNNING ENDS
+18.094642400741577 : Time taken - Linear
+
+
+
+Arun@LAPTOP-LV6ICMG8 MINGW64 ~/py220BV201901/students/ArunNalla/lessons/lesson07/assignment (master)
+$ C:/Users/Arun/AppData/Local/Programs/Python/Python37/python.exe c:/Users/Arun/py220BV201901/students/Arun
+Nalla/lessons/lesson07/assignment/parallel.py
+2019-03-06 19:06:58.104169 CODE START TIME
+
+2019-03-06 19:06:58.332342 PRODUCT CSV READING START
+2019-03-06 19:07:04.044077 CUSTOMER CSV READING START
+2019-03-06 19:07:10.075276 RENTAL CSV READING START
+
+2019-03-06 19:07:15.910898 RENTAL CSV READING END
+2019-03-06 19:07:15.911895 PRODUCT CSV READIND END
+2019-03-06 19:07:15.911895 CUSTOMER CSV READING END
+
+2019-03-06 19:07:15.911895 RUN END TIME
+((9999, 0, 9999, 17.581546783447266), (9999, 0, 9999, 17.581546783447266), (9999, 0, 9999, 17.581546783447266))
+17.58254313468933 :Total Time take - Parallel
+
+Arun@LAPTOP-LV6ICMG8 MINGW64 ~/py220BV201901/students/ArunNalla/lessons/lesson07/assignment (master)
+$

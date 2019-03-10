@@ -7,6 +7,12 @@ import datetime
 import csv
 
 def analyze(filename):
+    """Poor module
+        Reading the file two time, one (row) for getting year counts and
+        other for get lines with a specific stirng
+        This can be extacted from a single list of rows/line
+        """
+
     start = datetime.datetime.now()
     with open(filename) as csvfile:
         reader = csv.reader(csvfile, delimiter=',', quotechar='"')
@@ -43,7 +49,6 @@ def analyze(filename):
 
     with open(filename) as csvfile:
         reader = csv.reader(csvfile, delimiter=',', quotechar='"')
-
         found = 0
 
         for line in reader:
@@ -53,14 +58,15 @@ def analyze(filename):
 
         print(f"'ao' was found {found} times")
         end = datetime.datetime.now()
-
+    print(end-start, "Time taken to complete") # Checking run time
     return (start, end, year_count, found)
 
 def main():
     filename = "data/exercise.csv"
     analyze(filename)
+    
 
 
 if __name__ == "__main__":
     main()
-
+    
