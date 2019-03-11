@@ -1,10 +1,17 @@
 """
-Placeholder for unit tests. May be able to use mongomock if ready
 
-from mongoengine import connect
-db = connect('test')
-db.drop_database('test')
+Setup/teardown example:
+Everything after yield is teardown / evthing before is setup
 
+import smtplib
+import pytest
+
+@pytest.fixture(scope="module")
+def smtp_connection():
+    smtp_connection = smtplib.SMTP("smtp.gmail.com", 587, timeout=5)
+    yield smtp_connection  # provide the fixture value
+    print("teardown smtp")
+    smtp_connection.close()
 """
 
 import sys
@@ -23,7 +30,7 @@ from ingest_csv import ingest_rental_csv
 CUST_CSV_FILENAME = 'customers.csv'
 PROD_CSV_FILENAME = 'products.csv'
 RNTL_CSV_FILENAME = 'rentals.csv'
-#CSV_PATH_DBG = './lessons/lesson05/assignment/'
+#CSV_PATH_DBG = './lessons/lesson07/assignment/'
 CSV_PATH_DBG = ''
 
 

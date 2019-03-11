@@ -2,7 +2,7 @@
 ingest_csv.py module uses generator to perform per-line import
 from specified CSV file and ingest as document into mongodb
 """
-
+import time
 import threading
 
 from zipfile import ZipFile
