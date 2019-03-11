@@ -16,37 +16,45 @@ from models import util_drop_all
 
 def parallel():
     """
-    Ensure you application will create an empty database if one doesn’t exist
-    when the app is first run. Call it customers.db
+    Each module will return a list of tuples, one tuple for customer
+    and one for products. Each tuple will contain 4 values:
+    - the number of records processed (int),
+    - the record count in the database prior to running (int),
+    - the record count after running (int),
+    - the time taken to run the module (float).
     """
 
     logger.info("Drop all documents")
     with Connection():
         util_drop_all()
 
-    cust_thread = threading.Thread(target=ingest_customer_csv_thread)
-    prod_thread = threading.Thread(target=ingest_product_csv_thread)
-    rent_thread = threading.Thread(target=ingest_rental_csv_thread)
+    cust_kwargs = {}
+    prod_kwargs = {}
+    rental_kwargs = {}
 
-    start = time.perf_counter()
+    cust_thread = threading.Thread(target=ingest_customer_csv_thread,
+                                   kwargs=cust_kwargs)
+    prod_thread = threading.Thread(target=ingest_product_csv_thread,
+                                   kwargs=prod_kwargs)
+    rental_thread = threading.Thread(target=ingest_rental_csv_thread,
+                                     kwargs=rental_kwargs)
 
     cust_thread.start()
     prod_thread.start()
-    rent_thread.start()
+    rental_thread.start()
 
     # wait until all threads are done
     cust_thread.join()
     prod_thread.join()
-    rent_thread.join()
+    rental_thread.join()
 
-    elapsed = time.perf_counter() - start
-    print(f"parallel db ingest executed in {elapsed:0.4f} seconds")
-    logger.info(f"parallel db ingest executed in {elapsed:0.4f} seconds")
+    ret_list = [
+        (cust_kwargs['num_records'], 0, cust_kwargs['num_records'],
+         cust_kwargs['elapsed_time']),
+        (prod_kwargs['num_records'], 0, prod_kwargs['num_records'],
+         prod_kwargs['elapsed_time']),
+        (rental_kwargs['num_records'], 0, rental_kwargs['num_records'],
+         rental_kwargs['elapsed_time'])
+    ]
 
-    # db_dict = show_available_products()
-
-    # print(db_dict)
-
-    # db_dict = show_rentals('P000002')
-
-    # print(db_dict)
+    return ret_list

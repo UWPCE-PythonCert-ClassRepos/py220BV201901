@@ -69,10 +69,8 @@ def import_csv_gen(csv_filename):
     Import csv file generator (yields one record per yield)
     """
     with open(csv_filename, 'r') as csv_fd:
-        line_num = 0
         line = 'foo'
         while line:
-            line_num += 1
             try:
                 line = csv_fd.readline()
                 # generator 'yield' statement for each
@@ -84,7 +82,11 @@ def import_csv_gen(csv_filename):
 
 
 def ingest_customer_csv_thread(*args, **kwargs):
-    return ingest_customer_csv(True)
+    start = time.perf_counter()
+    num_records = ingest_customer_csv(True)
+    cust_elapsed = time.perf_counter() - start
+    kwargs['num_records'] = num_records
+    kwargs['elapsed_time'] = cust_elapsed
 
 
 def ingest_customer_csv(with_lock):
@@ -92,6 +94,7 @@ def ingest_customer_csv(with_lock):
     Ingest csv function to combine extract and import gen functions,
     and populate data from generator in database
     """
+    record_count = int(0)
     # Extract the CSV file from the zip archive
     extract_csv(DATA_ZIP_FILENAME, CUST_CSV_FILENAME, EXTRACT_PATH, with_lock)
     # Create a CSV import generator (next yields one db row)
@@ -118,12 +121,18 @@ def ingest_customer_csv(with_lock):
                     credit_limit=int(data[CUST_CREDIT_LIMIT])
                 )
                 customer.save()       # This will perform an insert
+                record_count += 1
             except StopIteration:
                 break
+    return record_count
 
 
 def ingest_product_csv_thread(*args, **kwargs):
-    return ingest_product_csv(True)
+    start = time.perf_counter()
+    num_records = ingest_product_csv(True)
+    prod_elapsed = time.perf_counter() - start
+    kwargs['num_records'] = num_records
+    kwargs['elapsed_time'] = prod_elapsed
 
 
 def ingest_product_csv(with_lock):
@@ -131,6 +140,7 @@ def ingest_product_csv(with_lock):
     Ingest csv function to combine extract and import gen functions,
     and populate data from generator in database
     """
+    record_count = int(0)
     # Extract the CSV file from the zip archive
     extract_csv(DATA_ZIP_FILENAME, PROD_CSV_FILENAME, EXTRACT_PATH, with_lock)
     # Create a CSV import generator (next yields one db row)
@@ -153,17 +163,24 @@ def ingest_product_csv(with_lock):
                     quantity_available=data[PROD_QTY]
                 )
                 product.save()       # This will perform an insert
+                record_count += 1
             except StopIteration:
                 break
+    return record_count
 
 def ingest_rental_csv_thread(*args, **kwargs):
-    return ingest_rental_csv(True)
+    start = time.perf_counter()
+    num_records = ingest_rental_csv(True)
+    rental_elapsed = time.perf_counter() - start
+    kwargs['num_records'] = num_records
+    kwargs['elapsed_time'] = rental_elapsed
 
 def ingest_rental_csv(with_lock):
     """
     Ingest csv function to combine extract and import gen functions,
     and populate data from generator in database
     """
+    record_count = int(0)
     # Extract the CSV file from the zip archive
     extract_csv(DATA_ZIP_FILENAME, RENTAL_CSV_FILENAME, EXTRACT_PATH, with_lock)
     # Create a CSV import generator (next yields one db row)
@@ -184,5 +201,7 @@ def ingest_rental_csv(with_lock):
                     user_id=data[RENTAL_USER_ID]
                 )
                 rental.save()       # This will perform an insert
+                record_count += 1
             except StopIteration:
                 break
+    return record_count
