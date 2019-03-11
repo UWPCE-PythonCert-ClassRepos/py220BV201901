@@ -1,5 +1,13 @@
 placeholder for timing results of single vs. multi-thread operations
 
+
+| Tables        | Are           | Cool  |
+| ------------- |:-------------:| -----:|
+| col 3 is      | right-aligned | $1600 |
+| col 2 is      | centered      |   $12 |
+| zebra stripes | are neat      |    $1 |
+
+```
 2019-03-10 01:02:13.451 | INFO     | __main__:main:22 - Start linear ingest from CSV files
 2019-03-10 01:02:26.787 | ERROR    | ingest_csv:ingest_customer_csv:107 - Data item count: 1
 2019-03-10 01:02:26.787 | ERROR    | ingest_csv:ingest_customer_csv:107 - Data item count: 1
@@ -28,3 +36,4 @@ db ingest executed in 35.5937
 2019-03-10 01:03:36.607 | ERROR    | ingest_csv:ingest_product_csv:146 - Data item count: 1
 db ingest executed in 33.4219
 2019-03-10 01:03:36.610 | INFO     | parallel:parallel:44 - db ingest executed in 33.4219
+```
