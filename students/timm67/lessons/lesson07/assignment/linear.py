@@ -1,5 +1,4 @@
 import time
-from sys import stdout
 from loguru import logger
 
 from ingest_csv import ingest_customer_csv
@@ -12,40 +11,33 @@ from database import show_rentals
 
 from models import util_drop_all
 
-CUST_CSV_FILENAME = 'customers.csv'
-PROD_CSV_FILENAME = 'products.csv'
-RNTL_CSV_FILENAME = 'rentals.csv'
-#CSV_PATH_DBG = './lessons/lesson07/assignment/'
-CSV_PATH_DBG = ''
-
-
 def linear():
     """
-    Ensure you application will create an empty database if one doesn’t exist
-    when the app is first run. Call it customers.db
+    Each module will return a list of tuples, one tuple for customer
+    and one for products. Each tuple will contain 4 values:
+    - the number of records processed (int),
+    - the record count in the database prior to running (int),
+    - the record count after running (int),
+    - the time taken to run the module (float).
     """
 
-    # Standalone function to initialize logging
-    logger.add(stdout, level='WARNING')
-    logger.add("logfile_{time}.txt", level='INFO')
-    logger.enable(__name__)
-
+    logger.info("Drop all documents")
     with Connection():
         util_drop_all()
 
     start = time.perf_counter()
 
-    ingest_customer_csv(CSV_PATH_DBG + CUST_CSV_FILENAME, False)
-    ingest_product_csv(CSV_PATH_DBG + PROD_CSV_FILENAME, False)
-    ingest_rental_csv(CSV_PATH_DBG + RNTL_CSV_FILENAME, False)
+    num_cust_records = ingest_customer_csv(False)
+    cust_elapsed = time.perf_counter() - start
+    num_prod_records = ingest_product_csv(False)
+    prod_elapsed = time.perf_counter() - cust_elapsed
+    num_rental_records = ingest_rental_csv(False)
+    rental_elapsed = time.perf_counter() - (prod_elapsed + cust_elapsed)
 
-    elapsed = time.perf_counter() - start
-    print(f"{__file__} db ingest executed in {elapsed:0.2f}")
+    ret_list = [
+        ('customer', num_cust_records, 0, num_cust_records, cust_elapsed),
+        ('product', num_prod_records, 0, num_prod_records, prod_elapsed),
+        ('rental', num_rental_records, 0, num_rental_records, rental_elapsed)
+    ]
 
-    db_dict = show_available_products()
-
-    print(db_dict)
-
-    db_dict = show_rentals('prd002')
-
-    print(db_dict)
+    return ret_list

@@ -1,7 +1,10 @@
 #!/bin/sh
 export PYTHONPATH=.
-python3 -m pylint ./database.py
-python3 -m pylint ./ingest_csv.py
-python3 -m pylint ./models.py
+pylint --py3k ./database.py
+pylint --py3k ./ingest_csv.py
+pylint --py3k ./models.py
+pylint --py3k ./linear.py
+pylint --py3k ./parallel.py
+
 # python3 -m coverage run --source=./basic_operations.py k -m pytest tests/test_unit.py; 
 pytest ./tests/unit_tests.py
