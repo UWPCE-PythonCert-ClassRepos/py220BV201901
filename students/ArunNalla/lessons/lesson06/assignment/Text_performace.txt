@@ -1,0 +1,9 @@
+Poor_pref: Reading csv file to extract row for year count and lines for extracting specific char in the line.
+Timed the execution time : Took ~ 10.5 sec (n = 5)
+
+cProfiling stats --> 'analyze(filename)' function (only function in the module) took most of the time.
+
+Good_pref: Read csv file once and extracted both row (year count) and line (specific char)
+Execution time was redcued to ~5.4 sec (n = 5)
+
+cProfile stats --> showed the same with redcued execution time
