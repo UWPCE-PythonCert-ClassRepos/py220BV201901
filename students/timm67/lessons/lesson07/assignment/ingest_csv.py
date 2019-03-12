@@ -4,6 +4,7 @@ from specified CSV file and ingest as document into mongodb
 """
 import time
 import threading
+from queue import Queue
 
 from zipfile import ZipFile
 
@@ -15,13 +16,13 @@ from models import Rental
 
 from database import Connection
 
-DATA_ZIP_FILENAME = './lessons/lesson07/assignment/data.zip'
-#DATA_ZIP_FILENAME = './data.zip'
+#DATA_ZIP_FILENAME = './lessons/lesson07/assignment/data.zip'
+DATA_ZIP_FILENAME = './data.zip'
 CUST_CSV_FILENAME = 'customers.csv'
 PROD_CSV_FILENAME = 'products.csv'
 RENTAL_CSV_FILENAME = 'rentals.csv'
-EXTRACT_PATH = './lessons/lesson07/assignment/'
-# EXTRACT_PATH = './'
+#EXTRACT_PATH = './lessons/lesson07/assignment/'
+EXTRACT_PATH = './'
 
 # indexes into array returned by CSV reader
 CUST_USERID = 0
@@ -41,7 +42,12 @@ PROD_QTY = 3
 RENTAL_PROD_ID = 5
 RENTAL_USER_ID = 0
 
+# Create a lock for mutex access to zip file for mthreading
 extract_lock = threading.Lock()
+
+# Create a queue for storing return values in a thread-safe way
+return_queue = Queue()
+
 
 def extract_csv(zip_filename, csv_filename, extract_path, with_lock):
     """
@@ -52,7 +58,7 @@ def extract_csv(zip_filename, csv_filename, extract_path, with_lock):
     if with_lock is True:
         logger.info(f"Acquiring lock for {csv_filename}")
         extract_lock.acquire()
-        logger.info(f"==> Lock acquired for {csv_filename}")
+        logger.info(f"*** Lock acquired for {csv_filename}")
         with ZipFile(zip_filename, 'r') as ziparchive:
             # extract csv file using EXTRACT_PATH
             ziparchive.extract(csv_filename, path=extract_path)
@@ -82,11 +88,11 @@ def import_csv_gen(csv_filename):
 
 
 def ingest_customer_csv_thread(*args, **kwargs):
+    """ threading wrapper for args, store returned values """
     start = time.perf_counter()
     num_records = ingest_customer_csv(True)
     cust_elapsed = time.perf_counter() - start
-    kwargs['num_records'] = num_records
-    kwargs['elapsed_time'] = cust_elapsed
+    return_queue.put(('customer', num_records, 0, num_records, cust_elapsed))
 
 
 def ingest_customer_csv(with_lock):
@@ -128,11 +134,11 @@ def ingest_customer_csv(with_lock):
 
 
 def ingest_product_csv_thread(*args, **kwargs):
+    """ threading wrapper for args, store returned values """
     start = time.perf_counter()
     num_records = ingest_product_csv(True)
     prod_elapsed = time.perf_counter() - start
-    kwargs['num_records'] = num_records
-    kwargs['elapsed_time'] = prod_elapsed
+    return_queue.put(('product', num_records, 0, num_records, prod_elapsed))
 
 
 def ingest_product_csv(with_lock):
@@ -168,12 +174,14 @@ def ingest_product_csv(with_lock):
                 break
     return record_count
 
+
 def ingest_rental_csv_thread(*args, **kwargs):
+    """ threading wrapper for args, store returned values """
     start = time.perf_counter()
     num_records = ingest_rental_csv(True)
     rental_elapsed = time.perf_counter() - start
-    kwargs['num_records'] = num_records
-    kwargs['elapsed_time'] = rental_elapsed
+    return_queue.put(('rental', num_records, 0, num_records, rental_elapsed))
+
 
 def ingest_rental_csv(with_lock):
     """
@@ -205,3 +213,11 @@ def ingest_rental_csv(with_lock):
             except StopIteration:
                 break
     return record_count
+
+
+def get_retval_thread():
+    if return_queue.empty() is False:
+        return return_queue.get()
+    else:
+        # probably should throw an exception here. Return None for now. 
+        return None

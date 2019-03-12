@@ -32,12 +32,12 @@ def linear():
     num_prod_records = ingest_product_csv(False)
     prod_elapsed = time.perf_counter() - cust_elapsed
     num_rental_records = ingest_rental_csv(False)
-    rental_elapsed = time.perf_counter() - prod_elapsed
+    rental_elapsed = time.perf_counter() - (prod_elapsed + cust_elapsed)
 
     ret_list = [
-        (num_cust_records, 0, num_cust_records, cust_elapsed),
-        (num_prod_records, 0, num_prod_records, prod_elapsed),
-        (num_rental_records, 0, num_rental_records, rental_elapsed)
+        ('customer', num_cust_records, 0, num_cust_records, cust_elapsed),
+        ('product', num_prod_records, 0, num_prod_records, prod_elapsed),
+        ('rental', num_rental_records, 0, num_rental_records, rental_elapsed)
     ]
 
     return ret_list

@@ -29,21 +29,17 @@ def main():
 
     logger.info("CSV ingest completed")
 
-    logger.info("Linear ingest statistics:")
-    logger.info(f"Customer db: num records[{ret_list_linear[0][0]}]")
-    logger.info(f"Customer db: time elapsed[{ret_list_linear[0][3]}]")
-    logger.info(f"Product db:  num records[{ret_list_linear[1][0]}]")
-    logger.info(f"Product db:  time elapsed[{ret_list_linear[1][3]}]")
-    logger.info(f"Rental db:   num records[{ret_list_linear[2][0]}]")
-    logger.info(f"Product db:  time elapsed[{ret_list_linear[2][3]}]")
+    print("Linear ingest statistics:")
+    for docstats in ret_list_linear:
+        print(f"{docstats[0]} doc: num  records: {docstats[3]}")
+        print(f"{docstats[0]} doc: time elapsed: {docstats[4]}")
 
-    logger.info("Parallel ingest statistics:")
-    logger.info(f"Customer db: num records[{ret_list_parallel[0][0]}]")
-    logger.info(f"Customer db: time elapsed[{ret_list_parallel[0][3]}]")
-    logger.info(f"Product db:  num records[{ret_list_parallel[1][0]}]")
-    logger.info(f"Product db:  time elapsed[{ret_list_parallel[1][3]}]")
-    logger.info(f"Rental db:   num records[{ret_list_parallel[2][0]}]")
-    logger.info(f"Product db:  time elapsed[{ret_list_parallel[2][3]}]")
+
+    print("Parallel ingest statistics:")
+    for docstats in ret_list_parallel:
+        print(f"{docstats[0]} doc: num  records: {docstats[3]}")
+        print(f"{docstats[0]} doc: time elapsed: {docstats[4]}")
+
 
 if  __name__ == '__main__':
     main()
