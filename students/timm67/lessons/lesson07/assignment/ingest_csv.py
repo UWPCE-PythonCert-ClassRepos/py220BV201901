@@ -2,8 +2,9 @@
 ingest_csv.py module uses generator to perform per-line import
 from specified CSV file and ingest as document into mongodb
 """
-
+import time
 import threading
+from queue import Queue
 
 from zipfile import ZipFile
 
@@ -15,29 +16,38 @@ from models import Rental
 
 from database import Connection
 
-ZIP_FILENAME_DBG = './lessons/lesson07/assignment/data.zip'
-CUST_ZIP_FILENAME = './data.zip'
-CUST_CSV_FILENAME = 'customer.csv'
-EXTRACT_PATH_DBG = './lessons/lesson07/assignment/'
+#DATA_ZIP_FILENAME = './lessons/lesson07/assignment/data.zip'
+DATA_ZIP_FILENAME = './data.zip'
+CUST_CSV_FILENAME = 'customers.csv'
+PROD_CSV_FILENAME = 'products.csv'
+RENTAL_CSV_FILENAME = 'rentals.csv'
+#EXTRACT_PATH = './lessons/lesson07/assignment/'
 EXTRACT_PATH = './'
 
 # indexes into array returned by CSV reader
 CUST_USERID = 0
 CUST_NAME = 1
-CUST_ADDRESS = 2
-CUST_ZIPCODE = 3
+CUST_LAST_NAME = 2
+CUST_ADDRESS = 3
 CUST_PHONE = 4
 CUST_EMAIL = 5
+CUST_STATUS = 6
+CUST_CREDIT_LIMIT = 7
 
 PROD_ID = 0
 PROD_DESC = 1
 PROD_TYPE = 2
 PROD_QTY = 3
 
-RENTAL_PROD_ID = 0
-RENTAL_USER_ID = 1
+RENTAL_PROD_ID = 5
+RENTAL_USER_ID = 0
 
+# Create a lock for mutex access to zip file for mthreading
 extract_lock = threading.Lock()
+
+# Create a queue for storing return values in a thread-safe way
+return_queue = Queue()
+
 
 def extract_csv(zip_filename, csv_filename, extract_path, with_lock):
     """
@@ -46,10 +56,13 @@ def extract_csv(zip_filename, csv_filename, extract_path, with_lock):
     the extraction for multithreaded operation
     """
     if with_lock is True:
+        logger.info(f"Acquiring lock for {csv_filename}")
         extract_lock.acquire()
+        logger.info(f"*** Lock acquired for {csv_filename}")
         with ZipFile(zip_filename, 'r') as ziparchive:
             # extract csv file using EXTRACT_PATH
             ziparchive.extract(csv_filename, path=extract_path)
+        logger.info(f"Releasing lock for {csv_filename}")
         extract_lock.release()
     else:
         with ZipFile(zip_filename, 'r') as ziparchive:
@@ -62,10 +75,8 @@ def import_csv_gen(csv_filename):
     Import csv file generator (yields one record per yield)
     """
     with open(csv_filename, 'r') as csv_fd:
-        line_num = 0
         line = 'foo'
         while line:
-            line_num += 1
             try:
                 line = csv_fd.readline()
                 # generator 'yield' statement for each
@@ -76,15 +87,24 @@ def import_csv_gen(csv_filename):
                 return
 
 
-def ingest_customer_csv(csv_path, with_lock):
+def ingest_customer_csv_thread(*args, **kwargs):
+    """ threading wrapper for args, store returned values """
+    start = time.perf_counter()
+    num_records = ingest_customer_csv(True)
+    cust_elapsed = time.perf_counter() - start
+    return_queue.put(('customer', num_records, 0, num_records, cust_elapsed))
+
+
+def ingest_customer_csv(with_lock):
     """
     Ingest csv function to combine extract and import gen functions,
     and populate data from generator in database
     """
+    record_count = int(0)
     # Extract the CSV file from the zip archive
-    extract_csv(CUST_ZIP_FILENAME, CUST_CSV_FILENAME, EXTRACT_PATH, with_lock)
+    extract_csv(DATA_ZIP_FILENAME, CUST_CSV_FILENAME, EXTRACT_PATH, with_lock)
     # Create a CSV import generator (next yields one db row)
-    import_generator = import_csv_gen(csv_path)
+    import_generator = import_csv_gen(EXTRACT_PATH + CUST_CSV_FILENAME)
     # Skip over the title row
     next(import_generator)
     # Iterate over all other rows
@@ -92,32 +112,45 @@ def ingest_customer_csv(csv_path, with_lock):
         while True:
             try:
                 data = next(import_generator)
-                if len(data) != 6:
+                if len(data) != 8:
                     logger.error(f'Data item count: {len(data)}')
                     continue
                 # extract items from list and add document to database
                 customer = Customer(
                     user_id=data[CUST_USERID],
                     name=data[CUST_NAME],
+                    last_name=data[CUST_LAST_NAME],
                     address=data[CUST_ADDRESS],
-                    zip_code=int(data[CUST_ZIPCODE]),
                     phone_number=data[CUST_PHONE],
-                    email=data[CUST_EMAIL]
+                    email=data[CUST_EMAIL],
+                    status=True if data[CUST_STATUS] == 'Active' else False,
+                    credit_limit=int(data[CUST_CREDIT_LIMIT])
                 )
                 customer.save()       # This will perform an insert
+                record_count += 1
             except StopIteration:
                 break
+    return record_count
 
 
-def ingest_product_csv(csv_path, with_lock):
+def ingest_product_csv_thread(*args, **kwargs):
+    """ threading wrapper for args, store returned values """
+    start = time.perf_counter()
+    num_records = ingest_product_csv(True)
+    prod_elapsed = time.perf_counter() - start
+    return_queue.put(('product', num_records, 0, num_records, prod_elapsed))
+
+
+def ingest_product_csv(with_lock):
     """
     Ingest csv function to combine extract and import gen functions,
     and populate data from generator in database
     """
+    record_count = int(0)
     # Extract the CSV file from the zip archive
-    extract_csv(CUST_ZIP_FILENAME, CUST_CSV_FILENAME, EXTRACT_PATH, with_lock)
+    extract_csv(DATA_ZIP_FILENAME, PROD_CSV_FILENAME, EXTRACT_PATH, with_lock)
     # Create a CSV import generator (next yields one db row)
-    import_generator = import_csv_gen(csv_path)
+    import_generator = import_csv_gen(EXTRACT_PATH + PROD_CSV_FILENAME)
     # Skip over the title row
     next(import_generator)
     # Iterate over all other rows
@@ -136,19 +169,30 @@ def ingest_product_csv(csv_path, with_lock):
                     quantity_available=data[PROD_QTY]
                 )
                 product.save()       # This will perform an insert
+                record_count += 1
             except StopIteration:
                 break
+    return record_count
 
 
-def ingest_rental_csv(csv_path, with_lock):
+def ingest_rental_csv_thread(*args, **kwargs):
+    """ threading wrapper for args, store returned values """
+    start = time.perf_counter()
+    num_records = ingest_rental_csv(True)
+    rental_elapsed = time.perf_counter() - start
+    return_queue.put(('rental', num_records, 0, num_records, rental_elapsed))
+
+
+def ingest_rental_csv(with_lock):
     """
     Ingest csv function to combine extract and import gen functions,
     and populate data from generator in database
     """
+    record_count = int(0)
     # Extract the CSV file from the zip archive
-    extract_csv(CUST_ZIP_FILENAME, CUST_CSV_FILENAME, EXTRACT_PATH, with_lock)
+    extract_csv(DATA_ZIP_FILENAME, RENTAL_CSV_FILENAME, EXTRACT_PATH, with_lock)
     # Create a CSV import generator (next yields one db row)
-    import_generator = import_csv_gen(csv_path)
+    import_generator = import_csv_gen(EXTRACT_PATH + RENTAL_CSV_FILENAME)
     # Skip over the title row
     next(import_generator)
     # Iterate over all other rows
@@ -156,7 +200,7 @@ def ingest_rental_csv(csv_path, with_lock):
         while True:
             try:
                 data = next(import_generator)
-                if len(data) != 2:
+                if len(data) != 6:
                     logger.error(f'Data item count: {len(data)}')
                     continue
                 # extract items from list and add document to database
@@ -165,5 +209,15 @@ def ingest_rental_csv(csv_path, with_lock):
                     user_id=data[RENTAL_USER_ID]
                 )
                 rental.save()       # This will perform an insert
+                record_count += 1
             except StopIteration:
                 break
+    return record_count
+
+
+def get_retval_thread():
+    if return_queue.empty() is False:
+        return return_queue.get()
+    else:
+        # probably should throw an exception here. Return None for now. 
+        return None

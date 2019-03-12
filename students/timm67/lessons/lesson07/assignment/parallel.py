@@ -1,13 +1,11 @@
 import threading
-import time
-from sys import stdout
 
 from loguru import logger
 
-
-from ingest_csv import ingest_customer_csv
-from ingest_csv import ingest_product_csv
-from ingest_csv import ingest_rental_csv
+from ingest_csv import ingest_customer_csv_thread
+from ingest_csv import ingest_product_csv_thread
+from ingest_csv import ingest_rental_csv_thread
+from ingest_csv import get_retval_thread
 
 from database import Connection
 from database import show_available_products
@@ -15,52 +13,49 @@ from database import show_rentals
 
 from models import util_drop_all
 
-CUST_CSV_FILENAME = 'customers.csv'
-PROD_CSV_FILENAME = 'products.csv'
-RNTL_CSV_FILENAME = 'rentals.csv'
-#CSV_PATH_DBG = './lessons/lesson07/assignment/'
-CSV_PATH_DBG = ''
-
 
 def parallel():
     """
-    Ensure you application will create an empty database if one doesn’t exist
-    when the app is first run. Call it customers.db
+    Each module will return a list of tuples, one tuple for customer
+    and one for products. Each tuple will contain 4 values:
+    - the number of records processed (int),
+    - the record count in the database prior to running (int),
+    - the record count after running (int),
+    - the time taken to run the module (float).
     """
+    ret_list = []
 
-    # Standalone function to initialize logging
-    logger.add(stdout, level='WARNING')
-    logger.add("logfile_{time}.txt", level='INFO')
-    logger.enable(__name__)
-
+    logger.info("Drop all documents")
     with Connection():
         util_drop_all()
 
-    cust_thread = threading.Thread(target=ingest_customer_csv,
-                                   args=(CSV_PATH_DBG + CUST_CSV_FILENAME, True))
-    prod_thread = threading.Thread(target=ingest_product_csv,
-                                   args=(CSV_PATH_DBG + PROD_CSV_FILENAME, True))
-    rent_thread = threading.Thread(target=ingest_rental_csv,
-                                   args=(CSV_PATH_DBG + RNTL_CSV_FILENAME, True))
+    # Create the threads; one for each mongo document
+    cust_thread = threading.Thread(target=ingest_customer_csv_thread)
+    prod_thread = threading.Thread(target=ingest_product_csv_thread)
+    rental_thread = threading.Thread(target=ingest_rental_csv_thread)
 
-    start = time.perf_counter()
-
+    # Start the threads
     cust_thread.start()
     prod_thread.start()
-    rent_thread.start()
+    rental_thread.start()
 
-    # wait until all threads are done
+    #
+    # Wait (block) until all threads are done. It is possible that the
+    # waiting order might affect the performance if the shortest running
+    # thread is not joined first. I based the order on the runtime
+    # returned from the threading 
+    #
     cust_thread.join()
+    rental_thread.join()
     prod_thread.join()
-    rent_thread.join()
 
-    elapsed = time.perf_counter() - start
-    print(f"{__file__} db ingest executed in {elapsed:0.2f}")
+    #
+    # Get the results of each thread. The thread name will be added to the
+    # tuple, because we don't know what order the threads finish up in 
+    # each time
+    #
+    ret_list.append(get_retval_thread())
+    ret_list.append(get_retval_thread())
+    ret_list.append(get_retval_thread())
 
-    db_dict = show_available_products()
-
-    print(db_dict)
-
-    db_dict = show_rentals('prd002')
-
-    print(db_dict)
+    return ret_list
