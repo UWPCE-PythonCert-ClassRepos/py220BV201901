@@ -151,6 +151,12 @@ def delete_all():
     return prdct_result.deleted_count, cust_result.deleted_count, rntl_result.deleted_count
 
 
+def drop_all():
+    """ delete all data from collections """
+    DB.PRDCT.drop()
+    DB.CUST.drop()
+    DB.RNTL.drop()
+
 if __name__ == "__main__":
     # Get current path
     DATA_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -171,4 +177,5 @@ if __name__ == "__main__":
     # Disable internal profiling and return results
     PR.disable()
     PR.print_stats()
-    delete_all()
+    drop_all()
+
