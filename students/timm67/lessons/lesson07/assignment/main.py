@@ -7,6 +7,7 @@ from parallel import parallel
 
 from models import util_drop_all
 from database import Connection
+from database import show_rentals
 
 # Standalone function to initialize logging
 logger.add(sys.stdout, level='WARNING')
@@ -19,15 +20,18 @@ def main():
     when the app is first run. Call it customers.db
     """
 
-    logger.info("Start linear ingest from CSV files")
+    print("Start linear ingest from CSV files")
 
     ret_list_linear = linear()
 
-    logger.info("Start parallel ingest from CSV files")
+    print("Start parallel ingest from CSV files")
 
     ret_list_parallel = parallel()
 
-    logger.info("CSV ingest completed")
+    print("CSV ingest completed")
+
+    result = show_rentals('P000003')
+    print(result)
 
     print("Linear ingest statistics:")
     for docstats in ret_list_linear:
