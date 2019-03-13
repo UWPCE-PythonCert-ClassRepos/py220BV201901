@@ -14,7 +14,6 @@ class Connection:
     Connection class to use as context manager for db connection
     """
     def __init__(self):
-        # to please pylint (ARGH)
         self.conn = None
 
     def __enter__(self):
@@ -86,5 +85,4 @@ def show_rentals(prod_id):
                                              }
                             }
                 ret_dict.update(user_info)
-
     return ret_dict
