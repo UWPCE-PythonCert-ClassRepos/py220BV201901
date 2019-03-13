@@ -16,7 +16,7 @@ class Testmongodatabase(unittest.TestCase):
         """ import data """
 
         directory = os.path.dirname(os.path.abspath(__file__))
-        mongo.import_data = mongo.decorator(mongo.import_data)
+        # mongo.import_data = mongo.decorator(mongo.import_data)
         resultgood, resultfail = mongo.import_data(directory, 'products.csv', 'customers.csv', 'rentals.csv')
 
         assert resultgood == (9999, 9999, 9999)
@@ -26,7 +26,7 @@ class Testmongodatabase(unittest.TestCase):
     def test_show_avail_products(self):
         """ test for available products """
 
-        mongo.show_available_products = mongo.decorator(mongo.show_available_products)
+        # mongo.show_available_products = mongo.decorator(mongo.show_available_products)
         result = mongo.show_available_products()
         assert len(result) == 9999
 
@@ -34,7 +34,7 @@ class Testmongodatabase(unittest.TestCase):
     def test_show_rentals(self):
         """ test for available products """
 
-        mongo.show_rentals = mongo.decorator(mongo.show_rentals)
+        # mongo.show_rentals = mongo.decorator(mongo.show_rentals)
         result = mongo.show_rentals("P000004")
 
         assert len(result) == 2
