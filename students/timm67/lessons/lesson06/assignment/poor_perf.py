@@ -3,11 +3,26 @@ poorly performing, poorly written module
 
 """
 
-import datetime
+import time
 import csv
+from zipfile import ZipFile
+
+ZIP_FILENAME_DBG = './lessons/lesson06/assignment/data/data.zip'
+ZIP_FILENAME = './data/data.zip'
+CSV_FILENAME = 'exercise-new.csv'
+EXTRACT_PATH_DBG = './lessons/lesson06/assignment/'
+EXTRACT_PATH = './data'
+
+def extract_csv(zip_filename, csv_filename, extract_path):
+    """
+    Extract .csv file from .zip file (req'd for github file size limits)
+    """
+    with ZipFile(zip_filename, 'r') as ziparchive:
+        # extract csv file using EXTRACT_PATH
+        ziparchive.extract(csv_filename, path=extract_path)
 
 def analyze(filename):
-    start = datetime.datetime.now()
+    start = time.perf_counter()
     with open(filename) as csvfile:
         reader = csv.reader(csvfile, delimiter=',', quotechar='"')
         new_ones = []
@@ -52,13 +67,17 @@ def analyze(filename):
                 found += 1
 
         print(f"'ao' was found {found} times")
-        end = datetime.datetime.now()
+        end = time.perf_counter()
 
     return (start, end, year_count, found)
 
 def main():
-    filename = "data/exercise.csv"
-    analyze(filename)
+    print(f"Extracting [{EXTRACT_PATH}{CSV_FILENAME}] from [{ZIP_FILENAME}]")
+    extract_csv(ZIP_FILENAME, CSV_FILENAME, EXTRACT_PATH)
+    filename = "data/exercise-new.csv"
+    ret = analyze(filename)
+    print(f"start[{ret[0]}] end[{ret[1]}]")
+    print(f"ao found [{ret[3]}] times")
 
 
 if __name__ == "__main__":
