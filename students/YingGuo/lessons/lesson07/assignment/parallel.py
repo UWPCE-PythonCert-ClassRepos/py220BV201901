@@ -2,8 +2,6 @@
 
 """
 based on lesson05 MongoDB assignment.
-This assignment Amend the add and update logic for both customers and products.
-so that it can process these in parallel.
 
 This module will return a list of tuples, one tuple for customer and one for products.
 Each tuple will contain 4 values: 
@@ -121,18 +119,18 @@ async def upload_data():
     await asyncio.gather(customer_to_db("customers","customers"), products_to_db("products", "products"))
 
 if __name__ == "__main__":
-    customer_csv_count = count_records_csv("customers")
-    product_csv_count = count_records_csv("products")
+    customer_csv_count = int(count_records_csv("customers"))
+    product_csv_count = int(count_records_csv("products"))
 
-    beginning_db_customers_count = count_records_db("customers")
-    beginning_db_products_count = count_records_db("products")
+    beginning_db_customers_count = int(count_records_db("customers"))
+    beginning_db_products_count = int(count_records_db("products"))
 
     start = datetime.datetime.now()
     mongo = MongoDBConnection()
     asyncio.run(upload_data())
     end = datetime.datetime.now()
     d = end - start
-    duration = d.total_seconds()
+    duration = float(d.total_seconds())
 
     end_db_customers_count = count_records_db("customers")
     end_db_products_count = count_records_db("products")
