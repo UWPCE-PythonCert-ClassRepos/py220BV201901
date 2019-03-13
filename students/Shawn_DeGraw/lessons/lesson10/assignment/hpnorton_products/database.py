@@ -61,13 +61,13 @@ def decorator(func):
 
         with open('timings.txt', 'a') as timingsfile:
             timingsfile.write(f'{str(datetime.datetime.now())} Function {func.__name__} took {timeend - timestart} to execute.\n')
-        # SYSTEMLOG.info(f'Function runtime: {timeend - timestart}')
-        # SYSTEMLOG.info(f' Function name: {func.__name__}')
+
         return value
 
     return wrapper_decorator
 
 
+@decorator
 def import_data(directory_name, product_file, customer_file, rentals_file):
     """
     Writes file data to Mongo DB.
@@ -183,6 +183,7 @@ def import_data(directory_name, product_file, customer_file, rentals_file):
     return (productsuccesscount, customersuccesscount, rentalsuccesscount), (productfailurecount, customerfailurecount, rentalfailurecount)
 
 
+@decorator
 def show_available_products():
     """ Returns all products with quantity greater than 0 """
 
@@ -200,6 +201,7 @@ def show_available_products():
     return result
 
 
+@decorator
 def show_rentals(productid):
     """
     Returns dictionary of customers with the provided
