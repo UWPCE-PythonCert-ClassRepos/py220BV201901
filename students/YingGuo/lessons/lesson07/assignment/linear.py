@@ -112,11 +112,11 @@ def count_records_db(collection_name):
 
 
 if __name__ == "__main__":
-    customer_csv_count = count_records_csv("customers")
-    product_csv_count = count_records_csv("products")
+    customer_csv_count = int(count_records_csv("customers"))
+    product_csv_count = int(count_records_csv("products"))
 
-    beginning_db_customers_count = count_records_db("customers")
-    beginning_db_products_count = count_records_db("products")
+    beginning_db_customers_count = int(count_records_db("customers"))
+    beginning_db_products_count = int(count_records_db("products"))
 
     start = datetime.datetime.now()
     mongo = MongoDBConnection()
@@ -124,10 +124,10 @@ if __name__ == "__main__":
     products_to_db("products", "products")
     end = datetime.datetime.now()
     d = end - start
-    duration = d.total_seconds()
+    duration = float(d.total_seconds())
 
-    end_db_customers_count = count_records_db("customers")
-    end_db_products_count = count_records_db("products")
+    end_db_customers_count = int(count_records_db("customers"))
+    end_db_products_count = int(count_records_db("products"))
 
     # the number of records processed (int), 
     # the record count in the database prior to running (int),
