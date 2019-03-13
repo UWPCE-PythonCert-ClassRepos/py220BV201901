@@ -23,8 +23,8 @@ def main():
     global quit_option
 
     # Build switch_dict with a dict comprehension
-    switch_options = [1, 2, 3, 4, 5]
-    switch_functions = [add_furn, single_cust_curry, single_cust_closure, create_report, quit_option_true]
+    switch_options = [1, 2, 3, 4]
+    switch_functions = [add_furn, single_cust, create_report, quit_option_true]
     switch_dict = {sw_opt: sw_fun for sw_opt, sw_fun in zip(switch_options, switch_functions)}
 
     while not quit_option:
@@ -33,10 +33,9 @@ def main():
         print('*'*10, '  Main Menu  ', '*'*10)
         print()
         print('1) Add Furniture')
-        print('2) Single Customer (Curry)')
-        print('3) Single Customer (Closure)')
-        print('4) Create a Report')
-        print('5) Quit')
+        print('2) Single Customer')
+        print('3) Create a Report')
+        print('4) Quit')
         print()
         print('Choose an option: ', end='')
 
@@ -186,8 +185,8 @@ def build_furniture_csv(furniture_dict, inv_file):
     dictfile.close()
 
 
-def single_cust_curry():
-    ''' U/I for single customer 'curry' function '''
+def single_cust():
+    ''' U/I for single_customer 'curry' function '''
 
     inv_file = input('Invoice file: ')
     cust_name = input('Customer Name: ')
@@ -196,30 +195,6 @@ def single_cust_curry():
     single_customer = partial(add_furniture, inv_file, cust_name)
 
     furniture_dict = single_customer(input_file)
-
-    build_furniture_csv(furniture_dict, inv_file)
-    clear_screen()
-
-
-def single_cust_closure_outer(inv_file, cust_name):
-    ''' Demonstrates 'closure' construct '''
-
-    def single_cust_closure_inner(input_file):
-        single_customer = partial(add_furniture, inv_file, cust_name)
-        return single_customer(input_file)
-    return single_cust_closure_inner
-
-
-def single_cust_closure():
-    ''' U/I for single customer 'closure' function '''
-
-    inv_file = input('Invoice file: ')
-    cust_name = input('Customer Name: ')
-    input_file = input('Customer Input File: ')
-
-    this_closure = single_cust_closure_outer(inv_file, cust_name)
-
-    furniture_dict = this_closure(input_file)
 
     build_furniture_csv(furniture_dict, inv_file)
     clear_screen()
