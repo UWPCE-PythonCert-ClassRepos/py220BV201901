@@ -1,0 +1,12 @@
+Tims-MBP:assignment timm$ cat test_items.csv
+LR04,Leather Sofa,25.00
+KT78,Kitchen Table,10.00
+BR02,Queen Mattress,17.00
+Tims-MBP:assignment timm$ python3 main.py
+Tims-MBP:assignment timm$ cat invoice01.csv
+Elisa Miles,LR04,Leather Sofa,25
+Edward Data,KT78,Kitchen Table,10
+Alex Gonzales,BR02,Queen Mattress,17
+Tims-MBP:assignment timm$ cat sw_invoice.csv
+Susan Wong,LR04,Leather Sofa,25.00
+Susan Wong,KT78,Kitchen Table,10.00
