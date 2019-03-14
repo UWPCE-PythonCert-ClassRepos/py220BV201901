@@ -1,0 +1,283 @@
+Lesson 8 assignment notes.
+
+Interpreted assignment instructions as follows:
+Created 'inventory.py'.  This program contains all functions and U/I.
+  
+It wasn't clear if add_furniture function should accept a csv file as input?
+I've included a manual data entry U/I for it instead.
+
+The single_cust_curry function demonstrates the currying objective based on inheriting
+the add_furniture function.  I had to do some modification to add_furniture to make it
+work.  The time spent on retrofitting add_furniture did not warrant the supposed
+benefit of currying.  Perhaps it would in other contexts?  I can see where currying
+might be useful.  But not sure if I would ever use it, unless for some reason I did
+not have access to the source code of the function being curried.
+
+The single_cust_closure function demonstrates the closure objective based on wrapping
+single_cust_closure_inner function with the single_cust_closure_outer function.
+
+I've included a sequence number with each csv record being created.  This is to make the
+csv file more like a database with unique 'key'.  The keys manage themselves and have no
+U/I (or user meddling either).
+
+The program imports/exports the csv for use inside the program as a dictionary.
+
+======================================================================================================
+
+Program run transcript with annotations follows:
+
+
+
+$ python inventory.py
+
+**********   Main Menu   **********
+
+1) Add Furniture		<--- Demonstrates add_furniture function
+2) Single Customer (Curry)	<--- Demonstrates single_customer currying function (with csv file import)
+3) Single Customer (Closure)	<--- Demonstrates single_customer closure function (with csv file import)
+4) Create a Report		<--- Simple output function to show contents of csv (or any) files
+5) Quit				<--- Exit program
+
+Choose an option: 1
+
+Invoice File: invoice01.csv	<--- Installing first record
+Customer Name: Elisa Miles
+Item Code: LR04
+Item Description: Leather Sofa
+Item Monthly Price: 25.00
+
+Furniture database invoice01.csv not found.  Starting with new, empty database.	<--- Alerts user that this is a new file
+<cr> to continue...								<--- Pauses and clears screen upon <CR>
+
+**********   Main Menu   **********
+
+1) Add Furniture
+2) Single Customer (Curry)
+3) Single Customer (Closure)
+4) Create a Report
+5) Quit
+
+Choose an option: 1
+
+Invoice File: invoice01.csv	<--- Installing second record
+Customer Name: Edward Data
+Item Code: KT78
+Item Description: Kitchen Table
+Item Monthly Price: 10.00
+
+
+<cr> to continue...
+
+**********   Main Menu   **********
+
+1) Add Furniture
+2) Single Customer (Curry)
+3) Single Customer (Closure)
+4) Create a Report
+5) Quit
+
+Choose an option: 1
+
+Invoice File: invoice01.csv	<--- Installing third record
+Customer Name: Alex Gonzales
+Item Code: BR02
+Item Description: Queen Mattress
+Item Monthly Price: 17.00
+
+
+<cr> to continue...
+
+**********   Main Menu   **********
+
+1) Add Furniture
+2) Single Customer (Curry)
+3) Single Customer (Closure)
+4) Create a Report
+5) Quit
+
+Choose an option: 4
+
+Invoice file: invoice01.csv
+
+Contents of invoice01.csv:		<--- Showing raw data of csv file, notice sequence numbers added
+1,Elisa Miles,LR04,Leather Sofa,25.0
+2,Edward Data,KT78,Kitchen Table,10.0
+3,Alex Gonzales,BR02,Queen Mattress,17.0
+
+<cr> to continue...
+
+**********   Main Menu   **********
+
+1) Add Furniture
+2) Single Customer (Curry)
+3) Single Customer (Closure)
+4) Create a Report
+5) Quit
+
+Choose an option: 2			<--- Using Currying method function
+
+Invoice file: invoice01.csv		<--- Shows use of importing single-customer csv to database
+Customer Name: David Gilmour
+Customer Input File: DG_invoice.csv
+
+
+<cr> to continue...
+
+**********   Main Menu   **********
+
+1) Add Furniture
+2) Single Customer (Curry)
+3) Single Customer (Closure)
+4) Create a Report
+5) Quit
+
+Choose an option: 4
+
+Invoice file: invoice01.csv		<--- Showing raw data of csv file after 'curry' single-customer csv records added
+
+Contents of invoice01.csv:
+1,Elisa Miles,LR04,Leather Sofa,25.0
+2,Edward Data,KT78,Kitchen Table,10.0
+3,Alex Gonzales,BR02,Queen Mattress,17.0
+4,David Gilmour,LR04,Pleather Couch,25.0
+5,David Gilmour,LR20,Coffee Table,10.55
+6,David Gilmour,MU01,Fender Strat,51.5
+7,David Gilmour,MU12,Hi-Watt Amp,45.9
+
+<cr> to continue...
+
+**********   Main Menu   **********
+
+1) Add Furniture
+2) Single Customer (Curry)
+3) Single Customer (Closure)
+4) Create a Report
+5) Quit
+
+Choose an option: 3			<--- Using Closure method function
+
+Invoice file: invoice01.csv		<--- Shows use of importing single-customer csv to database
+Customer Name: Nick Mason
+Customer Input File: NM_invoice.csv
+
+
+<cr> to continue...
+
+**********   Main Menu   **********
+
+1) Add Furniture
+2) Single Customer (Curry)
+3) Single Customer (Closure)
+4) Create a Report
+5) Quit
+
+Choose an option: 4
+
+Invoice file: invoice01.csv		<--- Showing raw data of csv file after 'closure' single-customer csv records added
+
+Contents of invoice01.csv:
+1,Elisa Miles,LR04,Leather Sofa,25.0
+2,Edward Data,KT78,Kitchen Table,10.0
+3,Alex Gonzales,BR02,Queen Mattress,17.0
+4,David Gilmour,LR04,Pleather Couch,25.0
+5,David Gilmour,LR20,Coffee Table,10.55
+6,David Gilmour,MU01,Fender Strat,51.5
+7,David Gilmour,MU12,Hi-Watt Amp,45.9
+8,Nick Mason,LR05,Velvet Couch,30.0
+9,Nick Mason,LR20,Coffee Table,10.55
+10,Nick Mason,MU02,Ludwig Drums,60.0
+11,Nick Mason,MU14,Drum Throne,8.45
+
+<cr> to continue...
+
+**********   Main Menu   **********
+
+1) Add Furniture
+2) Single Customer (Curry)
+3) Single Customer (Closure)
+4) Create a Report
+5) Quit
+
+Choose an option: 5
+
+
+Quitting process...
+
+$ cat DG_invoice.csv				<--- Raw data file for 'curry' single-customer csv used above
+LR04,Pleather Couch,25.00
+LR20,Coffee Table,10.55
+MU01,Fender Strat,51.50
+MU12,Hi-Watt Amp,45.90
+
+$ cat NM_invoice.csv				<--- Raw data file for 'closure' single-customer csv used above
+LR05,Velvet Couch,30.00
+LR20,Coffee Table,10.55
+MU02,Ludwig Drums,60.00
+MU14,Drum Throne,8.45
+
+$ cat invoice01.csv				<--- Final raw data file after all single-customer csv data added
+1,Elisa Miles,LR04,Leather Sofa,25.0
+2,Edward Data,KT78,Kitchen Table,10.0
+3,Alex Gonzales,BR02,Queen Mattress,17.0
+4,David Gilmour,LR04,Pleather Couch,25.0
+5,David Gilmour,LR20,Coffee Table,10.55
+6,David Gilmour,MU01,Fender Strat,51.5
+7,David Gilmour,MU12,Hi-Watt Amp,45.9
+8,Nick Mason,LR05,Velvet Couch,30.0
+9,Nick Mason,LR20,Coffee Table,10.55
+10,Nick Mason,MU02,Ludwig Drums,60.0
+11,Nick Mason,MU14,Drum Throne,8.45
+
+$ python inventory.py				<--- Ran program once more to show a new invoice file being added
+
+**********   Main Menu   **********
+
+1) Add Furniture
+2) Single Customer (Curry)
+3) Single Customer (Closure)
+4) Create a Report
+5) Quit
+
+Choose an option: 1
+
+Invoice File: NEWinvoice.csv
+Customer Name: Robert Fripp
+Item Code: KT21
+Item Description: Blender
+Item Monthly Price: 5.25
+
+Furniture database NEWinvoice.csv not found.  Starting with new, empty database.
+<cr> to continue...
+
+**********   Main Menu   **********
+
+1) Add Furniture
+2) Single Customer (Curry)
+3) Single Customer (Closure)
+4) Create a Report
+5) Quit
+
+Choose an option: 4
+
+Invoice file: NEWinvoice.csv
+
+Contents of NEWinvoice.csv:		<--- New invoice file contents using U/I output
+1,Robert Fripp,KT21,Blender,5.25
+
+<cr> to continue...
+
+**********   Main Menu   **********
+
+1) Add Furniture
+2) Single Customer (Curry)
+3) Single Customer (Closure)
+4) Create a Report
+5) Quit
+
+Choose an option: 5
+
+
+Quitting process...
+
+$ cat NEWinvoice.csv			<--- Raw data displayed for new invoice file
+1,Robert Fripp,KT21,Blender,5.25
