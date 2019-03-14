@@ -5,6 +5,7 @@ Assignment 07
 
 import asyncio
 import csv
+import datetime
 import logging
 import os
 from pymongo import MongoClient
@@ -79,6 +80,8 @@ async def load_product(product_file):
             product_error += 1
             LOGGER.error(ex)
 
+        await asyncio.sleep(0)
+
     return product_added, product_error
 
 async def load_customer(customer_file):
@@ -108,6 +111,8 @@ async def load_customer(customer_file):
             customer_error += 1
             LOGGER.error(ex)
 
+        await asyncio.sleep(0)
+
     return customer_added, customer_error
 
 async def load_rental(rental_file):
@@ -136,32 +141,30 @@ async def load_rental(rental_file):
         except Exception as ex:
             rental_error += 1
             LOGGER.error(ex)
+
+        await asyncio.sleep(0)
+
+
     return rental_added, rental_error
 
 def import_data(directory_name, product_file, customer_file, rental_file):
     '''
     Read in product, customer, and rental files and populate mongo db collections
     '''
-    # product_added, product_error = load_product(os.path.join(directory_name, product_file))
-    # customer_added, customer_error = load_customer(os.path.join(directory_name, customer_file))
-    # rental_added, rental_error = load_rental(os.path.join(directory_name, rental_file))
-
-
-
     loop = asyncio.get_event_loop()
-
     tasks = load_product(os.path.join(directory_name, product_file)), load_customer(os.path.join(directory_name, customer_file)), load_rental(os.path.join(directory_name, rental_file))
+    results = loop.run_until_complete(asyncio.gather(*tasks))
 
-    loop.run_until_complete(asyncio.gather(*tasks))
+    added = []
+    errors = []
 
-    print(tasks)
+    for result in results:
+        added.append(result[0])
+        errors.append(result[1])
+
     loop.close()
 
-    return 
-    # return((tasks[0].result()[0],tasks[1].result()[0],tasks[2].result()[0]),
-    #         (tasks[0].result()[1],tasks[1].result()[1],tasks[2].result()[1]))
-    # return ((product_added, customer_added, rental_added),
-    #         (product_error, customer_error, rental_error))
+    return (tuple(added), tuple(errors))
 
 def show_available_products():
     '''
@@ -210,17 +213,19 @@ def main():
     '''
     Define main flow
     '''
-    # added, errors = 
-    import_data(os.path.dirname(os.path.abspath(__file__)),
+    start = datetime.datetime.now()
+    added, errors = import_data(os.path.dirname(os.path.abspath(__file__)),
                                 'products.csv',
                                 'customers.csv',
                                 'rentals.csv')
+    end = datetime.datetime.now()
     products = show_available_products()
     user_data = show_rentals("prd005")
     print_dict(products)
     print_dict(user_data)
-    # print(added)
-    # print(errors)
+    print(end-start)
+    print(added)
+    print(errors)
 
 if __name__ == "__main__":
     main()

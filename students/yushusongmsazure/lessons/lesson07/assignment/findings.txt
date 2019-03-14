@@ -1,0 +1,5 @@
+I tried different ways for async and apparently the results are not what I expected. 
+Either this means what I have implemented was wrong or aync way is not a silver bullet.
+
+-Linear.py takes around 19 seconds to run
+-Parallel.py needs 24 seconds
