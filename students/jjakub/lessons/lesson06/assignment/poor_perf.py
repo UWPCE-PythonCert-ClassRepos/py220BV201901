@@ -57,7 +57,7 @@ def analyze(filename):
     return (start, end, year_count, found)
 
 def main():
-    filename = "data/exercise.csv"
+    filename = "data/exercise-new.csv"
     analyze(filename)
 
 

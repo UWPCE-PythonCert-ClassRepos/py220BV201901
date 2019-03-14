@@ -1,0 +1,30 @@
+Note: 
+1) added internal cProfile logic to measure performance
+2) added specific timers for each loop
+3) no changes to business logic
+
+
+$ python good_perf.py
+{'2013': 5911, '2014': 5854, '2015': 5994, '2016': 5762, '2017': 11600, '2018': 0}
+'ao' was found 63395 times
+Total year run time: 0:00:04.791718
+Total ao run time: 0:00:03.554435
+Total module run time: 0:00:08.441406
+         1086128 function calls in 8.442 seconds
+
+   Ordered by: standard name
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        2    0.000    0.000    0.000    0.000 _bootlocale.py:11(getpreferredencoding)
+        2    0.000    0.000    0.000    0.000 codecs.py:260(__init__)
+    43050    0.029    0.000    0.619    0.000 cp1252.py:22(decode)
+        1    7.638    7.638    8.348    8.348 good_perf.py:16(analyze)
+        1    0.094    0.094    8.441    8.441 good_perf.py:79(main)
+    43050    0.590    0.000    0.590    0.000 {built-in method _codecs.charmap_decode}
+        2    0.000    0.000    0.000    0.000 {built-in method _csv.reader}
+        2    0.000    0.000    0.000    0.000 {built-in method _locale._getdefaultlocale}
+        5    0.001    0.000    0.001    0.000 {built-in method builtins.print}
+        2    0.000    0.000    0.000    0.000 {built-in method io.open}
+       10    0.000    0.000    0.000    0.000 {built-in method now}
+  1000000    0.090    0.000    0.090    0.000 {method 'append' of 'list' objects}
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}

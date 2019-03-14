@@ -1,0 +1,28 @@
+Note: 
+1) removed duplicate open and read csv logic
+2) combined all three loops into a single loop
+3) removed append list
+
+
+$ python good_perf.py
+{'2013': 5911, '2014': 5854, '2015': 5994, '2016': 5762, '2017': 5789, '2018': 5811}
+'ao' was found 63395 times
+Total year run time: 0:00:05.567849
+Total module run time: 0:00:05.567849
+         43068 function calls in 5.568 seconds
+
+   Ordered by: standard name
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000    0.000    0.000 _bootlocale.py:11(getpreferredencoding)
+        1    0.000    0.000    0.000    0.000 codecs.py:260(__init__)
+    21525    0.023    0.000    0.359    0.000 cp1252.py:22(decode)
+        1    5.208    5.208    5.567    5.567 good_perf.py:10(analyze)
+        1    0.000    0.000    5.567    5.567 good_perf.py:82(main)
+    21525    0.336    0.000    0.336    0.000 {built-in method _codecs.charmap_decode}
+        1    0.000    0.000    0.000    0.000 {built-in method _csv.reader}
+        1    0.000    0.000    0.000    0.000 {built-in method _locale._getdefaultlocale}
+        4    0.000    0.000    0.000    0.000 {built-in method builtins.print}
+        1    0.000    0.000    0.000    0.000 {built-in method io.open}
+        6    0.000    0.000    0.000    0.000 {built-in method now}
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}

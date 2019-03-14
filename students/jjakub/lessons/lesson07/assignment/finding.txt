@@ -1,0 +1,21 @@
+The first step was to refactor the code to enable parallel operation. The function to load data 
+was split into separate functions for each collection.  Additionally, the function outputs were 
+modified to match the assignment requirements. The log was setup to record the start, end and total 
+run time for each function to ensure the parallel operations were indeed running at the same time. 
+It also allowed me to compare the performance of the linear and parallel modules in more detail.
+
+The total run times for both the parallel and sequential models are below. On average, the run time 
+for each module was between 13 and 14 seconds. There was no noticeable run time benefit from adding 
+the parallel functionality, therefore preference should be given to the linear module.
+
+LINEAR RESULTS:
+2019-03-12 10:38:21,865 linear.py:168 INFO Total module run time: 0:00:14.036634
+2019-03-12 10:46:15,421 linear.py:168 INFO Total module run time: 0:00:14.066947
+2019-03-12 10:46:32,532 linear.py:168 INFO Total module run time: 0:00:14.246046
+2019-03-12 10:47:42,341 linear.py:168 INFO Total module run time: 0:00:13.409849
+
+PARALLEL RESULTS:
+2019-03-12 10:39:23,653 parallel.py:176 INFO Total module run time: 0:00:14.279268
+2019-03-12 10:44:34,046 parallel.py:176 INFO Total module run time: 0:00:14.536674
+2019-03-12 10:44:59,564 parallel.py:176 INFO Total module run time: 0:00:13.873191
+2019-03-12 10:45:22,189 parallel.py:176 INFO Total module run time: 0:00:13.467106
