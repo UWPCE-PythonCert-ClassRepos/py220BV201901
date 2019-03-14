@@ -6,3 +6,5 @@ Step 2: Reduce file I/O time
 --Within analyze function, the csv file has been opened/closed 2 times to filful 2 different data analyze processes.
 --However, we can combine these 2 processes into 1 file I/O.
 --Time reduced by half based on 10 runs.
+
+Step 3: Use a list instead of dictionary to reduce lookup time for year_count
