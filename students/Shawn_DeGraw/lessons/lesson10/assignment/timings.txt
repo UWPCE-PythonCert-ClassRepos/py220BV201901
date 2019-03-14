@@ -1,0 +1,3 @@
+2019-03-12 19:54:00.263212 Function import_data took 19.544848203659058 to execute.
+2019-03-12 19:54:00.343996 Function show_available_products took 0.05784487724304199 to execute.
+2019-03-12 19:54:00.353362 Function show_rentals took 0.005376100540161133 to execute.

@@ -1,0 +1,39 @@
+2019-03-09 15:26:22,668:44  INFO Opening connection to MongoDB.
+2019-03-09 15:26:22,706:100 INFO Added product DB entry: prd001
+2019-03-09 15:26:22,707:100 INFO Added product DB entry: prd002
+2019-03-09 15:26:22,707:100 INFO Added product DB entry: prd003
+2019-03-09 15:26:22,708:100 INFO Added product DB entry: prd004
+2019-03-09 15:26:22,708:100 INFO Added product DB entry: prd005
+2019-03-09 15:26:22,709:100 INFO Added product DB entry: prd006
+2019-03-09 15:26:22,710:100 INFO Added product DB entry: prd007
+2019-03-09 15:26:22,711:100 INFO Added product DB entry: prd008
+2019-03-09 15:26:22,712:100 INFO Added product DB entry: prd009
+2019-03-09 15:26:22,712:100 INFO Added product DB entry: prd010
+2019-03-09 15:26:22,712:48  INFO Closing connection to MongoDB.
+2019-03-09 15:26:22,715:44  INFO Opening connection to MongoDB.
+2019-03-09 15:26:22,748:133 INFO Added customer DB entry: user001
+2019-03-09 15:26:22,749:133 INFO Added customer DB entry: user002
+2019-03-09 15:26:22,750:133 INFO Added customer DB entry: user003
+2019-03-09 15:26:22,751:133 INFO Added customer DB entry: user004
+2019-03-09 15:26:22,752:133 INFO Added customer DB entry: user005
+2019-03-09 15:26:22,753:133 INFO Added customer DB entry: user006
+2019-03-09 15:26:22,753:133 INFO Added customer DB entry: user007
+2019-03-09 15:26:22,754:133 INFO Added customer DB entry: user008
+2019-03-09 15:26:22,755:133 INFO Added customer DB entry: user009
+2019-03-09 15:26:22,755:133 INFO Added customer DB entry: user010
+2019-03-09 15:26:22,756:48  INFO Closing connection to MongoDB.
+2019-03-09 15:26:22,758:44  INFO Opening connection to MongoDB.
+2019-03-09 15:26:22,762:167 INFO Added rental DB entry to customer: user004
+2019-03-09 15:26:22,763:167 INFO Added rental DB entry to customer: user008
+2019-03-09 15:26:22,763:167 INFO Added rental DB entry to customer: user005
+2019-03-09 15:26:22,764:167 INFO Added rental DB entry to customer: user001
+2019-03-09 15:26:22,765:167 INFO Added rental DB entry to customer: user002
+2019-03-09 15:26:22,766:167 INFO Added rental DB entry to customer: user002
+2019-03-09 15:26:22,767:167 INFO Added rental DB entry to customer: user003
+2019-03-09 15:26:22,767:167 INFO Added rental DB entry to customer: user003
+2019-03-09 15:26:22,768:167 INFO Added rental DB entry to customer: user010
+2019-03-09 15:26:22,768:48  INFO Closing connection to MongoDB.
+2019-03-09 15:26:22,775:44  INFO Opening connection to MongoDB.
+2019-03-09 15:26:22,778:48  INFO Closing connection to MongoDB.
+2019-03-09 15:26:22,785:44  INFO Opening connection to MongoDB.
+2019-03-09 15:26:22,798:48  INFO Closing connection to MongoDB.
