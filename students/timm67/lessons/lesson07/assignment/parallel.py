@@ -51,7 +51,7 @@ def parallel():
 
     #
     # Get the results of each thread. The thread name will be added to the
-    # tuple, because we don't know what order the threads finish up in 
+    # tuple, because we don't know what order the threads finish up in
     # each time
     #
     ret_list.append(get_retval_thread())
