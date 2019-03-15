@@ -58,3 +58,79 @@ In [9]: prun analyze(filename)
         Minor (reclaiming a frame) page faults: 70543
         Voluntary context switches: 14
         Involuntary context switches: 99928
+
+###I then tried out the line_profiler technique:
+Steps:
+1) copy poor_perf into good_perf file.
+2) add a decorator @profile to function analyze
+3) kernprof -l good_perf.py -> this result in binary output file
+4) python -m line_profiler good_perf.py.lprof  :
+
+'ao' was found 63395 times
+result set: 
+
+{'2013': 5911, '2014': 5854, '2015': 5994, '2016': 5762, '2017': 11600, '2018': 0}
+
+{'2013': 5911, '2014': 5854, '2015': 5994, '2016': 5762, '2017': 11600, '2018': 0}
+'ao' was found 63395 times
+###OUTPUT
+
+Total time: 22.0235 s
+File: good_perf.py
+Function: analyze at line 12
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    12                                           @profile
+    13                                           def analyze(filename):
+    14         1         28.0     28.0      0.0      start = datetime.datetime.now()
+    15         1        146.0    146.0      0.0      with open(filename) as csvfile:
+    16         1          9.0      9.0      0.0          reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+    17         1          1.0      1.0      0.0          new_ones = []
+    18   1000002    4787236.0      4.8     21.7          for row in reader:
+    19   1000001    1098541.0      1.1      5.0              lrow = list(row)
+    20   1000001     842326.0      0.8      3.8              if lrow[5] > '00/00/2012':
+    21   1000000     930498.0      0.9      4.2                  new_ones.append((lrow[5], lrow[0]))
+    22                                                           #new_ones.extend((lrow[5], lrow[0]))
+    23                                           
+    24                                                   year_count = {
+    25         1          0.0      0.0      0.0              "2013": 0,
+    26         1          1.0      1.0      0.0              "2014": 0,
+    27         1          0.0      0.0      0.0              "2015": 0,
+    28         1          1.0      1.0      0.0              "2016": 0,
+    29         1          0.0      0.0      0.0              "2017": 0,
+    30         1          2.0      2.0      0.0              "2018": 0
+    31                                                   }
+    32                                           
+    33   1000001     724654.0      0.7      3.3          for new in new_ones:
+    34   1000000     925506.0      0.9      4.2              if new[0][6:] == '2013':
+    35      5911       5563.0      0.9      0.0                  year_count["2013"] += 1
+    36   1000000     917218.0      0.9      4.2              if new[0][6:] == '2014':
+    37      5854       5517.0      0.9      0.0                  year_count["2014"] += 1
+    38   1000000     923196.0      0.9      4.2              if new[0][6:] == '2015':
+    39      5994       5696.0      1.0      0.0                  year_count["2015"] += 1
+    40   1000000     935143.0      0.9      4.2              if new[0][6:] == '2016':
+    41      5762       5518.0      1.0      0.0                  year_count["2016"] += 1
+    42   1000000     942487.0      0.9      4.3              if new[0][6:] == '2017':
+    43      5789       5559.0      1.0      0.0                  year_count["2017"] += 1
+    44   1000000     923146.0      0.9      4.2              if new[0][6:] == '2018':
+    45      5811       5632.0      1.0      0.0                  year_count["2017"] += 1
+    46                                           
+    47         1        102.0    102.0      0.0          print(year_count)
+    48                                           
+    49         1         99.0     99.0      0.0      with open(filename) as csvfile:
+    50         1         12.0     12.0      0.0          reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+    51                                           
+    52         1          1.0      1.0      0.0          found = 0
+    53                                           
+    54   1000002    5443328.0      5.4     24.7          for line in reader:
+    55   1000001    1334575.0      1.3      6.1              lrow = list(line)
+    56   1000001    1190164.0      1.2      5.4              if "ao" in line[6]:
+    57     63395      71536.0      1.1      0.3                  found += 1
+    58                                           
+    59         1         22.0     22.0      0.0          print(f"'ao' was found {found} times")
+    60         1         34.0     34.0      0.0          end = datetime.datetime.now()
+    61                                           
+    62         1          1.0      1.0      0.0      return (start, end, year_count, found)
+
+#So after I recoded the first context, I reduced a few seconds.
+#After removing the seconds file context I see that I have reduced half.

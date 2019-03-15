@@ -1,0 +1,7 @@
+Linear - update result
+(9999, 0, 9999, 24.330232858657837) (9999, 0, 9999, 27.767932176589966) (9999, 0, 9999, 27.11205291748047)
+
+Parallel - update result:
+((9999, 0, 9999, 80.24988889694214), (9999, 0, 9999, 80.25664687156677), (9999, 0, 9999, 80.26251316070557))
+
+So I have been trying many thing and I get the worst results on Parallel every time.
