@@ -57,14 +57,26 @@ def init_inventory():
                       item_descriptions[i],
                       item_monthly_prices[i])
 
-def single_customer():
-    print()
-
+def single_customer(customer_name, invoice_file):
+    def create_invoice(test_file):
+        # read in csv and locate the customer name
+        try:
+            with open(test_file, encoding='utf-8-sig', newline='') as test_invoice:
+                test_data = csv.reader(test_invoice)
+                for test in test_data:
+                    add_furniture(invoice_file, customer_name, test[0], test[1], test[2])
+        except IOError as e:
+            LOGGER.error(e)
+    return create_invoice
 
 def main():
-
+    '''
+    This main flow first initialize the inventory
+    Then create invoice for a single customer
+    '''
     init_inventory()
-    single_customer()
+    create_invoice = single_customer("Susan Wong", "rented_items.csv")
+    create_invoice("test_items.csv")
 
 if __name__ == "__main__":
     main()
